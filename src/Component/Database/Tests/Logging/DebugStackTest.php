@@ -1,0 +1,46 @@
+<?php
+
+namespace Pagekit\Component\Database\Tests\Logging;
+
+use Pagekit\Component\Database\Logging\DebugStack;
+
+class DebugStackTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @var DebugStack
+     */
+    protected $logger;
+
+    public function setUp()
+	{
+		$this->logger = new DebugStack;
+	}
+
+	public function testLogging()
+	{
+		$this->logger->startQuery('SELECT something FROM table');
+		$this->assertEquals(array(
+            1 => array(
+                'sql'         => 'SELECT something FROM table',
+                'params'      => null,
+                'types'       => null,
+                'executionMS' => 0)
+            ),
+            $this->logger->queries
+        );
+
+		$this->logger->stopQuery();
+		$this->assertGreaterThan(0, $this->logger->queries[1]['executionMS']);
+		$this->assertGreaterThan(0, str_word_count($this->logger->queries[1]['callstack']));
+	}
+
+	public function testDisabledLogger()
+	{
+		$this->logger->enabled = false;
+		$this->logger->startQuery('SELECT something FROM table');
+		$this->assertEquals(array(), $this->logger->queries);
+
+		$this->logger->stopQuery();
+		$this->assertEquals(array(), $this->logger->queries);
+	}
+}
