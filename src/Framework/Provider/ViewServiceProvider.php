@@ -39,7 +39,7 @@ class ViewServiceProvider extends BaseViewServiceProvider
         $this->registerRazrEngine($app);
 
         $app['view']->addAction('head', function(ActionEvent $event) use ($app) {
-            $event->append(sprintf('<meta name="generator" content="Pagekit %1$s" data-version="%1$s" data-base="%2$s" />', $app['config']['app.version'], $app['url']->root()));
+            $event->append(sprintf('<meta name="generator" content="Pagekit %1$s" data-version="%1$s" data-base="%2$s" />', $app['config']['app.version'], $app['url']->root() ?: '/'));
         }, 16);
     }
 
