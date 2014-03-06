@@ -16,4 +16,4 @@ git clone git://github.com/pagekit/framework.git
 
 ## Copyright and license
 
-Copyright 2014 Pagekit, [MIT license](LICENSE).
+Copyright [YOOtheme](http://www.yootheme.com) GmbH under the [MIT license](LICENSE).
