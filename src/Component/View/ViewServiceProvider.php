@@ -28,8 +28,23 @@ class ViewServiceProvider implements ServiceProviderInterface
 
             $result = array();
 
-            if ($title = $view->get('meta.title')) {
-                $result[] = sprintf('<title>%s</title>', $title);
+            if ($title = $view->get('head.title')) {
+                $result[] = sprintf('        <title>%s</title>', $title);
+            }
+
+            if ($links = $view->get('head.link', array())) {
+                foreach($links as $rel => $attributes) {
+
+                    if (!$attributes) {
+                        continue;
+                    }
+
+                    $html = '';
+                    foreach ($attributes as $name => $value) {
+                        $html .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
+                    }
+                    $result[] = sprintf('        <link rel="%s"%s/>', $rel, $html);
+                }
             }
 
             $event->append(implode(PHP_EOL, $result));
