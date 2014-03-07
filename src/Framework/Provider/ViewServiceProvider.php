@@ -56,15 +56,15 @@ class ViewServiceProvider extends BaseViewServiceProvider
     {
         $engine = new RazrEngine($app['view.parser'], $env = new Environment(new RazrFilesystemLoader, array('cache' => $app['path'].'/app/cache/templates')));
 
-        $env->addGlobal('url', $app['url']);
         $env->addFunction(new SimpleFunction('action', array($app['view'], 'callAction')));
-        $env->addFunction(new SimpleFunction('style', array($app['view.styles'], 'queue')));
+        $env->addFunction(new SimpleFunction('gravatar', array(new GravatarHelper, 'get')));
+        $env->addFunction(new SimpleFunction('markdown', array($app['markdown'], 'parse')));
         $env->addFunction(new SimpleFunction('script', array($app['view.scripts'], 'queue')));
+        $env->addFunction(new SimpleFunction('style', array($app['view.styles'], 'queue')));
         $env->addFunction(new SimpleFunction('token', array(new TokenHelper($app['csrf']), 'generate')));
         $env->addFunction(new SimpleFunction('trans', array($app['translator'], 'trans')));
         $env->addFunction(new SimpleFunction('transchoice', array($app['translator'], 'transChoice')));
-        $env->addFunction(new SimpleFunction('markdown', array($app['markdown'], 'parse')));
-        $env->addFunction(new SimpleFunction('gravatar', array(new GravatarHelper, 'get')));
+        $env->addFunction(new SimpleFunction('url', array($app['url'], 'to')));
 
         $env->addFunction(new SimpleFunction('style', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
             $app['view.styles']->queue($name, $asset, $dependencies, $options);
