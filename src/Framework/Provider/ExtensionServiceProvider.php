@@ -4,7 +4,6 @@ namespace Pagekit\Framework\Provider;
 
 use Pagekit\Component\Package\Installer\PackageInstaller;
 use Pagekit\Framework\Application;
-use Pagekit\Framework\Cache\FileCache;
 use Pagekit\Framework\Extension\Event\LoadFailureEvent;
 use Pagekit\Framework\Extension\Exception\ExtensionLoadException;
 use Pagekit\Framework\Extension\ExtensionManager;

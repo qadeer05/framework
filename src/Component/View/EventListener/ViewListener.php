@@ -36,7 +36,7 @@ class ViewListener implements EventSubscriberInterface
     }
 
     /**
-     * Reads the @View annotations from the controller stores them in the "_view" attribute.
+     * Reads the @View annotations from the controller stores them in the "view" option.
      *
      * @param ConfigureRouteEvent $event
      */
@@ -49,8 +49,8 @@ class ViewListener implements EventSubscriberInterface
 
         if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\View\Annotation\View')) {
             $route = $event->getRoute();
-            $route->setDefault('_view', $annotation->getTemplate());
-            $route->setDefault('_view_layout', $annotation->getLayout());
+            $route->setOption('view', $annotation->getTemplate());
+            $route->setOption('view_layout', $annotation->getLayout());
         }
     }
 
@@ -64,11 +64,11 @@ class ViewListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $result  = $event->getControllerResult();
 
-        if (null !== $template = $request->attributes->get('_view') and (null === $result || is_array($result))) {
+        if (null !== $template = $request->attributes->get('_route_options[view]', false, true) and (null === $result || is_array($result))) {
             $response = new Response($result = $this->view->render($template, $result ?: array()));
         }
 
-        if (null !== $layout = $request->attributes->get('_view_layout')) {
+        if (null !== $layout = $request->attributes->get('_route_options[view_layout]', false, true)) {
             $this->view->setLayout($layout);
         }
 

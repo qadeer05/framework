@@ -84,6 +84,18 @@ class Router
     }
 
     /**
+     * Gets a route by name.
+     *
+     * @param string $name The route name
+     *
+     * @return Route|null A Route instance or null when not found
+     */
+    public function getRoute($name)
+    {
+        return $this->routes->get($name);
+    }
+
+    /**
      * Get the current request.
      *
      * @return Request
