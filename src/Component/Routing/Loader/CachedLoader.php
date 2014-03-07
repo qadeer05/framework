@@ -90,21 +90,25 @@ class CachedLoader
             $controller = $reflection->getFileName();
         }
 
-        if ($this->check || !isset($this->routes[$controller])) {
+        if ($this->check) {
+
             $time = file_exists($controller) ? filemtime($controller) : 0;
+
+            if (isset($this->routes[$controller]) && $this->routes[$controller]['time'] != $time) {
+                unset($this->routes[$controller]);
+            }
         }
 
-        if ($this->check && isset($this->routes[$controller]) && $this->routes[$controller]['time'] != $time) {
-            unset($this->routes[$controller]);
-        }
+        if (!isset($this->routes[$controller])) {
 
-        $routes = isset($this->routes[$controller]) ? $this->routes[$controller]['routes'] : $this->loader->load($controller, $options);
+            $routes = $this->loader->load($controller, $options);
+            $time = isset($time) ? $time : filemtime($controller);
 
-        if (isset($time) && $time) {
             $this->routes[$controller] = compact('routes', 'time');
             $this->cacheDirty = true;
         }
 
-        return $routes;
+        return $this->routes[$controller]['routes'];
     }
+
 }
