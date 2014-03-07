@@ -28,7 +28,7 @@ class ParamFetcherListener implements EventSubscriberInterface
     }
 
     /**
-     * Reads the @Request annotations from the controller stores them in the "_params" attribute.
+     * Reads the @Request annotations from the controller stores them in the "params" attribute.
      *
      * @param ConfigureRouteEvent $event
      */
@@ -47,7 +47,7 @@ class ParamFetcherListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $controller = $event->getController();
 
-        if (is_array($controller) && $params = $request->attributes->get('_route_options[params]')) {
+        if (is_array($controller) && $params = $request->attributes->get('_route_options[params]', false, true)) {
 
             $this->paramFetcher->setRequest($request);
             $this->paramFetcher->setParameters($params);
