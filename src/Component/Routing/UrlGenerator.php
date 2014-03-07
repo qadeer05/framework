@@ -203,7 +203,8 @@ class UrlGenerator extends BaseUrlGenerator
     protected function getBasePath()
     {
         if (!$this->base) {
-            $this->base = dirname(realpath($this->router->getRequest()->server->get('SCRIPT_FILENAME')));
+            $this->base = $this->router->getRequest()->server->get('SCRIPT_FILENAME');
+            $this->base = str_replace('\\', '/', dirname(realpath($this->base)));
         }
 
         return $this->base;
