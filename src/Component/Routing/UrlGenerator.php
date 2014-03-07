@@ -29,6 +29,11 @@ class UrlGenerator extends BaseUrlGenerator
     protected $events;
 
     /**
+     * @var string
+     */
+    protected $base;
+
+    /**
      * Constructor.
      *
      * @param Router                   $router
@@ -120,8 +125,7 @@ class UrlGenerator extends BaseUrlGenerator
 
         if ($this->isAbsolutePath($path)) {
             $path = str_replace('\\', '/', $path);
-            $base = dirname($this->router->getRequest()->server->get('SCRIPT_FILENAME'));
-            $path = strpos($path, $base) === 0 ? substr($path, strlen($base)) : $path;
+            $path = strpos($path, $base = $this->getBasePath()) === 0 ? substr($path, strlen($base)) : $path;
         }
 
         if ($query = http_build_query($parameters, '', '&')) {
@@ -189,5 +193,19 @@ class UrlGenerator extends BaseUrlGenerator
     protected function isAbsolutePath($file)
     {
         return $file && ($file[0] == '/' || $file[0] == '\\' || (strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/')));
+    }
+
+    /**
+     * Returns the script's base path
+     *
+     * @return string
+     */
+    protected function getBasePath()
+    {
+        if (!$this->base) {
+            $this->base = dirname(realpath($this->router->getRequest()->server->get('SCRIPT_FILENAME')));
+        }
+
+        return $this->base;
     }
 }
