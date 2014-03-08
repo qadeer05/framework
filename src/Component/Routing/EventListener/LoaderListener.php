@@ -43,7 +43,7 @@ class LoaderListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::TERMINATE => array('onKernelTerminate', 8)
+            KernelEvents::TERMINATE => array('onKernelTerminate', -256)
         );
     }
 }
