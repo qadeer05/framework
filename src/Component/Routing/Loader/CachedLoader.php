@@ -4,7 +4,7 @@ namespace Pagekit\Component\Routing\Loader;
 
 use Pagekit\Component\Cache\CacheInterface;
 
-class CachedLoader
+class CachedLoader implements LoaderInterface
 {
     /**
      * Route loader instance.
@@ -67,21 +67,7 @@ class CachedLoader
     }
 
     /**
-     * Destructor.
-     */
-    public function __destruct()
-    {
-        if ($this->cacheDirty) {
-            $this->cache->save($this->cacheKey, $this->routes);
-        }
-    }
-
-    /**
-     * Loads routes by parsing controller method names.
-     *
-     * @param  string $controller
-     * @param  array  $options
-     * @return array
+     * {@inheritdoc}
      */
     public function load($controller, array $options = array())
     {
@@ -111,4 +97,13 @@ class CachedLoader
         return $this->routes[$controller]['routes'];
     }
 
+    /**
+     * Writes the cache file.
+     */
+    public function write()
+    {
+        if ($this->cacheDirty) {
+            $this->cache->save($this->cacheKey, $this->routes);
+        }
+    }
 }

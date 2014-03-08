@@ -4,6 +4,7 @@ namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\Filter\FilterManager;
 use Pagekit\Component\Routing\Controller\ControllerReader;
+use Pagekit\Component\Routing\EventListener\LoaderListener;
 use Pagekit\Component\Routing\EventListener\OptionsListener;
 use Pagekit\Component\Routing\EventListener\StringToResponseListener;
 use Pagekit\Component\Routing\EventListener\UrlAliasListener;
@@ -68,6 +69,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $app['events']->addSubscriber(new UrlAliasListener($app['router']->getUrlAliases()));
         $app['events']->addSubscriber(new ParamFetcherListener(new ParamReader, new ParamFetcher(new FilterManager)));
         $app['events']->addSubscriber(new RouterListener($app['router']->getUrlMatcher(), null, null, $app['request_stack']));
+        $app['events']->addSubscriber(new LoaderListener($app['router']));
         $app['events']->addSubscriber(new OptionsListener($app['router']));
         $app['events']->addSubscriber(new ResponseListener('UTF-8'));
         $app['events']->addSubscriber(new StringToResponseListener);

@@ -5,7 +5,7 @@ namespace Pagekit\Component\Routing\Loader;
 use Pagekit\Component\Routing\Controller\ControllerReaderInterface;
 use Symfony\Component\Routing\RouteCollection;
 
-class RouteLoader
+class RouteLoader implements LoaderInterface
 {
     /**
      * @var ControllerReaderInterface
@@ -23,12 +23,7 @@ class RouteLoader
     }
 
     /**
-     * Loads a routes collection by parsing controller method names.
-     *
-     * @param  string $controller
-     * @param  array $options
-     * @throws \InvalidArgumentException
-     * @return RouteCollection
+     * {@inheritdoc}
      */
     public function load($controller, array $options = array())
     {

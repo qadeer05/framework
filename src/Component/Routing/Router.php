@@ -2,6 +2,7 @@
 
 namespace Pagekit\Component\Routing;
 
+use Pagekit\Component\Routing\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ class Router
     protected $routes;
 
     /**
-     * @var mixed
+     * @var LoaderInterface
      */
     protected $loader;
 
@@ -65,7 +66,7 @@ class Router
      * @param HttpKernelInterface      $kernel
      * @param mixed                    $loader
      */
-    public function __construct(EventDispatcherInterface $events, HttpKernelInterface $kernel, $loader)
+    public function __construct(EventDispatcherInterface $events, HttpKernelInterface $kernel, LoaderInterface $loader)
     {
         $this->events = $events;
         $this->kernel = $kernel;
@@ -93,6 +94,16 @@ class Router
     public function getRoute($name)
     {
         return $this->routes->get($name);
+    }
+
+    /**
+     * Get the current route loader.
+     *
+     * @return LoaderInterface
+     */
+    public function getLoader()
+    {
+        return $this->loader;
     }
 
     /**
