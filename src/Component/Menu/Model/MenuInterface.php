@@ -2,7 +2,7 @@
 
 namespace Pagekit\Component\Menu\Model;
 
-interface MenuInterface
+interface MenuInterface extends \IteratorAggregate
 {
     /**
      * @return string
@@ -38,4 +38,9 @@ interface MenuInterface
      * @return ItemInterface[]
      */
     public function getItems();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator();
 }
