@@ -27,7 +27,7 @@
         "symfony/translation": "2.4.*",
         "nikic/php-parser": "0.9.4",
         "erusev/parsedown": "dev-master",
-        "michelf/php-markdown": "dev-master"
+        "michelf/php-markdown": "1.4.*"
     },
     "autoload": {
         "psr-4": { "Pagekit\\": "src" }
