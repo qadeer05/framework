@@ -339,11 +339,12 @@ class Router
             throw new \RuntimeException('No Request set.');
         }
 
-        if (!$routeObj = $this->routes->get($route)) {
+        if (!$routeObj = $this->getRoute($route)) {
             throw new \RuntimeException(sprintf('Route not found. "%s"', $route));
         }
 
         $attributes = array_replace($routeObj->getDefaults(), (array) $attributes);
+        $attributes['_route'] = $route;
 
         return $this->kernel->handle($this->request->duplicate($query, $request, $attributes), HttpKernelInterface::SUB_REQUEST);
     }

@@ -64,11 +64,11 @@ class ViewListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $result  = $event->getControllerResult();
 
-        if (null !== $template = $request->attributes->get('_route_options[view]', false, true) and (null === $result || is_array($result))) {
+        if (null !== $template = $request->attributes->get('_route_options[view]', null, true) and (null === $result || is_array($result))) {
             $response = new Response($result = $this->view->render($template, $result ?: array()));
         }
 
-        if (null !== $layout = $request->attributes->get('_route_options[view_layout]', false, true)) {
+        if (null !== $layout = $request->attributes->get('_route_options[view_layout]', null, true)) {
             $this->view->setLayout($layout);
         }
 
