@@ -105,12 +105,7 @@ class SessionServiceProvider implements ServiceProviderInterface
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
-            return;
-        }
-
-        // bootstrap the session
-        if (!isset($this->app['session'])) {
+        if (!$event->isMasterRequest() || !isset($this->app['session'])) {
             return;
         }
 
@@ -126,18 +121,20 @@ class SessionServiceProvider implements ServiceProviderInterface
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        if (!$event->isMasterRequest()) {
             return;
         }
 
         $session = $event->getRequest()->getSession();
+
         if ($session && $session->isStarted()) {
+
             $session->save();
 
             $params = session_get_cookie_params();
+            $cookie = new Cookie($session->getName(), $session->getId(), 0 === $params['lifetime'] ? 0 : time() + $params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly']);
 
-            $event->getResponse()->headers->setCookie(new Cookie($session->getName(), $session->getId(), 0 === $params['lifetime'] ? 0 : time() + $params['lifetime'], $params['path'], $params['domain'], $params['secure'], $params['httponly']));
+            $event->getResponse()->headers->setCookie($cookie);
         }
     }
 }
-
