@@ -14,7 +14,7 @@ class CookieServiceProvider implements ServiceProviderInterface
             $app['cookie.init'] = true;
 
             $request = $app['request'];
-            $path    = $app['config']->get('cookie.path', rtrim($request->getBaseUrl(), '/'));
+            $path    = $app['config']->get('cookie.path', $request->getBasePath() ?: '/');
             $domain  = $app['config']->get('cookie.domain');
 
 			return new CookieJar($request, $path, $domain);
