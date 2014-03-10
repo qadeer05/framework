@@ -1,6 +1,9 @@
 <?php
 
+
 namespace Pagekit\Component\Markdown;
+
+use Michelf\MarkdownExtra;
 
 /**
  * Markdown parser based on Parsedown.
@@ -17,9 +20,9 @@ class MarkdownParser
     /**
      * Constructor.
      *
-     * @param \Parsedown $parser
+     * @param MarkdownExtra $parser
      */
-    public function __construct(\Parsedown $parser)
+    public function __construct(MarkdownExtra $parser)
     {
         $this->parser = $parser;
     }
@@ -32,6 +35,6 @@ class MarkdownParser
      */
     public function parse($text)
     {
-        return $this->parser->parse($text);
+        return $this->parser->transform($text);
     }
 }
