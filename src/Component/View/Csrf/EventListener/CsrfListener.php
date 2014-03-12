@@ -5,10 +5,10 @@ namespace Pagekit\Component\View\Csrf\EventListener;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
+use Pagekit\Component\View\Csrf\Exception\BadTokenException;
 use Pagekit\Component\View\Csrf\Provider\CsrfProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CsrfListener implements EventSubscriberInterface
 {
@@ -25,7 +25,8 @@ class CsrfListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param Reader $reader
+     * @param CsrfProviderInterface $provider
+     * @param Reader                $reader
      */
     public function __construct(CsrfProviderInterface $provider, Reader $reader = null)
     {
@@ -46,7 +47,7 @@ class CsrfListener implements EventSubscriberInterface
         }
 
         if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\View\Csrf\Annotation\Token')) {
-            $event->getRoute()->setDefault('_csrf_name', $annotation->getName());
+            $event->getRoute()->setOption('_csrf_name', $annotation->getName());
         }
     }
 
@@ -54,13 +55,14 @@ class CsrfListener implements EventSubscriberInterface
      * Checks for the CSRF token and throws 401 exception if invalid.
      *
      * @param GetResponseEvent $event
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
 
-        if ($name = $request->attributes->get('_csrf_name') and !$this->provider->validate($request->get($name))) {
-            throw new HttpException(401, 'Invalid CSRF token.');
+        if ($name = $request->attributes->get('_route_options[_csrf_name]', false, true) and !$this->provider->validate($request->get($name))) {
+            throw new BadTokenException(401, 'Invalid CSRF token.');
         }
     }
 
