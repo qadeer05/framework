@@ -65,7 +65,7 @@ class ViewListener implements EventSubscriberInterface
         $result  = $event->getControllerResult();
 
         if (null !== $template = $request->attributes->get('_route_options[view]', null, true) and (null === $result || is_array($result))) {
-            $response = new Response($result = $this->view->render($template, $result ?: array()));
+            $response = $result = $this->view->render($template, $result ?: array());
         }
 
         if (null !== $layout = $request->attributes->get('_route_options[view_layout]', null, true)) {
@@ -74,11 +74,11 @@ class ViewListener implements EventSubscriberInterface
 
         if ($layout = $this->view->getLayout()) {
             $this->view->addAction('content', function (ActionEvent $e) use ($result) { $e->setContent((string) $result); });
-            $response = new Response($this->view->render($layout));
+            $response = $this->view->render($layout);
         }
 
         if (isset($response)) {
-            $event->setResponse($response);
+            $event->setResponse(new Response($response));
         }
     }
 
