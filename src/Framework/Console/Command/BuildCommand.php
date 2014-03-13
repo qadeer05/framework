@@ -4,6 +4,7 @@ namespace Pagekit\Framework\Console\Command;
 
 use Pagekit\Framework\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -23,6 +24,15 @@ class BuildCommand extends Command
      */
     protected $description = 'Builds a Pagekit release';
 
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        $this->addOption('development', 'd', InputOption::VALUE_NONE, 'Development Build');
+    }
+
     /**
      * Builds a .zip release file.
      */
@@ -30,9 +40,13 @@ class BuildCommand extends Command
     {
         $vers = $this->getApplication()->getVersion();
         $path = $this->pagekit['path'];
+        $dev  = preg_replace_callback('/(\d)$/', function($matches) { return $matches[1] + 1; }, $vers).'-dev'.time(true);
 
         $zip = new \ZipArchive;
-        $zip->open($zipFile = "$path/pagekit-$vers.zip", \ZipArchive::OVERWRITE);
+        if (!$zip->open($zipFile = "{$path}/pagekit-".($this->option('development') ? $dev : $vers).".zip", \ZipArchive::OVERWRITE)) {
+            $this->error("Can't open ZIP extension in '$zipFile'");
+            exit;
+        }
 
         $finder = Finder::create()
             ->files()
@@ -70,6 +84,10 @@ class BuildCommand extends Command
         $zip->addEmptyDir('app/temp');
         $zip->addEmptyDir('storage');
         $zip->addFile($path . '/.htaccess', '.htaccess');
+
+        if ($this->option('development')) {
+            $zip->addFromString('app/config/app.php', str_replace("'version' => '{$vers}',", "'version' => '{$dev}',", file_get_contents("{$path}/app/config/app.php")));
+        }
 
         $zip->close();
 
