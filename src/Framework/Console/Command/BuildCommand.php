@@ -60,7 +60,6 @@ class BuildCommand extends Command
                     '^extensions\/.+\/languages\/.+\.(po|pot)',
                     '^framework\/.+\/(tests\/|phpunit\.xml)',
                     '^vendor\/doctrine\/(annotations|cache|collections|common|dbal|inflector|lexer)\/(bin|docs|tests|build|phpunit|run|upgrade)',
-                    '^vendor\/erusev\/parsedown\/(tests\/|phpunit\.xml)',
                     '^vendor\/ircmaxell\/.+\/(test|phpunit|version-test)',
                     '^vendor\/nikic\/php-parser\/(doc|grammar|test|phpunit)',
                     '^vendor\/pagekit\/.+\/(tests\/|phpunit\.xml)',
