@@ -2,7 +2,7 @@
 
 namespace Pagekit\Component\View\Templating\Helper;
 
-use Pagekit\Component\Markdown\MarkdownParser;
+use Pagekit\Component\Markdown\Markdown;
 use Symfony\Component\Templating\Helper\Helper;
 
 class MarkdownHelper extends Helper
@@ -12,9 +12,9 @@ class MarkdownHelper extends Helper
     /**
      * Constructor.
      *
-     * @param MarkdownParser $parser
+     * @param Markdown $parser
      */
-    public function __construct(MarkdownParser $parser)
+    public function __construct(Markdown $parser)
     {
         $this->parser = $parser;
     }
