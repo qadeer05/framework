@@ -44,15 +44,15 @@ class RoutesCommand extends Command
             );
 
             if ($this->option('verbose')) {
-                $rows[$name]['access'] = json_encode($route->getOption('access'));
+                $rows[$name]['admin'] = $route->getOption('admin') ? '1' : '';
                 $rows[$name]['csrf'] = $route->getOption('_csrf_name') ? '1' : '';
+                $rows[$name]['access'] = json_encode(array_diff($route->getOption('access', array()), array('system: access admin area')));
             }
         }
 
         $headers = array('Name', 'URI', 'Action');
         if ($this->option('verbose')) {
-            $headers[] = 'Access';
-            $headers[] = 'Csrf';
+            $headers = array_merge($headers, array('Admin', 'Csrf', 'Access'));
         }
 
         $table = $this->getHelperSet()->get('table');
