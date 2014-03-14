@@ -58,10 +58,10 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function base($referenceType = self::ABSOLUTE_PATH)
     {
-        $url = $this->context->getBaseUrl();
+        $url = $this->getRequest()->getBasePath();
 
         if ($referenceType === self::ABSOLUTE_URL) {
-            $url = $this->router->getRequest()->getSchemeAndHttpHost().$url;
+            $url = $this->getRequest()->getSchemeAndHttpHost().$url;
         }
 
         return $url;
@@ -75,11 +75,11 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function current($referenceType = self::ABSOLUTE_PATH)
     {
-        if ($qs = $this->context->getQueryString()) {
+        if ($qs = $this->getRequest()->getQueryString()) {
             $qs = '?'.$qs;
         }
 
-        return $this->base($referenceType).$this->context->getPathInfo().$qs;
+        return $this->base($referenceType).$this->getRequest()->getPathInfo().$qs;
     }
 
     /**
@@ -90,7 +90,7 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function previous($referenceType = self::ABSOLUTE_PATH)
     {
-        if ($referer = $this->router->getRequest()->headers->get('referer')) {
+        if ($referer = $this->getRequest()->headers->get('referer')) {
             return $this->to($referer, array(), $referenceType);
         }
 
@@ -154,6 +154,7 @@ class UrlGenerator extends BaseUrlGenerator
             }
 
             $url = $this->dispatchEvent($this->generate($name, $parameters, $referenceType));
+
         } catch (RouteNotFoundException $e) {
             $url = false;
         }
@@ -169,6 +170,35 @@ class UrlGenerator extends BaseUrlGenerator
         $this->events->dispatch('route.generate', $event = new GenerateRouteEvent($name, $parameters));
 
         return parent::generate($event->getRoute(), $event->getParameters(), $referenceType);
+    }
+
+    /**
+     * Returns current request.
+     *
+     * @return string
+     */
+    protected function getRequest()
+    {
+        if (($request = $this->router->getRequest()) == null) {
+            throw new \RuntimeException('Accessed request outside of request scope.');
+        }
+
+        return $request;
+    }
+
+    /**
+     * Returns the script's base path.
+     *
+     * @return string
+     */
+    protected function getBasePath()
+    {
+        if (!$this->base) {
+            $this->base = $this->getRequest()->server->get('SCRIPT_FILENAME');
+            $this->base = str_replace('\\', '/', dirname(realpath($this->base)));
+        }
+
+        return $this->base;
     }
 
     /**
@@ -193,20 +223,5 @@ class UrlGenerator extends BaseUrlGenerator
     protected function isAbsolutePath($file)
     {
         return $file && ($file[0] == '/' || $file[0] == '\\' || (strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/')));
-    }
-
-    /**
-     * Returns the script's base path
-     *
-     * @return string
-     */
-    protected function getBasePath()
-    {
-        if (!$this->base) {
-            $this->base = $this->router->getRequest()->server->get('SCRIPT_FILENAME');
-            $this->base = str_replace('\\', '/', dirname(realpath($this->base)));
-        }
-
-        return $this->base;
     }
 }
