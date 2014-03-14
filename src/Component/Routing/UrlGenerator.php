@@ -51,7 +51,7 @@ class UrlGenerator extends BaseUrlGenerator
     }
 
     /**
-     * Get the base URL for the current request.
+     * Get the base path for the current request.
      *
      * @param  mixed $referenceType
      * @return string
@@ -68,7 +68,7 @@ class UrlGenerator extends BaseUrlGenerator
     }
 
     /**
-     * Get the current URL for the request.
+     * Get the URL for the current request.
      *
      * @param  mixed $referenceType
      * @return string
@@ -98,7 +98,7 @@ class UrlGenerator extends BaseUrlGenerator
     }
 
     /**
-     * Generate a URL to the given path or named route.
+     * Get the URL to a path or locator resource.
      *
      * @param  string $path
      * @param  mixed  $parameters
@@ -132,34 +132,52 @@ class UrlGenerator extends BaseUrlGenerator
             $query = '?'.$query;
         }
 
-        return $this->dispatchEvent($this->base($referenceType).'/'.trim($path, '/').$query);
+        $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($this->base($referenceType).'/'.trim($path, '/').$query, $this));
+
+        return $event->getUrl();
     }
 
     /**
-     * Get the URL to a named route.
+     * Get the URL to a route path or name route.
      *
-     * @param  string $name
+     * @param  string $path
      * @param  mixed  $parameters
      * @param  mixed  $referenceType
      * @return string|false
      */
-    protected function route($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function route($path = '', $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
-        try {
-
-            if (false !== strpos($name, '?')) {
-                list($name, $query) = explode('?', $name);
-                parse_str($query, $params);
-                $parameters = array_merge($params, $parameters);
-            }
-
-            $url = $this->dispatchEvent($this->generate($name, $parameters, $referenceType));
-
-        } catch (RouteNotFoundException $e) {
-            $url = false;
+        if (filter_var($path, FILTER_VALIDATE_URL) !== false || $this->isAbsolutePath($path)) {
+            return $path;
         }
 
-        return $url;
+        try {
+
+            if (strpos($path, '?') !== false) {
+                list($name, $query) = explode('?', $path);
+                parse_str($query, $params);
+                $params = array_merge($params, $parameters);
+            } else {
+                $name = $path;
+                $params = $parameters;
+            }
+
+            $url = $this->generate($name, $params, $referenceType);
+
+        } catch (RouteNotFoundException $e) {
+
+            if (strpos($path, '@') === 0) {
+                return false;
+            } elseif ($path !== '') {
+                $path = "/$path";
+            }
+
+            $url = $this->getRequest()->getBaseUrl().$path;
+        }
+
+        $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($url, $this));
+
+        return $event->getUrl();
     }
 
     /**
@@ -199,19 +217,6 @@ class UrlGenerator extends BaseUrlGenerator
         }
 
         return $this->base;
-    }
-
-    /**
-     * Dispatches the URL generate event.
-     *
-     * @param  string $url
-     * @return string|false
-     */
-    protected function dispatchEvent($url)
-    {
-        $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($url, $this));
-
-        return $event->getUrl();
     }
 
     /**

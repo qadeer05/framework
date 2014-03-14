@@ -38,6 +38,7 @@ class ViewServiceProvider extends BaseViewServiceProvider
         $this->registerPhpEngine($app);
         $this->registerRazrEngine($app);
 
+        $app['view']->set('url', $app['url']);
         $app['view']->addAction('head', function(ActionEvent $event) use ($app) {
             $event->append(sprintf('<meta name="generator" content="Pagekit %1$s" data-version="%1$s" data-base="%2$s" />', $app['config']['app.version'], $app['url']->base() ?: '/'));
         }, 16);
@@ -64,7 +65,6 @@ class ViewServiceProvider extends BaseViewServiceProvider
         $env->addFunction(new SimpleFunction('token', array(new TokenHelper($app['csrf']), 'generate')));
         $env->addFunction(new SimpleFunction('trans', array($app['translator'], 'trans')));
         $env->addFunction(new SimpleFunction('transchoice', array($app['translator'], 'transChoice')));
-        $env->addFunction(new SimpleFunction('url', array($app['url'], 'to')));
 
         $env->addFunction(new SimpleFunction('style', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
             $app['view.styles']->queue($name, $asset, $dependencies, $options);
