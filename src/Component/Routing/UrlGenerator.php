@@ -60,7 +60,7 @@ class UrlGenerator extends BaseUrlGenerator
     {
         $url = $this->context->getBaseUrl();
 
-        if ($referenceType == self::ABSOLUTE_URL) {
+        if ($referenceType === self::ABSOLUTE_URL) {
             $url = $this->router->getRequest()->getSchemeAndHttpHost().$url;
         }
 
