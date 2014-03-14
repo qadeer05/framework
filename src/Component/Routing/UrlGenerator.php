@@ -51,12 +51,12 @@ class UrlGenerator extends BaseUrlGenerator
     }
 
     /**
-     * Get the root URL for the current request.
+     * Get the base URL for the current request.
      *
      * @param  mixed $referenceType
      * @return string
      */
-    public function root($referenceType = self::ABSOLUTE_PATH)
+    public function base($referenceType = self::ABSOLUTE_PATH)
     {
         $url = $this->context->getBaseUrl();
 
@@ -79,7 +79,7 @@ class UrlGenerator extends BaseUrlGenerator
             $qs = '?'.$qs;
         }
 
-        return $this->root($referenceType).$this->context->getPathInfo().$qs;
+        return $this->base($referenceType).$this->context->getPathInfo().$qs;
     }
 
     /**
@@ -132,7 +132,7 @@ class UrlGenerator extends BaseUrlGenerator
             $query = '?'.$query;
         }
 
-        return $this->dispatchEvent($this->root($referenceType).'/'.trim($path, '/').$query);
+        return $this->dispatchEvent($this->base($referenceType).'/'.trim($path, '/').$query);
     }
 
     /**
