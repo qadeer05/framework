@@ -5,9 +5,7 @@
     "homepage": "http://pagekit.com",
     "license": "MIT",
     "require": {
-        "php": ">=5.3.3",
-        "pagekit/routing": "1.*",
-        "pagekit/templating": "1.*"
+        "php": ">=5.3.3"
     },
     "autoload": {
         "psr-0": { "Pagekit\\Component\\View\\": "" }
