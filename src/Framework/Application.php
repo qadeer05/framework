@@ -47,28 +47,6 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     }
 
     /**
-     * Gets a parameter or an object.
-     *
-     * @param  string $id
-     * @return mixed
-     */
-    public function get($id)
-    {
-        return $this[$id];
-    }
-
-    /**
-     * Sets a parameter or an object.
-     *
-     * @param string $id
-     * @param mixed  $value
-     */
-    public function set($id, $value)
-    {
-        $this[$id] = $value;
-    }
-
-    /**
      * Registers a service provider.
      *
      * @param  ServiceProviderInterface|string $provider
