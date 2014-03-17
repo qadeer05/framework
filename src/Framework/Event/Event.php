@@ -4,7 +4,7 @@ namespace Pagekit\Framework\Event;
 
 use Symfony\Component\EventDispatcher\Event as BaseEvent;
 
-class Event extends BaseEvent
+class Event extends BaseEvent implements \ArrayAccess
 {
     /**
      * @var array
@@ -22,18 +22,45 @@ class Event extends BaseEvent
     }
 
     /**
-     * Gets or sets a parameter value.
+     * Determine if the given parameter exists.
      *
      * @param  string $key
-     * @param  mixed  $value
-     * @return mixed|null
+     * @return bool
      */
-    public function __invoke($key, $value = null)
+    public function offsetExists($key)
     {
-        if ($value !== null) {
-            $this->parameters[$key] = $value;
-        } elseif (isset($this->parameters[$key])) {
-            return $this->parameters[$key];
-        }
+        return isset($this->parameters[$key]);
+    }
+
+    /**
+     * Gets a parameter value.
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    public function offsetGet($key)
+    {
+        return isset($this->parameters[$key]) ? $this->parameters[$key] : null;
+    }
+
+    /**
+     * Sets a parameter value.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function offsetSet($key, $value)
+    {
+        $this->parameters[$key] = $value;
+    }
+
+    /**
+     * Unsets a parameter value.
+     *
+     * @param string $key
+     */
+    public function offsetUnset($key)
+    {
+        unset($this->parameters[$key]);
     }
 }
