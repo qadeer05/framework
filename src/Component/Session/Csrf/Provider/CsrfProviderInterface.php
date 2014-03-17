@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Csrf\Provider;
+namespace Pagekit\Component\Session\Csrf\Provider;
 
 interface CsrfProviderInterface
 {

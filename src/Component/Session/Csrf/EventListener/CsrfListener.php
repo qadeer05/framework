@@ -1,12 +1,12 @@
 <?php
 
-namespace Pagekit\Component\View\Csrf\EventListener;
+namespace Pagekit\Component\Session\Csrf\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
-use Pagekit\Component\View\Csrf\Exception\BadTokenException;
-use Pagekit\Component\View\Csrf\Provider\CsrfProviderInterface;
+use Pagekit\Component\Session\Csrf\Exception\BadTokenException;
+use Pagekit\Component\Session\Csrf\Provider\CsrfProviderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -43,10 +43,10 @@ class CsrfListener implements EventSubscriberInterface
     {
         if (!$this->reader) {
             $this->reader = new SimpleAnnotationReader;
-            $this->reader->addNamespace('Pagekit\Component\View\Csrf\Annotation');
+            $this->reader->addNamespace('Pagekit\Component\Session\Csrf\Annotation');
         }
 
-        if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\View\Csrf\Annotation\Token')) {
+        if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\Session\Csrf\Annotation\Token')) {
             $event->getRoute()->setOption('_csrf_name', $annotation->getName());
         }
     }

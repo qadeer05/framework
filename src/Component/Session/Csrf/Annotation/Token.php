@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Csrf\Annotation;
+namespace Pagekit\Component\Session\Csrf\Annotation;
 
 /**
  * @Annotation

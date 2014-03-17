@@ -1,11 +1,11 @@
 <?php
 
-namespace Pagekit\Component\View;
+namespace Pagekit\Component\Session;
 
-use Pagekit\Component\View\Csrf\EventListener\CsrfListener;
-use Pagekit\Component\View\Csrf\Provider\SessionCsrfProvider;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
+use Pagekit\Component\Session\Csrf\EventListener\CsrfListener;
+use Pagekit\Component\Session\Csrf\Provider\SessionCsrfProvider;
 
 class CsrfServiceProvider implements ServiceProviderInterface
 {

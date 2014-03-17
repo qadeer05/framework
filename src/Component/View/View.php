@@ -58,16 +58,6 @@ class View
     }
 
     /**
-     * Add a template engine.
-     *
-     * @param EngineInterface $engine
-     */
-    public function addEngine(EngineInterface $engine)
-    {
-        $this->engine->addEngine($engine);
-    }
-
-    /**
      * Get the layout template.
      *
      * @return string

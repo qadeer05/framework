@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\EventListener;
+namespace Pagekit\Component\View\Event;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;

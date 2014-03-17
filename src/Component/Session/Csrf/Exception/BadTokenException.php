@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Csrf\Exception;
+namespace Pagekit\Component\Session\Csrf\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
