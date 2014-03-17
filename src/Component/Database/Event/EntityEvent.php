@@ -4,7 +4,7 @@ namespace Pagekit\Component\Database\Event;
 
 use Pagekit\Component\Database\ORM\EntityManager;
 use Pagekit\Component\Database\ORM\Metadata;
-use Pagekit\Component\Event\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class EntityEvent extends Event
 {

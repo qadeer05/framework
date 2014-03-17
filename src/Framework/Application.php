@@ -2,8 +2,8 @@
 
 namespace Pagekit\Framework;
 
-use Pagekit\Component\Event\EventServiceProvider;
 use Pagekit\Framework\Exception\ExceptionListenerWrapper;
+use Pagekit\Framework\Provider\EventServiceProvider;
 use Pagekit\Framework\Provider\RoutingServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

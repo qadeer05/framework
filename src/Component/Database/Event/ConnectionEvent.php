@@ -3,7 +3,7 @@
 namespace Pagekit\Component\Database\Event;
 
 use Pagekit\Component\Database\Connection;
-use Pagekit\Component\Event\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class ConnectionEvent extends Event
 {

@@ -5,7 +5,6 @@ namespace Pagekit\Component\Database\ORM;
 use Pagekit\Component\Database\Connection;
 use Pagekit\Component\Database\Event\EntityEvent;
 use Pagekit\Component\Database\Events;
-use Pagekit\Component\Event\Event;
 
 class EntityManager
 {
