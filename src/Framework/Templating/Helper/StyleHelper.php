@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Templating\Helper;
+namespace Pagekit\Framework\Templating\Helper;
 
 class StyleHelper extends AssetHelper
 {

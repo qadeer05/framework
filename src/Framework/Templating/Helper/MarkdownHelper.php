@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Templating\Helper;
+namespace Pagekit\Framework\Templating\Helper;
 
 use Pagekit\Component\Markdown\Markdown;
 use Symfony\Component\Templating\Helper\Helper;

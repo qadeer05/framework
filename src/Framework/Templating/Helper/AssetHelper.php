@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Templating\Helper;
+namespace Pagekit\Framework\Templating\Helper;
 
 use Pagekit\Component\View\Asset\AssetManager;
 use Symfony\Component\Templating\Helper\Helper;

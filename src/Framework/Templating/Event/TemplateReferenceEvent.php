@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\View\Templating\Event;
+namespace Pagekit\Framework\Templating\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Templating\TemplateReferenceInterface;

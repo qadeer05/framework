@@ -82,8 +82,8 @@ class ExtensionTranslateCommand extends Command
 
         $this->extensions = $this->pagekit['config']['extension.core'];
         $this->visitors = array(
-            'razr' => new RazrNodeVisitor($this->pagekit['view.engine.razr']),
-            'php'  => new PhpNodeVisitor($this->pagekit['view.engine.php'])
+            'razr' => new RazrNodeVisitor($this->pagekit['tmpl.razr']),
+            'php'  => new PhpNodeVisitor($this->pagekit['tmpl.php'])
         );
         $this->xgettext = !defined('PHP_WINDOWS_VERSION_MAJOR') && (bool)exec('which xgettext');
         $this->loader = new PoFileLoader;

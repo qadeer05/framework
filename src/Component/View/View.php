@@ -41,10 +41,10 @@ class View
      *
      * @param EventDispatcherInterface $events
      */
-    public function __construct(EventDispatcherInterface $events)
+    public function __construct(EventDispatcherInterface $events, EngineInterface $engine = null)
     {
         $this->events = $events;
-        $this->engine = new DelegatingEngine;
+        $this->engine = $engine ?: new DelegatingEngine;
     }
 
     /**

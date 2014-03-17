@@ -1,8 +1,8 @@
 <?php
 
-namespace Pagekit\Component\View\Templating;
+namespace Pagekit\Framework\Templating;
 
-use Pagekit\Component\View\Templating\Event\TemplateReferenceEvent;
+use Pagekit\Framework\Templating\Event\TemplateReferenceEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReference;
