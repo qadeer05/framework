@@ -12,7 +12,7 @@ use Symfony\Component\Templating\EngineInterface;
 class View
 {
     /**
-     * @var DelegatingEngine
+     * @var EngineInterface
      */
     protected $engine;
 
