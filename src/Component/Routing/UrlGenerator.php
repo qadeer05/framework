@@ -172,7 +172,7 @@ class UrlGenerator extends BaseUrlGenerator
                 $path = "/$path";
             }
 
-            $url = $this->getRequest()->getBaseUrl().$path;
+            $url = $this->context->getBaseUrl().$path;
         }
 
         $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($url, $this));
@@ -193,6 +193,7 @@ class UrlGenerator extends BaseUrlGenerator
     /**
      * Returns current request.
      *
+     * @throws \RuntimeException
      * @return string
      */
     protected function getRequest()
