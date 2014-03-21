@@ -3,8 +3,8 @@
 namespace Pagekit\Framework\Controller;
 
 use Pagekit\Framework\Application;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class ControllerResolver extends BaseControllerResolver
 {
@@ -30,6 +30,7 @@ class ControllerResolver extends BaseControllerResolver
      * Creates a controller instance and injects dependencies.
      *
      * @param  string $controller
+     * @throws \InvalidArgumentException
      * @return mixed
      */
     protected function createController($controller)

@@ -58,7 +58,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
         };
 
         $app['db.debug_stack'] = function($app) {
-            return new DebugStack(null, $app['profiler.stopwatch']);
+            return new DebugStack($app['profiler.stopwatch']);
         };
     }
 

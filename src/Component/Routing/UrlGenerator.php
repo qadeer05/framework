@@ -6,8 +6,9 @@ use Pagekit\Component\File\Exception\InvalidArgumentException;
 use Pagekit\Component\File\ResourceLocator;
 use Pagekit\Component\Routing\Event\GenerateRouteEvent;
 use Pagekit\Component\Routing\Event\GenerateUrlEvent;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 
@@ -199,11 +200,11 @@ class UrlGenerator extends BaseUrlGenerator
      * Returns current request.
      *
      * @throws \RuntimeException
-     * @return string
+     * @return Request
      */
     protected function getRequest()
     {
-        if (($request = $this->router->getRequest()) == null) {
+        if (null == $request = $this->router->getRequest()) {
             throw new \RuntimeException('Accessed request outside of request scope.');
         }
 

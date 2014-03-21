@@ -17,9 +17,8 @@ class DebugStack extends BaseDebugStack
     */
     protected $stopwatch;
 
-    public function __construct(LoggerInterface $logger = null, Stopwatch $stopwatch = null)
+    public function __construct(Stopwatch $stopwatch = null)
     {
-        $this->logger = $logger;
         $this->stopwatch = $stopwatch;
     }
 
