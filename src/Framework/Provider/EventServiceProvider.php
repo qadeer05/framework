@@ -3,8 +3,8 @@
 namespace Pagekit\Framework\Provider;
 
 use Pagekit\Framework\Application;
-use Pagekit\Framework\ServiceProviderInterface;
 use Pagekit\Framework\Event\EventDispatcher;
+use Pagekit\Framework\ServiceProviderInterface;
 
 class EventServiceProvider implements ServiceProviderInterface
 {

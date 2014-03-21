@@ -4,12 +4,12 @@ namespace Pagekit\Framework\Provider;
 
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
-use Pagekit\Framework\Templating\RazrEngine;
 use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
+use Pagekit\Framework\Templating\RazrEngine;
 use Razr\Environment;
-use Razr\SimpleFunction;
 use Razr\Loader\FilesystemLoader;
+use Razr\SimpleFunction;
 
 class RazrServiceProvider implements ServiceProviderInterface
 {

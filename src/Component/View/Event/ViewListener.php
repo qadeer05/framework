@@ -5,7 +5,6 @@ namespace Pagekit\Component\View\Event;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
-use Pagekit\Component\View\Event\ActionEvent;
 use Pagekit\Component\View\View;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;

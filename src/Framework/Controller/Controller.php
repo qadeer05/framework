@@ -4,7 +4,6 @@ namespace Pagekit\Framework\Controller;
 
 use Pagekit\Framework\ApplicationAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class Controller extends ApplicationAware
 {

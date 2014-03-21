@@ -3,7 +3,6 @@
 namespace Pagekit\Component\Routing\Loader;
 
 use Pagekit\Component\Routing\Controller\ControllerReaderInterface;
-use Symfony\Component\Routing\RouteCollection;
 
 class RouteLoader implements LoaderInterface
 {

@@ -2,10 +2,10 @@
 
 namespace Pagekit\Component\View;
 
-use Pagekit\Framework\Application;
-use Pagekit\Framework\ServiceProviderInterface;
 use Pagekit\Component\View\Event\ActionEvent;
 use Pagekit\Component\View\Event\ViewListener;
+use Pagekit\Framework\Application;
+use Pagekit\Framework\ServiceProviderInterface;
 
 class ViewServiceProvider implements ServiceProviderInterface
 {

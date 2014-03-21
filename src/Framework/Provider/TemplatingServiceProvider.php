@@ -4,17 +4,17 @@ namespace Pagekit\Framework\Provider;
 
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
-use Pagekit\Framework\Templating\TemplateNameParser;
 use Pagekit\Framework\Templating\Helper\ActionHelper;
 use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\MarkdownHelper;
 use Pagekit\Framework\Templating\Helper\ScriptHelper;
 use Pagekit\Framework\Templating\Helper\StyleHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
-use Symfony\Component\Templating\PhpEngine;
+use Pagekit\Framework\Templating\TemplateNameParser;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\Templating\Loader\FilesystemLoader;
+use Symfony\Component\Templating\PhpEngine;
 
 class TemplatingServiceProvider implements ServiceProviderInterface
 {

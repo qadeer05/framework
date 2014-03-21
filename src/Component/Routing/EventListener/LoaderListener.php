@@ -2,8 +2,8 @@
 
 namespace Pagekit\Component\Routing\EventListener;
 
-use Pagekit\Component\Routing\Router;
 use Pagekit\Component\Routing\Loader\CachedLoader;
+use Pagekit\Component\Routing\Router;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
