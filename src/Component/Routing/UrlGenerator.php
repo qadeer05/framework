@@ -75,23 +75,28 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function current($referenceType = self::ABSOLUTE_PATH)
     {
+        $url = $this->getRequest()->getBaseUrl();
+
+        if ($referenceType === self::ABSOLUTE_URL) {
+            $url = $this->getRequest()->getSchemeAndHttpHost().$url;
+        }
+
         if ($qs = $this->getRequest()->getQueryString()) {
             $qs = '?'.$qs;
         }
 
-        return $this->base($referenceType).$this->getRequest()->getPathInfo().$qs;
+        return $url.$this->getRequest()->getPathInfo().$qs;
     }
 
     /**
      * Get the URL for the previous request.
      *
-     * @param  mixed  $referenceType
      * @return string
      */
-    public function previous($referenceType = self::ABSOLUTE_PATH)
+    public function previous()
     {
         if ($referer = $this->getRequest()->headers->get('referer')) {
-            return $this->to($referer, array(), $referenceType);
+            return $this->to($referer);
         }
 
         return '';
