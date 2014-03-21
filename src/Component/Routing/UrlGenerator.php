@@ -15,6 +15,11 @@ use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 class UrlGenerator extends BaseUrlGenerator
 {
     /**
+     * Generates a base relative URL, e.g. "dir/file".
+     */
+    const RELATIVE_URL = 'base';
+
+    /**
      * @var Router
      */
     protected $router;
@@ -138,9 +143,7 @@ class UrlGenerator extends BaseUrlGenerator
             $query = '?'.$query;
         }
 
-        $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($this->base($referenceType).'/'.trim($path, '/').$query, $this));
-
-        return $event->getUrl();
+        return $this->generateUrl($this->base($referenceType).'/'.trim($path, '/').$query, $referenceType);
     }
 
     /**
@@ -181,9 +184,7 @@ class UrlGenerator extends BaseUrlGenerator
             $url = $this->context->getBaseUrl().$path;
         }
 
-        $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($url, $this));
-
-        return $event->getUrl();
+        return $this->generateUrl($url, $referenceType);
     }
 
     /**
@@ -194,6 +195,24 @@ class UrlGenerator extends BaseUrlGenerator
         $this->events->dispatch('route.generate', $event = new GenerateRouteEvent($name, $parameters));
 
         return parent::generate($event->getRoute(), $event->getParameters(), $referenceType);
+    }
+
+    /**
+     * @param  string $url
+     * @param  mixed  $referenceType
+     * @return string
+     */
+    protected function generateUrl($url, $referenceType)
+    {
+        $this->events->dispatch('url.generate', $event = new GenerateUrlEvent($url, $this));
+
+        $url = $event->getUrl();
+
+        if ($referenceType == 'base') {
+            $url = ltrim(substr($url, strlen($this->context->getBaseUrl())), '/');
+        }
+
+        return $url;
     }
 
     /**
