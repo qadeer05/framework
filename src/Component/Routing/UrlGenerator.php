@@ -64,10 +64,10 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function base($referenceType = self::ABSOLUTE_PATH)
     {
-        $url = $this->getRequest()->getBasePath();
+        $url = $this->context->getBasePath();
 
         if ($referenceType === self::ABSOLUTE_URL) {
-            $url = $this->getRequest()->getSchemeAndHttpHost().$url;
+            $url = $this->context->getSchemeAndHttpHost().$url;
         }
 
         return $url;
@@ -81,17 +81,17 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function current($referenceType = self::ABSOLUTE_PATH)
     {
-        $url = $this->getRequest()->getBaseUrl();
+        $url = $this->context->getBaseUrl();
 
         if ($referenceType === self::ABSOLUTE_URL) {
-            $url = $this->getRequest()->getSchemeAndHttpHost().$url;
+            $url = $this->context->getSchemeAndHttpHost().$url;
         }
 
-        if ($qs = $this->getRequest()->getQueryString()) {
+        if ($qs = $this->context->getQueryString()) {
             $qs = '?'.$qs;
         }
 
-        return $url.$this->getRequest()->getPathInfo().$qs;
+        return $url.$this->context->getPathInfo().$qs;
     }
 
     /**
@@ -101,7 +101,7 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function previous()
     {
-        if ($referer = $this->getRequest()->headers->get('referer')) {
+        if ($referer = $this->context->getReferer()) {
             return $this->to($referer);
         }
 
@@ -130,13 +130,9 @@ class UrlGenerator extends BaseUrlGenerator
 
         }
 
-        if (0 === strpos($path, '@')) {
-            return $this->route($path, $parameters, $referenceType);
-        }
-
         if ($this->isAbsolutePath($path)) {
             $path = str_replace('\\', '/', $path);
-            $path = strpos($path, $base = $this->getBasePath()) === 0 ? substr($path, strlen($base)) : $path;
+            $path = strpos($path, $base = $this->context->getScriptPath()) === 0 ? substr($path, strlen($base)) : $path;
         }
 
         if ($query = http_build_query($parameters, '', '&')) {
@@ -213,36 +209,6 @@ class UrlGenerator extends BaseUrlGenerator
         }
 
         return $url;
-    }
-
-    /**
-     * Returns current request.
-     *
-     * @throws \RuntimeException
-     * @return Request
-     */
-    protected function getRequest()
-    {
-        if (null == $request = $this->router->getRequest()) {
-            throw new \RuntimeException('Accessed request outside of request scope.');
-        }
-
-        return $request;
-    }
-
-    /**
-     * Returns the script's base path.
-     *
-     * @return string
-     */
-    protected function getBasePath()
-    {
-        if (!$this->base) {
-            $this->base = $this->getRequest()->server->get('SCRIPT_FILENAME');
-            $this->base = str_replace('\\', '/', dirname(realpath($this->base)));
-        }
-
-        return $this->base;
     }
 
     /**

@@ -46,7 +46,7 @@ class ToolbarListener implements EventSubscriberInterface
     {
         $profiler = $this->profiler;
 
-        $this->router->get('_profiler/{token}', '@_profiler', function($token) use ($profiler) {
+        $this->router->get('_profiler/{token}', '_profiler', function($token) use ($profiler) {
 
             if (!$profile = $profiler->loadProfile($token)) {
                 return new Response;
@@ -108,7 +108,7 @@ class ToolbarListener implements EventSubscriberInterface
 
         $content  = $response->getContent();
         $token    = $response->headers->get('X-Debug-Token');
-        $route    = $this->url->to('@_profiler', compact('token'));
+        $route    = $this->url->route('_profiler', compact('token'));
         $url      = $this->url->to(__DIR__.'/../assets');
         $markup[] = "<div id=\"profiler\" data-url=\"$url\" data-route=\"$route\" style=\"display: none\"></div>";
         $markup[] = "<script src=\"$url/js/profiler.js\"></script>";
@@ -125,7 +125,7 @@ class ToolbarListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 1024),
+            KernelEvents::REQUEST => array('onKernelRequest', 128),
             KernelEvents::RESPONSE => array('onKernelResponse', -128)
         );
     }
