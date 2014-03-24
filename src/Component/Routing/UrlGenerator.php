@@ -204,7 +204,7 @@ class UrlGenerator extends BaseUrlGenerator
 
         $url = $event->getUrl();
 
-        if ($referenceType == 'base') {
+        if ($referenceType === self::RELATIVE_URL) {
             $url = ltrim(substr($url, strlen($this->context->getBaseUrl())), '/');
         }
 
