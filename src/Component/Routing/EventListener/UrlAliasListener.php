@@ -4,7 +4,6 @@ namespace Pagekit\Component\Routing\EventListener;
 
 use Pagekit\Component\Routing\Event\GenerateUrlEvent;
 use Pagekit\Component\Routing\UrlAliasManager;
-use Pagekit\System\Event\SystemInitEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

@@ -26,7 +26,7 @@ class UrlAliasManager
     /**
      * Get alias by source
      *
-     * @param string $source
+     * @param  string $source
      * @return string
      */
     public function alias($source)
@@ -37,7 +37,7 @@ class UrlAliasManager
     /**
      * Get source by alias
      *
-     * @param string $alias
+     * @param  string $alias
      * @return string
      */
     public function source($alias)
