@@ -67,10 +67,11 @@ class Router
      */
     public function __construct(EventDispatcherInterface $events, HttpKernelInterface $kernel, LoaderInterface $loader)
     {
-        $this->events = $events;
-        $this->kernel = $kernel;
-        $this->loader = $loader;
-        $this->routes = new RouteCollection;
+        $this->events  = $events;
+        $this->kernel  = $kernel;
+        $this->loader  = $loader;
+        $this->routes  = new RouteCollection;
+        $this->context = new RequestContext;
     }
 
     /**
@@ -120,12 +121,8 @@ class Router
      *
      * @return RequestContext
      */
-    public function getRequestContext()
+    public function getContext()
     {
-        if (!$this->context) {
-            $this->context = new RequestContext;
-        }
-
         return $this->context;
     }
 
@@ -137,7 +134,7 @@ class Router
     public function getUrlMatcher()
     {
         if (!$this->matcher) {
-            $this->matcher = new UrlMatcher($this->routes, $this->getRequestContext());
+            $this->matcher = new UrlMatcher($this->routes, $this->context);
         }
 
         return $this->matcher;
@@ -318,6 +315,7 @@ class Router
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         $this->request = $request;
+        $this->context->fromRequest($request);
 
         return $this->kernel->handle($request, $type, $catch);
     }

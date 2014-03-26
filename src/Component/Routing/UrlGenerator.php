@@ -49,7 +49,7 @@ class UrlGenerator extends BaseUrlGenerator
      */
     public function __construct(Router $router, ResourceLocator $locator, EventDispatcherInterface $events, LoggerInterface $logger = null)
     {
-        parent::__construct($router->getRoutes(), $router->getRequestContext(), $logger);
+        parent::__construct($router->getRoutes(), $router->getContext(), $logger);
 
         $this->router  = $router;
         $this->locator = $locator;
