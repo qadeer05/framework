@@ -30,7 +30,7 @@ class RememberMeServiceProvider implements ServiceProviderInterface, EventSubscr
         $app['events']->addSubscriber($this);
     }
 
-    public function onKernelRequest()
+    public function onKernelRequest($event, $name, $dispatcher)
     {
         try {
 
@@ -42,7 +42,7 @@ class RememberMeServiceProvider implements ServiceProviderInterface, EventSubscr
 
             $this->app['auth']->setUser($user);
 
-            $this->app['events']->dispatch(AuthEvents::LOGIN, new LoginEvent($user));
+            $dispatcher->dispatch(AuthEvents::LOGIN, new LoginEvent($user));
 
         } catch (\Exception $e) {}
     }
