@@ -9,7 +9,7 @@ class ActionEvent extends Event
     /**
      * @var string
      */
-    private $action;
+    protected $action;
 
     /**
      * @var array
