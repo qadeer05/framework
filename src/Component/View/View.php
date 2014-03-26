@@ -34,7 +34,7 @@ class View
     /**
      * @var string
      */
-    protected $prefix = 'action.';
+    protected $prefix = 'view.action.';
 
     /**
      * Constructor.
