@@ -29,7 +29,7 @@ class UrlAliasListener implements EventSubscriberInterface
      *
      * @param SystemInitEvent $event
      */
-    public function onBoot(SystemInitEvent $event)
+    public function onInit(SystemInitEvent $event)
     {
         $request = $event->getRequest();
 
@@ -56,7 +56,7 @@ class UrlAliasListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            'boot'         => 'onBoot',
+            'init'         => 'onInit',
             'url.generate' => 'onGenerateUrl'
         );
     }
