@@ -26,13 +26,15 @@ class EntityEvent extends Event
     /**
      * Constructor.
      *
-     * @param object $entity
+     * @param object        $entity
+     * @param Metadata      $metadata
+     * @param EntityManager $manager
      */
     public function __construct($entity, Metadata $metadata, EntityManager $manager)
     {
-        $this->entity = $entity;
+        $this->entity   = $entity;
         $this->metadata = $metadata;
-        $this->manager = $manager;
+        $this->manager  = $manager;
     }
 
     /**
