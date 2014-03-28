@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
 use Pagekit\Component\View\View;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -56,9 +57,11 @@ class ViewListener implements EventSubscriberInterface
     /**
      * Renders view layout.
      *
-     * @param GetResponseForControllerResultEvent  $event
+     * @param GetResponseForControllerResultEvent $event
+     * @param string                              $name
+     * @param EventDispatcherInterface            $dispatcher
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event)
+    public function onKernelView(GetResponseForControllerResultEvent $event, $name, EventDispatcherInterface $dispatcher)
     {
         $request = $event->getRequest();
         $result  = $event->getControllerResult();
@@ -73,7 +76,8 @@ class ViewListener implements EventSubscriberInterface
 
         if ($layout = $this->view->getLayout()) {
             $this->view->addAction('content', function (ActionEvent $e) use ($result) { $e->setContent((string) $result); });
-            $response = $this->view->render($layout);
+            $dispatcher->dispatch('view.layout', $e = new LayoutEvent($layout));
+            $response = $this->view->render($e->getLayout(), $e->getParameters());
         }
 
         if (isset($response)) {

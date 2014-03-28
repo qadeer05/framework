@@ -40,6 +40,7 @@ class View
      * Constructor.
      *
      * @param EventDispatcherInterface $events
+     * @param EngineInterface          $engine
      */
     public function __construct(EventDispatcherInterface $events, EngineInterface $engine = null)
     {
