@@ -44,31 +44,77 @@ class Message extends FlashBag
         $this->setName($name);
     }
 
+    /**
+     * Adds debug message
+     *
+     * @param string $message
+     */
     public function debug($message)
     {
         $this->add(self::DEBUG, $message);
     }
 
+    /**
+     * Adds info message
+     *
+     * @param string $message
+     */
     public function info($message)
     {
         $this->add(self::INFO, $message);
     }
 
+    /**
+     * Adds warning message
+     *
+     * @param string $message
+     */
     public function warning($message)
     {
         $this->add(self::WARNING, $message);
     }
 
+    /**
+     * Adds error message
+     *
+     * @param string $message
+     */
     public function error($message)
     {
         $this->add(self::ERROR, $message);
     }
 
+    /**
+     * Adds success message
+     *
+     * @param string $message
+     */
     public function success($message)
     {
         $this->add(self::SUCCESS, $message);
     }
 
+    /**
+     * Checks if messages exist
+     *
+     * @return bool
+     */
+    public function hasMessages()
+    {
+        foreach ($this->levels() as $level) {
+            if ($this->has($level)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets array of message levels
+     *
+     * @return array
+     */
     public static function levels()
     {
         return array(
