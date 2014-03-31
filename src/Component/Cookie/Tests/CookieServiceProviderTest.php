@@ -26,7 +26,7 @@ class CookieServiceProviderTest extends \PHPUnit_Framework_TestCase
 		$app = new Application;
 		$app['session'] = new Session(new MockArraySessionStorage);
 		$app['request'] = $this->request;
-		$app->set('config', $config);
+		$app['config'] = $config;
 		$app->boot();
 
 		return $app;

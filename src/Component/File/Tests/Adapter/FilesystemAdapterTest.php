@@ -253,7 +253,7 @@ class FilesystemAdapterTest extends \PHPUnit_Framework_TestCase
             array('c:\\..\\var\\..\\lib', 'c:/lib'),
             array('\\var\\lib', '/var/lib'),
             array('var/lib', 'var/lib'),
-            array('../var/lib', '../var/lib'),
+            array('../var/lib', 'var/lib'),
             array('', ''),
             array(null, '')
         );

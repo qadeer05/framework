@@ -19,7 +19,7 @@ class ReadOnlyStreamWrapperTest extends \PHPUnit_Framework_TestCase
 
         file_put_contents($this->workspace.'/testfile', 'foo');
 
-        stream_wrapper_register('foo', 'Pagekit\Component\File\ReadOnlyStreamWrapper');
+        stream_wrapper_register('foo', 'Pagekit\Component\File\StreamWrapper\ReadOnlyStreamWrapper');
     }
 
     public function tearDown()

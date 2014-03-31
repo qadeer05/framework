@@ -26,12 +26,12 @@ class CacheServiceProviderTest extends ServiceProviderTest
 	*/
 	public function testRegister($config)
 	{
-		$cacheConfig = array('cache.storage' => $config, 'cache.path' => './', 'cache.prefix' => 'prefix_');
-		$this->app->set('config', $this->getConfig($cacheConfig));
+		$cacheConfig = array('cache.default' => 'test', 'cache.caches.test' => array('storage' => $config, 'path' => './', 'cache.prefix' => 'prefix_'));
+		$this->app['config'] = $this->getConfig($cacheConfig);
 		$this->app->boot();
 
 		$provider = new CacheServiceProvider;
-		
+
 		if ($config == 'apc') {
 			if ( ! extension_loaded('apc') || false === @apc_cache_info()) {
 				$this->markTestSkipped('The ' . __CLASS__ .' requires the use of APC');

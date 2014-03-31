@@ -132,7 +132,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public function testRenameFailed()
     {
         try {
-            $this->filesystem->rename('folder1/fileunknown', 'folder1/fileunknown2');
+            $this->filesystem->rename($this->workspace.'/folder1/fileunknown', $this->workspace.'/folder1/fileunknown2');
         } catch (\Exception $e) {
             $this->assertEquals('rename('.$this->workspace.'/folder1/fileunknown,'.$this->workspace.'/folder1/fileunknown2): No such file or directory', $e->getMessage());
         }
@@ -155,7 +155,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public function testCopyFailed()
     {
         try {
-            $this->filesystem->copy('folder1/fileunknown', 'folder1/fileunknown2');
+            $this->filesystem->copy($this->workspace.'/folder1/fileunknown', $this->workspace.'/folder1/fileunknown2');
         } catch (\Exception $e) {
             $this->assertEquals('copy('.$this->workspace.'/folder1/fileunknown): failed to open stream: No such file or directory', $e->getMessage());
         }
@@ -221,7 +221,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         foreach ($files as $file) {
             touch($dir.DIRECTORY_SEPARATOR.$file);
         }
-        
+
         $this->filesystem->changeMode($dir, 0777, 0000, true);
         foreach ($files as $file) {
             $this->assertEquals(777, $this->getFilePermissions($dir.DIRECTORY_SEPARATOR.$file));

@@ -43,7 +43,7 @@ class DatabaseServiceProviderTest extends ServiceProviderTest
 
         $this->app['caches'] = array('phpfile' => new Cache(new ArrayCache));
 
-		$this->app->set('config', $this->getConfig($conf));
+		$this->app['config'] = $this->getConfig($conf);
 		$this->provider->register($this->app);
 
         $this->assertInstanceOf('Pagekit\Component\Database\Connection', $this->app['db']);

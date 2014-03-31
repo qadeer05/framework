@@ -32,7 +32,7 @@ class MailServiceProviderTest extends ServiceProviderTest
 	public function testMailServiceProvider($mailDriver)
 	{
 		$mailConfig = array('mail.driver' => $mailDriver);
-		$this->app->set('config', $this->getConfig($mailConfig));
+		$this->app['config'] = $this->getConfig($mailConfig);
 		$this->app->boot();
 
 		$this->provider->register($this->app);
