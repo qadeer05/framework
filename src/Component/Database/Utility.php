@@ -155,7 +155,7 @@ class Utility
     */
     public function dropConstraint(Constraint $constraint, $table)
     {
-        $this->manager->dropConstraint($constraint, $this->replacePrefix($tablle));
+        $this->manager->dropConstraint($constraint, $this->replacePrefix($table));
     }
 
     /**
