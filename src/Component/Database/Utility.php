@@ -2,6 +2,13 @@
 
 namespace Pagekit\Component\Database;
 
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Constraint;
+use Doctrine\DBAL\Schema\ForeignKeyConstraint;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+
 class Utility
 {
 	/**
@@ -10,7 +17,7 @@ class Utility
 	protected $connection;
 
     /**
-     * @var SchemaManager
+     * @var AbstractSchemaManager
      */
     protected $manager;
 
@@ -203,6 +210,7 @@ class Utility
      *
      * @param  string $method
      * @param  array  $args
+     * @throws \BadMethodCallException
      * @return mixed
      */
     public function __call($method, $args)
