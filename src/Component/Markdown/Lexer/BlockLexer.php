@@ -268,7 +268,7 @@ class BlockLexer
 
                 $this->tokens[] = array(
                     'type' => $this->options['sanitize'] ? 'paragraph' : 'html',
-                    'pre'  => ($cap[1] === 'pre' || $cap[1] === 'script' || $cap[1] === 'style'),
+                    'pre'  => isset($cap[1]) && ($cap[1] === 'pre' || $cap[1] === 'script' || $cap[1] === 'style'),
                     'text' => $cap[0]
                 );
 
