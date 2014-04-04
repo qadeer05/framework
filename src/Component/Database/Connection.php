@@ -12,7 +12,7 @@ class Connection
     /**
      * The database connection.
      *
-     * @var Connection
+     * @var \Doctrine\DBAL\Connection
      */
     protected $connection;
 

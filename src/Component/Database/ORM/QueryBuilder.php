@@ -172,7 +172,8 @@ class QueryBuilder
      * Proxy method call to query builder.
      *
      * @param  string $method
-     * @param  array  $args
+     * @param  array $args
+     * @throws \BadMethodCallException
      * @return mixed
      */
     public function __call($method, $args)

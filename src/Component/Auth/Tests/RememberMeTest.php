@@ -8,6 +8,9 @@ class RememberMeTest extends \PHPUnit_Framework_TestCase
 {
 	protected $key;
 	protected $username;
+    protected $cookie;
+    protected $provider;
+    protected $remember;
 
 	public function setUp()
 	{
