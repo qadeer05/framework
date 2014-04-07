@@ -642,6 +642,7 @@ class QueryBuilder
     /**
      * Execute the query as select, update or delete.
      *
+     * @param  string $type
      * @return mixed
      */
     protected function executeQuery($type = 'select')

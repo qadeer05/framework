@@ -2,6 +2,7 @@
 
 namespace Pagekit\Component\Database\Event;
 
+use Pagekit\Component\Database\Connection;
 use Pagekit\Component\Database\ORM\EntityManager;
 use Pagekit\Component\Database\ORM\Metadata;
 use Symfony\Component\EventDispatcher\Event;

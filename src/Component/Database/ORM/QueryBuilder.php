@@ -20,7 +20,7 @@ class QueryBuilder
     protected $metadata;
 
     /**
-     * @var QueryBuilder
+     * @var \Pagekit\Component\Database\Query\QueryBuilder
      */
     protected $query;
 
@@ -152,6 +152,7 @@ class QueryBuilder
     /**
      * Gets all nested relations of the query.
      *
+     * @param  string $relation
      * @return array
      */
     public function getNestedRelations($relation)
