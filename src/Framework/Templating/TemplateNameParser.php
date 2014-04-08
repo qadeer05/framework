@@ -5,7 +5,6 @@ namespace Pagekit\Framework\Templating;
 use Pagekit\Framework\Templating\Event\TemplateReferenceEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
-use Symfony\Component\Templating\TemplateReference;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
 class TemplateNameParser implements TemplateNameParserInterface
@@ -53,7 +52,7 @@ class TemplateNameParser implements TemplateNameParserInterface
             }
         }
 
-        $this->events->dispatch('parse.template.name', new TemplateReferenceEvent($template));
+        $this->events->dispatch('templating.reference', new TemplateReferenceEvent($template));
 
         return $template;
     }

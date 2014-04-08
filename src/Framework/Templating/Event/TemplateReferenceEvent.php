@@ -2,7 +2,7 @@
 
 namespace Pagekit\Framework\Templating\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Pagekit\Framework\Event\Event;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 
 class TemplateReferenceEvent extends Event

@@ -31,11 +31,21 @@ class RazrEngine implements EngineInterface
     }
 
     /**
+     * Gets the environment.
+     *
+     * @return Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function render($name, array $parameters = array())
     {
-        return $this->environment->render($name, $parameters);
+        return $this->load($name)->render($parameters);
     }
 
     /**
@@ -60,8 +70,6 @@ class RazrEngine implements EngineInterface
 
     /**
      * {@inheritdoc}
-     *
-     * It also supports Template as name parameter.
      */
     public function supports($name)
     {
@@ -74,9 +82,20 @@ class RazrEngine implements EngineInterface
         return 'razr' === $template->get('engine');
     }
 
-
-    public function getEnvironment()
+    /**
+     * Loads a template.
+     *
+     * @param  string $name
+     * @return Template
+     */
+    protected function load($name)
     {
-        return $this->environment;
+        if ($name instanceof Template) {
+            return $name;
+        }
+
+        $template = $this->parser->parse($name);
+
+        return $this->environment->loadTemplate($template->getPath());
     }
 }
