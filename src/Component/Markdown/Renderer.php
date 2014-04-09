@@ -31,15 +31,15 @@ class Renderer
         }
 
         if (!$lang) {
-            return '<pre><code>'.($escaped ? $code : htmlspecialchars($code, ENT_QUOTES))."\n</code></pre>";
+            return '<pre><code>'.($escaped ? $code : Markdown::escape($code, true))."\n</code></pre>";
         }
 
         return implode('', array(
             '<pre><code class="',
             $this->options['langPrefix'],
-            htmlspecialchars($lang, ENT_QUOTES),
+            Markdown::escape($lang, true),
             '">',
-            ($escaped ? $code :htmlspecialchars($code, ENT_QUOTES)),
+            ($escaped ? $code :Markdown::escape($code, true)),
             "\n</code></pre>\n"
         ));
     }

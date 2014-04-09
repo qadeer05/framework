@@ -56,4 +56,20 @@ class Markdown
     {
         return $this->parser->parse($this->lexer->lex($text));
     }
+
+    /**
+     * Convert special characters to HTML entities.
+     *
+     * @param  string  $text
+     * @param  boolean $encode
+     * @return string
+     */
+    public static function escape($text, $encode = false)
+    {
+
+        $text = preg_replace(!$encode ? '/&(?!#?\w+;)/':'/&/', '&amp;', $text);
+        $text = str_replace(array('<', '>', '"', '\''), array('&lt;', '&gt;', '&quot;', '&#39;'), $text);
+
+        return $text;
+    }
 }

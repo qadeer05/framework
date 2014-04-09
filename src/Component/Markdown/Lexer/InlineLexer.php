@@ -2,6 +2,8 @@
 
 namespace Pagekit\Component\Markdown\Lexer;
 
+use Pagekit\Component\Markdown\Markdown;
+
 /**
  * @copyright Copyright (c) Pagekit, http://pagekit.com
  * @copyright Copyright (c) 2011-2014, Christopher Jeffrey (https://github.com/chjj/)
@@ -59,7 +61,7 @@ class InlineLexer
                     $text = $cap[1][6] === ':' ? $this->mangle(substr($cap[1], 0, 7)) : $this->mangle($cap[1]);
                     $href = $this->mangle('mailto:').$text;
                 } else {
-                    $text = htmlspecialchars($cap[1], ENT_QUOTES);
+                    $text = Markdown::escape($cap[1]);
                     $href = $text;
                 }
 
@@ -72,7 +74,7 @@ class InlineLexer
             if (!$this->inLink && (preg_match($this->rules['url'], $src, $cap))) {
 
                 $src  = substr($src, strlen($cap[0]));
-                $text = htmlspecialchars($cap[1], ENT_QUOTES);
+                $text = Markdown::escape($cap[1]);
                 $href = $text;
                 $out .= $this->renderer->link($href, null, $text);
 
@@ -89,7 +91,7 @@ class InlineLexer
                 }
 
                 $src  = substr($src, strlen($cap[0]));
-                $out .= $this->options['sanitize'] ? htmlspecialchars($cap[0], ENT_QUOTES) : $cap[0];
+                $out .= $this->options['sanitize'] ? Markdown::escape($cap[0]) : $cap[0];
 
                 continue;
             }
@@ -152,7 +154,7 @@ class InlineLexer
             if (preg_match($this->rules['code'], $src, $cap)) {
 
                 $src  = substr($src, strlen($cap[0]));
-                $out .= $this->renderer->codespan(htmlspecialchars($cap[2], ENT_QUOTES));
+                $out .= $this->renderer->codespan(Markdown::escape($cap[2]));
 
                 continue;
             }
@@ -179,7 +181,7 @@ class InlineLexer
             if (preg_match($this->rules['text'], $src, $cap)) {
 
                 $src  = substr($src, strlen($cap[0]));
-                $out .= htmlspecialchars($this->smartypants($cap[0]), ENT_QUOTES);
+                $out .= Markdown::escape($this->smartypants($cap[0]));
 
                 continue;
             }
@@ -201,10 +203,10 @@ class InlineLexer
      */
     protected function outputLink($cap, $link)
     {
-        $href  = htmlspecialchars($link['href'], ENT_QUOTES);
-        $title = $link['title'] ? htmlspecialchars($link['title'], ENT_QUOTES) : null;
+        $href  = Markdown::escape($link['href']);
+        $title = $link['title'] ? Markdown::escape($link['title']) : null;
 
-        return $cap[0][0] !== '!' ? $this->renderer->link($href, $title, $this->output($cap[1])) : $this->renderer->image($href, $title, htmlspecialchars($cap[1], ENT_QUOTES));
+        return $cap[0][0] !== '!' ? $this->renderer->link($href, $title, $this->output($cap[1])) : $this->renderer->image($href, $title, Markdown::escape($cap[1]));
     }
 
     /**
