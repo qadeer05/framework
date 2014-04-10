@@ -62,10 +62,5 @@ interface RepositoryInterface extends \Countable
      */
     public function removePackage(PackageInterface $package);
 
-    /**
-     * Returns the number of packages in this repository.
-     *
-     * @return int
-     */
-    public function count();
+
 }
