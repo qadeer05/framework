@@ -8,7 +8,6 @@ use Pagekit\Component\Routing\Event\GenerateRouteEvent;
 use Pagekit\Component\Routing\Event\GenerateUrlEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 

@@ -2,7 +2,6 @@
 
 namespace Pagekit\Component\Database\ORM;
 
-use Pagekit\Component\Database\Event\EntityEvent;
 use Pagekit\Component\Database\Events;
 
 class EntityMap
@@ -36,7 +35,7 @@ class EntityMap
      * Gets the identifier of an entity.
      *
      * @param  object $entity
-     * @return array
+     * @return mixed
      */
     public function getIdentifier($entity)
     {
@@ -129,7 +128,7 @@ class EntityMap
             $this->entities[$class][$id] = $entity;
         }
 
-        $this->manager->dispatchEvent(Events::postLoad, new EntityEvent($entity, $metadata, $this->manager));
+        $this->manager->dispatchEvent(Events::postLoad, $entity, $metadata);
 
         return $entity;
     }

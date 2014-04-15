@@ -33,15 +33,28 @@ class EntityManager
     protected $entities;
 
     /**
+     * @var string
+     */
+    protected $eventClass;
+
+    /**
      * Creates a new Manager instance
      *
-     * @param Connection      $connection
-     * @param MetadataManager $metadata
+     * @param  Connection      $connection
+     * @param  MetadataManager $metadata
+     * @param  string          $eventClass
+     * @throws \RuntimeException
      */
-    public function __construct($connection, MetadataManager $metadata)
+    public function __construct($connection, MetadataManager $metadata, $eventClass = 'Pagekit\Component\Database\Event\EntityEvent')
     {
         $this->connection = $connection;
         $this->metadata   = $metadata;
+
+        if (!is_subclass_of($eventClass, 'Pagekit\Component\Database\Event\EntityEvent')) {
+            throw new \RuntimeException(sprintf('The Event Class %s is not a subclass of "Pagekit\Component\Database\Event\EntityEvent"', $eventClass));
+        }
+
+        $this->eventClass = $eventClass;
         $this->entities   = new EntityMap($this);
     }
 
@@ -196,34 +209,34 @@ class EntityManager
 
         $metadata->setValues($entity, $data);
 
-        $this->dispatchEvent(Events::preSave, $event = new EntityEvent($entity, $metadata, $this));
+        $this->dispatchEvent(Events::preSave, $entity, $metadata);
 
         switch ($this->getEntityState($entity, self::STATE_NEW)) {
 
             case self::STATE_NEW:
 
-                $this->dispatchEvent(Events::preCreate, $event);
+                $this->dispatchEvent(Events::preCreate, $entity, $metadata);
 
                 $this->connection->insert($metadata->getTable(), $metadata->getValues($entity, true, true));
                 $this->entities->add($entity, $id = $this->connection->lastInsertId());
 
                 $metadata->setValue($entity, $identifier, $id, true);
 
-                $this->dispatchEvent(Events::postCreate, $event);
+                $this->dispatchEvent(Events::postCreate, $entity, $metadata);
 
                 break;
 
             case self::STATE_MANAGED:
 
-                $this->dispatchEvent(Events::preUpdate, $event);
+                $this->dispatchEvent(Events::preUpdate, $entity, $metadata);
 
                 $values = $metadata->getValues($entity, true, true);
                 $this->connection->update($metadata->getTable(), $values, array($identifier => $values[$identifier]));
 
-                $this->dispatchEvent(Events::postUpdate, $event);
+                $this->dispatchEvent(Events::postUpdate, $entity, $metadata);
         }
 
-        $this->dispatchEvent(Events::postSave, $event);
+        $this->dispatchEvent(Events::postSave, $entity, $metadata);
     }
 
     /**
@@ -241,7 +254,7 @@ class EntityManager
 
             case self::STATE_MANAGED:
 
-                $this->dispatchEvent(Events::preDelete, $event = new EntityEvent($entity, $metadata, $this));
+                $this->dispatchEvent(Events::preDelete, $entity, $metadata);
 
                 if (!$value = $metadata->getValue($entity, $identifier, true)) {
                     throw new \InvalidArgumentException("Can't remove entity with empty identifier value.");
@@ -250,7 +263,7 @@ class EntityManager
                 $this->connection->delete($metadata->getTable(), array($identifier => $value));
                 $this->entities->remove($entity);
 
-                $this->dispatchEvent(Events::postDelete, $event);
+                $this->dispatchEvent(Events::postDelete, $entity, $metadata);
 
                 $metadata->setValue($entity, $identifier, null, true);
 
@@ -303,23 +316,19 @@ class EntityManager
     /**
      * Dispatches an event to all registered listeners.
      *
-     * @param  string $name
-     * @param  Event  $event
+     * @param  string   $name
+     * @param  mixed    $entity
+     * @param  Metadata $metadata
      * @return bool
      */
-    public function dispatchEvent($name, $event = null)
+    public function dispatchEvent($name, $entity, Metadata $metadata)
     {
-        $prefix = '';
+        $prefix = $metadata->getEventPrefix();
+        $event  = new $this->eventClass($entity, $metadata, $this);
 
-        if ($event instanceof EntityEvent) {
-
-            $metadata = $event->getMetadata();
-            $prefix   = $metadata->getEventPrefix();
-
-            if ($events = $metadata->getEvents() and isset($events[$name])) {
-                foreach ($events[$name] as $callback) {
-                    call_user_func_array(array($event->getEntity(), $callback), array($this));
-                }
+        if ($events = $metadata->getEvents() and isset($events[$name])) {
+            foreach ($events[$name] as $callback) {
+                call_user_func_array(array($entity, $callback), array($event));
             }
         }
 
