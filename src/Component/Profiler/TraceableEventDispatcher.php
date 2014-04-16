@@ -344,7 +344,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
                 'file'  => $file,
                 'line'  => $line,
                 'pretty' => $class.'::'.$listener[1],
-                'priority' => $this->priorities[$class.'::'.$listener[1]]
+                'priority' => isset($this->priorities[$class.'::'.$listener[1]]) ? $this->priorities[$class.'::'.$listener[1]] : 'n/a'
             );
         }
 
