@@ -16,7 +16,8 @@ class RequestContext extends BaseRequestContext
     {
         parent::fromRequest($request);
 
-        $this->setBasePath($request->getBasePath());
+        $this->setBasePath($path = $request->getBasePath());
+        $this->setBaseUrl($request->server->get('HTTP_MOD_REWRITE') == 'On' ? $path : "$path/index.php");
         $this->setScriptPath($request->server->get('SCRIPT_FILENAME'));
         $this->setReferer($request->headers->get('referer'));
         $this->setSchemeAndHttpHost($request->getSchemeAndHttpHost());
