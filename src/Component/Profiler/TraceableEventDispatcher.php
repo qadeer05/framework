@@ -322,7 +322,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
                 'file'  => $file,
                 'line'  => $line,
                 'pretty' => $listener,
-                'priority' => $this->priorities[$file.'::'.$line]
+                'priority' => isset($this->priorities[$file.'::'.$line]) ? $this->priorities[$file.'::'.$line] : 'n/a'
             );
         } elseif (is_array($listener) || (is_object($listener) && is_callable($listener))) {
             if (!is_array($listener)) {
