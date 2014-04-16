@@ -90,7 +90,7 @@ class AssetManager implements \IteratorAggregate
     }
 
     /**
-     * Registers a asset.
+     * Registers an asset.
      *
      * @param  string $name
      * @param  mixed  $asset
@@ -106,7 +106,7 @@ class AssetManager implements \IteratorAggregate
     }
 
     /**
-     * Unregisters a asset.
+     * Unregisters an asset.
      *
      * @param  string $name
      * @return self
