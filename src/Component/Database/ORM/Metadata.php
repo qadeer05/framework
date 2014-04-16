@@ -81,8 +81,9 @@ class Metadata
     /**
      * Constructor.
      *
-     * @param string $class
-     * @param array  $config
+     * @param MetadataManager $manager
+     * @param string          $class
+     * @param array           $config
      */
     public function __construct($manager, $class, array $config = array())
     {

@@ -5,6 +5,7 @@ namespace Pagekit\Component\Mail;
 use Swift_Attachment;
 use Swift_Image;
 use Swift_Message;
+use Swift_Mime_Attachment;
 
 class Message implements MessageInterface
 {
@@ -265,12 +266,12 @@ class Message implements MessageInterface
 	/**
 	 * Prepare and attach the given attachment.
 	 *
-	 * @param Swift_Attachment $attachment
-	 * @param string $mime
-     * @param string $name
+	 * @param  Swift_Mime_Attachment $attachment
+	 * @param  string                $mime
+     * @param  string                $name
 	 * @return Message
 	 */
-	protected function prepAttachment(Swift_Attachment $attachment, $mime = null, $name = null)
+	protected function prepAttachment(Swift_Mime_Attachment $attachment, $mime = null, $name = null)
 	{
 		if (null !== $mime) {
 			$attachment->setContentType($mime);

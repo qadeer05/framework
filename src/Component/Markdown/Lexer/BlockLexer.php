@@ -349,7 +349,7 @@ class BlockLexer
             }
 
             if ($src) {
-                throw new \Exception('Infinite loop on byte: ' + ord(substr($str, 0)));
+                throw new \Exception('Infinite loop on byte: ' + ord(substr($src, 0)));
             }
         }
 

@@ -2,6 +2,7 @@
 
 namespace Pagekit\Framework\Console;
 
+use Pagekit\Framework\Console\Event\ConsoleEvent;
 use Symfony\Component\Console\Application as BaseAppliction;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 
@@ -27,7 +28,7 @@ class Application extends BaseAppliction
         $this->pagekit = $pagekit;
 
         if (isset($pagekit['events'])) {
-            $pagekit['events']->dispatch('console.init', new Event\ConsoleEvent($this));
+            $pagekit['events']->dispatch('console.init', new ConsoleEvent($this));
         }
     }
 

@@ -169,9 +169,9 @@ class AssetManager implements \IteratorAggregate
     /**
      * Resolve asset dependencies.
      *
-     * @param Asset $asset
-     * @param array $resolved
-     * @param array $unresolved
+     * @param AssetInterface $asset
+     * @param array          $resolved
+     * @param array          $unresolved
      * @throws \RuntimeException
      */
     protected function resolveDependencies($asset, &$resolved, &$unresolved = array())

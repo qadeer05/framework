@@ -27,10 +27,8 @@ class LoaderListener implements EventSubscriberInterface
 
     /**
      * Writes routes cache on kernel terminate.
-     *
-     * @param PostResponseEvent $event
      */
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelTerminate()
     {
         if (($loader = $this->router->getLoader()) instanceof CachedLoader) {
             $loader->write();

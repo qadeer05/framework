@@ -2,6 +2,8 @@
 
 namespace Pagekit\Component\Routing\Loader;
 
+use Symfony\Component\Routing\RouteCollection;
+
 interface LoaderInterface
 {
     /**

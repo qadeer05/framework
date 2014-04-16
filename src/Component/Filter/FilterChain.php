@@ -12,7 +12,7 @@ class FilterChain implements \Countable, FilterInterface
     /**
      * Filter chain
      *
-     * @var PriorityQueue
+     * @var \SplPriorityQueue
      */
     protected $filters;
 
@@ -21,7 +21,7 @@ class FilterChain implements \Countable, FilterInterface
      */
     public function __construct()
     {
-        $this->filters = new \SplPriorityQueue();
+        $this->filters = new \SplPriorityQueue;
     }
 
     /**
@@ -73,7 +73,7 @@ class FilterChain implements \Countable, FilterInterface
     /**
      * Get all the filters.
      *
-     * @return PriorityQueue
+     * @return \SplPriorityQueue
      */
     public function getFilters()
     {

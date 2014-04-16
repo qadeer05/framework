@@ -23,7 +23,7 @@ class JsonLoader extends ArrayLoader
             $config = json_decode(file_get_contents($json), true);
         }
 
-        if (null === $config) {
+        if (!isset($config) || !is_array($config)) {
             throw new InvalidArgumentException('Unable to load json.');
         }
 
