@@ -42,24 +42,15 @@ class CachedLoader implements LoaderInterface
     protected $cacheDirty = false;
 
     /**
-     * Check controller modified time.
-     *
-     * @var bool
-     */
-    protected $check;
-
-    /**
      * Constructor.
      *
      * @param RouteLoader    $loader
      * @param CacheInterface $cache
-     * @param bool           $check
      */
-    public function __construct(RouteLoader $loader, CacheInterface $cache, $check = false)
+    public function __construct(RouteLoader $loader, CacheInterface $cache)
     {
         $this->loader = $loader;
         $this->cache  = $cache;
-        $this->check  = $check;
 
         if ($routes = $this->cache->fetch($this->cacheKey)) {
             $this->routes = $routes;
@@ -76,19 +67,16 @@ class CachedLoader implements LoaderInterface
             $controller = $reflection->getFileName();
         }
 
-        if ($this->check) {
+        $time = file_exists($controller) ? filemtime($controller) : 0;
 
-            $time = file_exists($controller) ? filemtime($controller) : 0;
-
-            if (isset($this->routes[$controller]) && $this->routes[$controller]['time'] != $time) {
-                unset($this->routes[$controller]);
-            }
+        if (isset($this->routes[$controller]) && $this->routes[$controller]['time'] != $time) {
+            unset($this->routes[$controller]);
         }
 
         if (!isset($this->routes[$controller])) {
 
             $routes = $this->loader->load($controller, $options);
-            $time = isset($time) ? $time : filemtime($controller);
+            $time   = isset($time) ? $time : filemtime($controller);
 
             $this->routes[$controller] = compact('routes', 'time');
             $this->cacheDirty = true;
