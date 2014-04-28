@@ -157,16 +157,18 @@ class UrlGenerator extends BaseUrlGenerator
 
         try {
 
-            if (strpos($path, '?') !== false) {
-                list($name, $query) = explode('?', $path);
-                parse_str($query, $params);
+            $parsed   = parse_url($path);
+            $name     = $parsed['path'];
+            $fragment = isset($parsed['fragment']) ? '#' . $parsed['fragment'] : '';
+
+            if (isset($parsed['query'])) {
+                parse_str($parsed['query'], $params);
                 $params = array_merge($params, $parameters);
             } else {
-                $name = $path;
                 $params = $parameters;
             }
 
-            $url = $this->generate($name, $params, $referenceType);
+            $url = $this->generate($name, $params, $referenceType) . $fragment;
 
         } catch (RouteNotFoundException $e) {
 
