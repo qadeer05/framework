@@ -2,6 +2,7 @@
 
 namespace Pagekit\Component\Routing;
 
+use Pagekit\Component\Routing\Exception\LoaderException;
 use Pagekit\Component\Routing\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -212,7 +213,11 @@ class Router
      */
     public function addController($controller, array $options = array())
     {
-        $this->routes->addCollection($this->loader->load($controller, $options));
+        try {
+
+            $this->routes->addCollection($this->loader->load($controller, $options));
+
+        } catch (LoaderException $e) {}
     }
 
     /**

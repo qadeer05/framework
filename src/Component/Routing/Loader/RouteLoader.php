@@ -2,6 +2,7 @@
 
 namespace Pagekit\Component\Routing\Loader;
 
+use Pagekit\Component\Routing\Exception\LoaderException;
 use Pagekit\Component\Routing\Controller\ControllerReaderInterface;
 
 class RouteLoader implements LoaderInterface
@@ -26,19 +27,15 @@ class RouteLoader implements LoaderInterface
      */
     public function load($controller, array $options = array())
     {
-        $class = null;
-
         if ('.php' == substr($controller, -4) && file_exists($controller)) {
-            $class = $this->findClass($controller);
-        } elseif (class_exists($controller)) {
-            $class = $controller;
+            $controller = $this->findClass($controller);
         }
 
-        if (empty($class)) {
-            throw new \InvalidArgumentException(sprintf('Controller class "%s" does not exist.', $controller));
+        if (!class_exists($controller)) {
+            throw new LoaderException(sprintf('Controller class "%s" does not exist.', $controller));
         }
 
-        return $this->reader->read(new \ReflectionClass($class), $options);
+        return $this->reader->read(new \ReflectionClass($controller), $options);
     }
 
     /**
