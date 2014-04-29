@@ -15,7 +15,7 @@
         "doctrine/dbal": "2.4.*",
         "guzzle/http": "3.*",
         "ircmaxell/password-compat": "1.0.*",
-        "pimple/pimple": "2.*",
+        "pimple/pimple": "~2.0",
         "swiftmailer/swiftmailer": "5.*",
         "symfony/console": "2.4.*",
         "symfony/finder": "2.4.*",
