@@ -137,7 +137,7 @@ class EntityManager
             return false;
         }
 
-        return (bool) $this->connection->fetchColumn('SELECT 1  FROM '.$metadata->getTable().' WHERE '.$identifier.'='.$this->connection->quote($metadata->getValue($entity, $identifier, true)));
+        return (bool) $this->connection->fetchColumn('SELECT 1 FROM '.$metadata->getTable().' WHERE '.$identifier.'='.$this->connection->quote($metadata->getValue($entity, $identifier, true)));
     }
 
     /**

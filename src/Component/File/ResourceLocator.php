@@ -64,7 +64,7 @@ class ResourceLocator
      * Find the first resource or all resource variants.
      *
      * @param  string $uri
-     * @param bool $first
+     * @param  bool $first
      * @throws InvalidArgumentException
      * @return array|string|false
      */
