@@ -7,6 +7,8 @@ use Pagekit\Component\Auth\Event\LoginEvent;
 use Pagekit\Component\Auth\Event\LogoutEvent;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
+use RandomLib\Factory;
+use SecurityLib\Strength;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -22,8 +24,13 @@ class AuthServiceProvider implements ServiceProviderInterface, EventSubscriberIn
             return new Auth($app['events'], $app['session']);
         };
 
-        $app['auth.encoder.native'] = function() {
+        $app['auth.password'] = function() {
             return new NativePasswordEncoder;
+        };
+
+        $app['auth.random'] = function() {
+            $factory = new Factory;
+            return $factory->getGenerator(new Strength(Strength::MEDIUM));
         };
     }
 

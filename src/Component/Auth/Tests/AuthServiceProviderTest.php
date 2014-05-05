@@ -22,7 +22,7 @@ class AuthServiceProviderTest extends ServiceProviderTest
 		$this->provider->register($this->app);
 
 		$this->assertInstanceOf('Pagekit\Component\Auth\Auth', $this->app['auth']);
-		$this->assertInstanceOf('Pagekit\Component\Auth\Encoder\NativePasswordEncoder', $this->app['auth.encoder.native']);
+		$this->assertInstanceOf('Pagekit\Component\Auth\Encoder\NativePasswordEncoder', $this->app['auth.password']);
 	}
 
 	public function testLogin()
