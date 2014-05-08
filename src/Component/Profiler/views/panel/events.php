@@ -9,11 +9,11 @@ function abbrClass($class)
 
 $displayListener = function($listener) {
     if ($listener['type'] == "Closure") {
-        return 'Closure ('.substr($listener['file'],strlen(dirname($_SERVER['SCRIPT_FILENAME'])) + 1).' Line '. $listener['line'].')';
+        return 'Closure ('.substr($listener['file'], strlen(dirname($_SERVER['SCRIPT_FILENAME'])) + 1).' Line '. $listener['line'].')';
     } elseif ($listener['type'] == "Function") {
         return ($link = getFileLink($listener['file'], $listener['line'])) ? "<a href=\"$link\">{$listener['function']}</a>" : $listener['function'];
     } elseif ($listener['type'] == "Method") {
-        return abbrClass($listener['class']).'::'.(($link = getFileLink($listener['file'], $listener['line'])) ? "<a href=\"$link\">{$listener['method']}</a>" : $listener['method']).' ('.substr($listener['class'],0,strpos($listener['class'],'\\')).') ';
+        return abbrClass($listener['class']).'::'.(($link = getFileLink($listener['file'], $listener['line'])) ? "<a href=\"$link\">{$listener['method']}</a>" : $listener['method']).' ('.strtok($listener['class'], '\\').') ';
     }
 }
 

@@ -465,14 +465,16 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
                 } catch (\LogicException $e) {}
                 // The children profiles have been updated by the previous 'kernel.response'
                 // event. Only the root profile need to be updated with the 'kernel.terminate'
-                // timing informations.
+                // timing information.
                 $this->updateProfiles($token, false);
                 break;
         }
 
-        foreach ($this->wrappedListeners[$this->id] as $wrapped) {
-            $this->dispatcher->removeListener($eventName, $wrapped);
-            $this->dispatcher->addListener($eventName, $this->wrappedListeners[$this->id][$wrapped]);
+        if (isset($this->wrappedListeners[$this->id])) {
+            foreach ($this->wrappedListeners[$this->id] as $wrapped) {
+                $this->dispatcher->removeListener($eventName, $wrapped);
+                $this->dispatcher->addListener($eventName, $this->wrappedListeners[$this->id][$wrapped]);
+            }
         }
 
         unset($this->wrappedListeners[$this->id]);
