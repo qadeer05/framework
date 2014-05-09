@@ -37,7 +37,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $loader = new CachedLoader($loader, $app['cache']);
             }
 
-            return new Router($app['events'], $app['kernel'], $loader);
+            return new Router($app['kernel'], $loader);
         };
 
         $app['kernel'] = function($app) {

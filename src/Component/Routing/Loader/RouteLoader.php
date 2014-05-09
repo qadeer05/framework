@@ -2,8 +2,8 @@
 
 namespace Pagekit\Component\Routing\Loader;
 
-use Pagekit\Component\Routing\Exception\LoaderException;
 use Pagekit\Component\Routing\Controller\ControllerReaderInterface;
+use Pagekit\Component\Routing\Exception\LoaderException;
 
 class RouteLoader implements LoaderInterface
 {

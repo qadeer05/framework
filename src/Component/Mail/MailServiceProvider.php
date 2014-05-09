@@ -88,7 +88,7 @@ class MailServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $app->finish(function () use ($app) {
+        $app->on('kernel.terminate', function () use ($app) {
             // To speed things up (by avoiding Swift Mailer initialization), flush
             // messages only if our mailer has been created (potentially used)
             if ($app['mailer.initialized']) {

@@ -46,14 +46,8 @@ class ProfilerServiceProvider implements ServiceProviderInterface
             return new Stopwatch;
         };
 
-        if (!$app->offsetExists('profiler.events')) {
-            $app['profiler.events'] = $app->protect(function($dispatcher, $stopwatch) {
-                return new TraceableEventDispatcher($dispatcher, $stopwatch);
-            });
-        }
-
         $app->extend('events', function($dispatcher, $app) {
-            return $app['profiler.events']($dispatcher, $app['profiler.stopwatch']);
+            return new TraceableEventDispatcher($dispatcher, $app['profiler.stopwatch']);
         });
     }
 

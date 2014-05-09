@@ -102,57 +102,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      */
     public function on($event, $callback, $priority = 0)
     {
-        $this['events']->on($event, $callback, $priority);
-    }
-
-    /**
-     * Dispatches an event to all registered listeners.
-     *
-     * @param string $name
-     * @param mixed  $event
-     */
-    public function trigger($name, $event = null)
-    {
-        return $this['events']->trigger($name, $event);
-    }
-
-    /**
-     * Registers a before filter.
-     *
-     * Before filters are run before any route has been matched.
-     *
-     * @param mixed $callback
-     * @param int   $priority
-     */
-    public function before($callback, $priority = 0)
-    {
-        $this['router']->before($callback, $priority);
-    }
-
-    /**
-     * Registers an after filter.
-     *
-     * After filters are run after the controller has been executed.
-     *
-     * @param mixed $callback
-     * @param int   $priority
-     */
-    public function after($callback, $priority = 0)
-    {
-        $this['router']->after($callback, $priority);
-    }
-
-    /**
-     * Registers a finish filter.
-     *
-     * Finish filters are run after the response has been sent.
-     *
-     * @param mixed $callback
-     * @param int   $priority
-     */
-    public function finish($callback, $priority = 0)
-    {
-        $this['router']->finish($callback, $priority);
+        $this['events']->addListener($event, $callback, $priority);
     }
 
     /**

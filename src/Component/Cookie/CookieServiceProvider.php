@@ -4,6 +4,7 @@ namespace Pagekit\Component\Cookie;
 
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class CookieServiceProvider implements ServiceProviderInterface
 {
@@ -23,10 +24,10 @@ class CookieServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $app->after(function($request, $response) use ($app) {
+        $app->on('kernel.response', function(FilterResponseEvent $event) use ($app) {
 			if (isset($app['cookie.init'])) {
                 foreach ($app['cookie']->getQueuedCookies() as $cookie) {
-                    $response->headers->setCookie($cookie);
+                    $event->getResponse()->headers->setCookie($cookie);
                 }
 			}
 		});

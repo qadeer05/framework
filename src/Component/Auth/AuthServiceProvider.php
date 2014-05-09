@@ -8,7 +8,6 @@ use Pagekit\Component\Auth\Event\LogoutEvent;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 use RandomLib\Factory;
-use SecurityLib\Strength;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
