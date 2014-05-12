@@ -14,9 +14,9 @@ use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 class UrlGenerator extends BaseUrlGenerator
 {
     /**
-     * Generates a base relative URL, e.g. "dir/file".
+     * Generates a relative path without the base path, e.g. "/dir/file".
      */
-    const RELATIVE_URL = 'base';
+    const BASE_PATH = 'base';
 
     /**
      * @var Router
@@ -206,8 +206,8 @@ class UrlGenerator extends BaseUrlGenerator
 
         $url = $event->getUrl();
 
-        if ($referenceType === self::RELATIVE_URL) {
-            $url = ltrim(substr($url, strlen($this->context->getBaseUrl())), '/');
+        if ($referenceType === self::BASE_PATH) {
+            $url = substr($url, strlen($this->context->getBaseUrl()));
         }
 
         return $url;

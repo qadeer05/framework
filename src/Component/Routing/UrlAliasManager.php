@@ -17,9 +17,6 @@ class UrlAliasManager
      */
     public function register($alias, $source)
     {
-        $alias  = '/'.trim($alias, '/');
-        $source = '/'.trim($source, '/');
-
         $this->aliases = array($alias => $source) + $this->aliases;
     }
 
