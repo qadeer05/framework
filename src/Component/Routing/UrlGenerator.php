@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 class UrlGenerator extends BaseUrlGenerator
 {
     /**
-     * Generates a relative path without the base path, e.g. "/dir/file".
+     * Generates a path relative to the executed script, e.g. "/dir/file".
      */
     const BASE_PATH = 'base';
 
