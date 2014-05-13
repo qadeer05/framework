@@ -184,7 +184,8 @@ class View
             $replace  = $dispatcher->dispatch($prefix.$action, new ActionEvent($action, $parameters))->getContent();
 
             $response->setContent(str_replace($placeholder, $replace, $response->getContent()));
-        });
+
+        }, 10);
 
         return $placeholder;
     }
