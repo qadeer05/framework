@@ -34,7 +34,7 @@ class BlockLexer
     public function lex($src)
     {
         $src = preg_replace(array('/\r\n|\r/m', '/\t/m'), array("\n", '    '), $src);
-        $src = str_replace(array('\u00a0', '\u2424'), array(' ', "\n"), $src);
+        $src = str_replace(array('\\u00a0', '\\u2424'), array(' ', "\n"), $src);
 
         $this->tokens = array();
         $this->tokens['links'] = array();
@@ -210,13 +210,14 @@ class BlockLexer
                     $space = strlen($item);
 
                     $item  = preg_replace('/^ *([*+-]|\d+\.) +/', '', $item);
+                    $space -= strlen($item);
 
                     // Outdent whatever the
                     // list item contains. Hacky.
                     if (strpos($item, "\n ")===false) {
-
-                        $space -= strlen($item);
                         $item = !$this->options['pedantic'] ? preg_replace('/^ {1,'.$space.'}/m', '', $item) : preg_replace('/^ {1,4}/m', '', $item);
+                    } else {
+                        $item = preg_replace('/^ {1,'.$space.'}/m', '', $item);
                     }
 
                     // Determine whether the next list item belongs here.
