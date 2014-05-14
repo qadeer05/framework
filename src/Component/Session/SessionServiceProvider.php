@@ -85,12 +85,12 @@ class SessionServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $app['events']->addListener(KernelEvents::REQUEST, array($this, 'onEarlyKernelRequest'), 128);
-
         if ($app['session.test']) {
-            $app['events']->addListener(KernelEvents::REQUEST, array($this, 'onKernelRequest'), 192);
-            $app['events']->addListener(KernelEvents::RESPONSE, array($this, 'onKernelResponse'), -128);
+            $app['events']->addListener(KernelEvents::REQUEST, array($this, 'onKernelRequest'), 100);
+            $app['events']->addListener(KernelEvents::RESPONSE, array($this, 'onKernelResponse'), -100);
         }
+
+        $app['events']->addListener(KernelEvents::REQUEST, array($this, 'onEarlyKernelRequest'), 100);
     }
 
     public function onEarlyKernelRequest(GetResponseEvent $event)

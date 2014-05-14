@@ -34,7 +34,7 @@ class RoutingServiceProvider extends BaseRoutingServiceProvider
                     $event->setResponse(new RedirectResponse(rtrim($event->getRequest()->getUriForPath($path), '/'), 301));
 				}
 
-	        }, 256);
+	        }, 200);
 
 		}
     }

@@ -6,7 +6,6 @@ use Pagekit\Component\Routing\Event\GenerateUrlEvent;
 use Pagekit\Component\Routing\UrlAliasManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 class UrlAliasListener implements EventSubscriberInterface
 {
@@ -57,8 +56,8 @@ class UrlAliasListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 48),
-            'url.generate'        => 'onGenerateUrl'
+            'kernel.request' => array('onKernelRequest', 40),
+            'url.generate'   => 'onGenerateUrl'
         );
     }
 }

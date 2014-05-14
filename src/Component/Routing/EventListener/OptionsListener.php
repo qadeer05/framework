@@ -46,7 +46,7 @@ class OptionsListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 31)
+            KernelEvents::REQUEST => array('onKernelRequest', 30)
         );
     }
 }
