@@ -17,6 +17,8 @@ class UrlAliasManager
      */
     public function register($alias, $source)
     {
+        $alias = preg_replace('/^[^\/]/', '/$0', $alias);
+
         $this->aliases = array($alias => $source) + $this->aliases;
     }
 
