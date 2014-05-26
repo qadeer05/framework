@@ -11,62 +11,51 @@ class CacheServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $app['caches'] = function($app) {
+        $supports = Cache::supports();
 
-            $caches = new \Pimple;
+        foreach ($app['config']['cache'] as $name => $config) {
+            $app[$name] = function() use ($config, $supports) {
 
-            $supports = Cache::supports();
+                if (!isset($config['storage'])) {
+                    throw new \RuntimeException('Cache storage missing.');
+                }
 
-            foreach ($app['config']['cache.caches'] as $name => $config) {
-                $caches[$name] = function() use ($config, $supports) {
+                if ($config['storage'] == 'auto' || !in_array($config['storage'], $supports)) {
+                    $config['storage'] = end($supports);
+                }
 
-                    if (!isset($config['storage'])) {
-                        throw new \RuntimeException('Cache storage missing.');
-                    }
+                switch ($config['storage']) {
 
-                    if ($config['storage'] == 'auto' || !in_array($config['storage'], $supports)) {
-                        $config['storage'] = end($supports);
-                    }
+                    case 'array':
+                        $storage = new ArrayCache;
+                        break;
 
-                    switch ($config['storage']) {
+                    case 'apc':
+                        $storage = new ApcCache;
+                        break;
 
-                        case 'array':
-                            $storage = new ArrayCache;
-                            break;
+                    case 'file':
+                        $storage = new FilesystemCache($config['path']);
+                        break;
 
-                        case 'apc':
-                            $storage = new ApcCache;
-                            break;
+                    case 'phpfile':
+                        $storage = new PhpFileCache($config['path']);
+                        break;
 
-                        case 'file':
-                            $storage = new FilesystemCache($config['path']);
-                            break;
+                    default:
+                        throw new \RuntimeException('Unknown cache storage.');
+                        break;
+                }
 
-                        case 'phpfile':
-                            $storage = new PhpFileCache($config['path']);
-                            break;
+                $cache = new Cache($storage);
 
-                        default:
-                            throw new \RuntimeException('Unknown cache storage.');
-                            break;
-                    }
+                if ($prefix = isset($config['prefix']) ? $config['prefix'] : false) {
+                    $cache->setNamespace($prefix);
+                }
 
-                    $cache = new Cache($storage);
-
-                    if ($prefix = isset($config['prefix']) ? $config['prefix'] : false) {
-                        $cache->setNamespace($prefix);
-                    }
-
-                    return $cache;
-                };
-            }
-
-            return $caches;
-        };
-
-        $app['cache'] = function($app) {
-            return $app['caches'][$app['config']['cache.default']];
-        };
+                return $cache;
+            };
+        }
     }
 
     public function boot(Application $app)

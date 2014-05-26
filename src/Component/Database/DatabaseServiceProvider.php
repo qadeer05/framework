@@ -56,7 +56,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
 
             $manager = new MetadataManager($app['db']);
             $manager->setLoader(new AnnotationLoader);
-            $manager->setCache($app['caches']['phpfile']);
+            $manager->setCache($app['cache.phpfile']);
 
             return $manager;
         };
