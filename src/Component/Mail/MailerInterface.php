@@ -5,27 +5,38 @@ namespace Pagekit\Component\Mail;
 interface MailerInterface
 {
     /**
-     * Creates and returns a message object
+     * Creates a new message instance.
      *
-     * @return MessageInterface
+     * @param  string $subject
+     * @param  string $body
+     * @param  mixed  $to
+     * @param  mixed  $from
+     * @return object
      */
-    public function create();
+    public function create($subject = null, $body = null, $to = null, $from = null);
 
     /**
-     * Send email based on message object
+     * Sends the given message.
      *
-     * @param mixed $message Message object
-     * @param array $errors An array of failures by-reference
-     * @return boolean
+     * @param  mixed $message
+     * @param  array $errors
+     * @return int
      */
     public function send($message, &$errors = array());
 
     /**
-     * Queues email based on message object
+     * Queues the given message and send it later.
      *
-     * @param mixed $message Message object
-     * @param array $errors An array of failures by-reference
-     * @return boolean
+     * @param  mixed $message
+     * @param  array $errors
+     * @return int
      */
     public function queue($message, &$errors = array());
+
+    /**
+     * Registers a plugin.
+     *
+     * @param object $plugin
+     */
+    public function registerPlugin($plugin);
 }

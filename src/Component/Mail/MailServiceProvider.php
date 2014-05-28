@@ -11,25 +11,14 @@ class MailServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $app['mailer.initialized'] = false;
-
         $app['mailer'] = function($app) {
+
             $app['mailer.initialized'] = true;
 
-            return new Mailer($app['swift.mailer'], $app['swift.spooltransport']);
+            return new Mailer($app['swift.transport'], $app['swift.spooltransport']);
         };
 
-        $app['swift.mailer'] = function($app) {
-            return Swift_Mailer::newInstance($app['swift.transport']);
-        };
-
-        $app['swift.spooltransport'] = function ($app) {
-            return new \Swift_SpoolTransport($app['swift.spool']);
-        };
-
-        $app['swift.spool'] = function () {
-            return new \Swift_MemorySpool;
-        };
+        $app['mailer.initialized'] = false;
 
         $app['swift.transport'] = function($app) {
 
@@ -84,13 +73,19 @@ class MailServiceProvider implements ServiceProviderInterface
         $app['swift.transport.eventdispatcher'] = function () {
             return new \Swift_Events_SimpleEventDispatcher;
         };
+
+        $app['swift.spool'] = function () {
+            return new \Swift_MemorySpool;
+        };
+
+        $app['swift.spooltransport'] = function ($app) {
+            return new \Swift_SpoolTransport($app['swift.spool']);
+        };
     }
 
     public function boot(Application $app)
     {
         $app->on('kernel.terminate', function () use ($app) {
-            // To speed things up (by avoiding Swift Mailer initialization), flush
-            // messages only if our mailer has been created (potentially used)
             if ($app['mailer.initialized']) {
                 $app['swift.spooltransport']->getSpool()->flushQueue($app['swift.transport']);
             }

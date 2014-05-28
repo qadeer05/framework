@@ -7,7 +7,7 @@ use Swift_Image;
 use Swift_Message;
 use Swift_Mime_Attachment;
 
-class Message implements MessageInterface
+class Message extends Swift_Message implements MessageInterface
 {
     /**
      * @var MailerInterface
@@ -15,220 +15,73 @@ class Message implements MessageInterface
     protected $mailer;
 
     /**
-     * @var Swift_Message
+     * {@inheritdoc}
      */
-    protected $message;
+    public function getMailer()
+    {
+        return $this->mailer;
+    }
 
     /**
-     * Create a new Message.
+     * {@inheritdoc}
+     */
+    public function setMailer(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function send(&$errors = null)
+    {
+        return $this->mailer->send($this, $errors);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function queue(&$errors = null)
+    {
+        return $this->mailer->queue($this, $errors);
+    }
+
+    /**
+     * Attaches a file to the message.
      *
-     * @param MailerInterface $mailer
-     * @param Swift_Message   $message
+     * @param  string $file
+     * @param  string $name
+     * @param  string $mime
+     * @return self
      */
-    public function __construct(MailerInterface $mailer, Swift_Message $message)
+    public function attachFile($file, $name = null, $mime = null)
     {
-        $this->mailer  = $mailer;
-        $this->message = $message;
+		return $this->prepareAttachment(Swift_Attachment::fromPath($file), $name, $mime);
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function generateId()
-    {
-        return $this->message->generateId();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function subject($subject)
-    {
-        $this->message->setSubject($subject);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubject()
-    {
-        return $this->message->getSubject();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function date($date)
-    {
-        $this->message->setDate($date);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDate()
-    {
-        return $this->message->getDate();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBody()
-    {
-        return $this->message->getBody();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function body($body, $contentType = null, $charset = null)
-    {
-        $this->message->setBody((string) $body, $contentType, $charset);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function returnPath($address)
-    {
-        $this->message->setReturnPath($address);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReturnPath()
-    {
-        return $this->message->getReturnPath();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function sender($address, $name = null)
-    {
-        $this->message->setSender($address, $name);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSender()
-    {
-        return $this->message->getSender();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function from($addresses, $name = null)
-    {
-        $this->message->setFrom($addresses, $name);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFrom()
-    {
-        return $this->message->getFrom();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function replyTo($addresses, $name = null)
-    {
-        $this->message->setReplyTo($addresses, $name);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReplyTo()
-    {
-        return $this->message->getReplyTo();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function to($addresses, $name = null)
-    {
-        $this->message->setTo($addresses, $name);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTo()
-    {
-        return $this->message->getTo();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function cc($addresses, $name = null)
-    {
-        $this->message->setCc($addresses, $name);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCc()
-    {
-        return $this->message->getCc();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function bcc($addresses, $name = null)
-    {
-        $this->message->setBcc($addresses, $name);
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBcc()
-    {
-        return $this->message->getBcc();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attach($file, $name = null, $mime = null)
-    {
-		return $this->prepAttachment(Swift_Attachment::fromPath($file), $name, $mime);
-    }
-
-    /**
-     * {@inheritdoc}
+     * Attaches in-memory data as an attachment.
+     *
+     * @param  string $data
+     * @param  string $name
+     * @param  string $mime
+     * @return self
      */
     public function attachData($data, $name, $mime = null)
     {
-        return $this->prepAttachment(Swift_Attachment::newInstance($data, $name), null, $mime);
+        return $this->prepareAttachment(Swift_Attachment::newInstance($data, $name), null, $mime);
     }
 
     /**
-     * {@inheritdoc}
+     * Embeds a file in the message and get the CID.
+     *
+     * @param  string $file
+     * @param  string $cid
+     * @return string
      */
-    public function embed($file, $cid = null)
+    public function embedFile($file, $cid = null)
     {
         $attachment = Swift_Image::fromPath($file);
 
@@ -240,27 +93,16 @@ class Message implements MessageInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Embeds in-memory data in the message and get the CID.
+     *
+     * @param  string $data
+     * @param  string $name
+     * @param  string $contentType
+     * @return string
      */
     public function embedData($data, $name, $contentType = null)
     {
 		return $this->message->embed(Swift_Image::newInstance($data, $name, $contentType));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function queue(&$errors = array())
-    {
-        return $this->mailer->queue($this->message, $errors);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function send(&$errors = array())
-    {
-        return $this->mailer->send($this->message, $errors);
     }
 
 	/**
@@ -269,9 +111,9 @@ class Message implements MessageInterface
 	 * @param  Swift_Mime_Attachment $attachment
 	 * @param  string                $mime
      * @param  string                $name
-	 * @return Message
+	 * @return self
 	 */
-	protected function prepAttachment(Swift_Mime_Attachment $attachment, $mime = null, $name = null)
+	protected function prepareAttachment(Swift_Mime_Attachment $attachment, $mime = null, $name = null)
 	{
 		if (null !== $mime) {
 			$attachment->setContentType($mime);

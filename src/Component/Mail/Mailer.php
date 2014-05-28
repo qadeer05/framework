@@ -2,20 +2,20 @@
 
 namespace Pagekit\Component\Mail;
 
-use Swift_Mailer;
-use Swift_Message;
 use Swift_SmtpTransport;
 use Swift_SpoolTransport;
+use Swift_Transport;
 use Swift_TransportException;
+use Swift_RfcComplianceException;
 
 class Mailer implements MailerInterface
 {
     /**
-     * The Swift Mailer instance.
+     * The Swift Transport instance.
      *
-     * @var Swift_Mailer
+     * @var Swift_Transport
      */
-    protected $swift;
+    protected $trans;
 
     /**
      * The Swift Spool Transport instance.
@@ -27,37 +27,71 @@ class Mailer implements MailerInterface
     /**
      * Create a new Mailer instance.
      *
-     * @param Swift_Mailer $swift
+     * @param Swift_Mailer         $trans
      * @param Swift_SpoolTransport $queue
      */
-    public function __construct(Swift_Mailer $swift, Swift_SpoolTransport $queue)
+    public function __construct(Swift_Transport $trans, Swift_SpoolTransport $queue)
     {
-        $this->swift = $swift;
+        $this->trans = $trans;
         $this->queue = $queue;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function create($subject = null, $body = null, $to = null, $from = null)
     {
-        return new Message($this, new Swift_Message);
+        $message = new Message($subject, $body);
+
+        if ($to !== null) {
+            $message->setTo($to);
+        }
+
+        if ($from !== null) {
+            $message->setFrom($from);
+        }
+
+        return $message->setMailer($this);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function send($message, &$errors = array())
+    public function send($message, &$errors = null)
     {
-        return $this->swift->send($message, $errors);
+        $errors = (array) $errors;
+
+        if (!$this->trans->isStarted()) {
+            $this->trans->start();
+        }
+
+        $sent = 0;
+
+        try {
+            $sent = $this->trans->send($message, $errors);
+        } catch (Swift_RfcComplianceException $e) {
+            foreach ($message->getTo() as $address => $name) {
+                $errors[] = $address;
+            }
+        }
+
+        return $sent;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function queue($message, &$errors = array())
+    public function queue($message, &$errors = null)
     {
         return $this->queue->send($message, $errors);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function registerPlugin($plugin)
+    {
+        $this->trans->registerPlugin($plugin);
     }
 
     /**
@@ -70,7 +104,7 @@ class Mailer implements MailerInterface
      * @param  string  $encryption
      * @throws Swift_TransportException
      */
-    public static function testSmtpConnection($host = "localhost", $port = 25, $username = "", $password = "", $encryption = null)
+    public function testSmtpConnection($host = 'localhost', $port = 25, $username = '', $password = '', $encryption = null)
     {
         Swift_SmtpTransport::newInstance($host, $port)
             ->setUsername($username)
