@@ -73,7 +73,7 @@ class CsrfListener implements EventSubscriberInterface
     {
         return array(
             'route.configure' => 'onConfigureRoute',
-            'kernel.request'  => array('onKernelRequest', 10)
+            'kernel.request'  => array('onKernelRequest', -10)
         );
     }
 }
