@@ -27,7 +27,7 @@ class Mailer implements MailerInterface
     /**
      * Create a new Mailer instance.
      *
-     * @param Swift_Mailer         $trans
+     * @param Swift_Transport      $trans
      * @param Swift_SpoolTransport $queue
      */
     public function __construct(Swift_Transport $trans, Swift_SpoolTransport $queue)
