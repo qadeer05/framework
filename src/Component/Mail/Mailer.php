@@ -2,11 +2,11 @@
 
 namespace Pagekit\Component\Mail;
 
+use Swift_RfcComplianceException;
 use Swift_SmtpTransport;
 use Swift_SpoolTransport;
 use Swift_Transport;
 use Swift_TransportException;
-use Swift_RfcComplianceException;
 
 class Mailer implements MailerInterface
 {

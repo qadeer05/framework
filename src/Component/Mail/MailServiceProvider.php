@@ -4,7 +4,6 @@ namespace Pagekit\Component\Mail;
 
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
-use Swift_Mailer;
 use Swift_MailTransport;
 
 class MailServiceProvider implements ServiceProviderInterface

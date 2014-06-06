@@ -100,7 +100,7 @@ $dumpEvents = function($events) {
             return dict.hasOwnProperty(key)
                 ? dict[key]
                 : null;
-            }
+            };
 
         this.set = function(key, value) {
             dict[key] = value;
