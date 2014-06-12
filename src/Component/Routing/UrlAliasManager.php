@@ -82,6 +82,8 @@ class UrlAliasManager implements RequestMatcherInterface, UrlGeneratorInterface
      */
     public function add($path, $source, $inbound = null, $outbound = null)
     {
+        $path = preg_replace('/^[^\/]/', '/$0', $path);
+
         $this->routes->add($source, new Route($path, array(), array(), array('_inbound' => $inbound, '_outbound' => $outbound)));
     }
 
