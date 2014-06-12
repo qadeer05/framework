@@ -3,7 +3,7 @@
 namespace Pagekit\Component\Profiler\EventListener;
 
 use Pagekit\Component\Routing\Router;
-use Pagekit\Component\Routing\UrlGenerator;
+use Pagekit\Component\Routing\UrlProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -19,7 +19,7 @@ class ToolbarListener implements EventSubscriberInterface
     protected $profiler;
 
     /**
-     * @var UrlGenerator
+     * @var UrlProvider
      */
     protected $url;
 
@@ -31,11 +31,11 @@ class ToolbarListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param Profiler     $profiler
-     * @param UrlGenerator $url
-     * @param Router       $router
+     * @param Profiler    $profiler
+     * @param UrlProvider $url
+     * @param Router      $router
      */
-    public function __construct(Profiler $profiler, UrlGenerator $url, Router $router)
+    public function __construct(Profiler $profiler, UrlProvider $url, Router $router)
     {
         $this->profiler = $profiler;
         $this->url      = $url;

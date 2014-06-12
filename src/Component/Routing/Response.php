@@ -11,16 +11,16 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class Response
 {
     /**
-     * @var UrlGenerator
+     * @var UrlProvider
      */
     protected $url;
 
     /**
      * Constructor.
      *
-     * @param UrlGenerator $url
+     * @param UrlProvider $url
      */
-    public function __construct(UrlGenerator $url)
+    public function __construct(UrlProvider $url)
     {
         $this->url = $url;
     }
@@ -68,9 +68,9 @@ class Response
 	/**
 	 * Returns a streamed response.
 	 *
-	 * @param  Closure $callback
-	 * @param  int     $status
-	 * @param  array   $headers
+	 * @param  callable $callback
+	 * @param  int      $status
+	 * @param  array    $headers
 	 * @return StreamedResponse
 	 */
 	public function stream($callback, $status = 200, $headers = array())

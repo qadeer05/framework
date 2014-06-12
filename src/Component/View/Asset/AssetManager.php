@@ -2,12 +2,12 @@
 
 namespace Pagekit\Component\View\Asset;
 
-use Pagekit\Component\Routing\UrlGenerator;
+use Pagekit\Component\Routing\UrlProvider;
 
 class AssetManager implements \IteratorAggregate
 {
     /**
-     * @var UrlGenerator
+     * @var UrlProvider
      */
     protected $url;
 
@@ -29,10 +29,10 @@ class AssetManager implements \IteratorAggregate
     /**
      * Constructor.
      *
-     * @param UrlGenerator $url
+     * @param UrlProvider $url
      * @param string       $version
      */
-    public function __construct(UrlGenerator $url, $version = null)
+    public function __construct(UrlProvider $url, $version = null)
     {
         $this->url = $url;
         $this->version = $version;

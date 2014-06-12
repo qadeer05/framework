@@ -57,7 +57,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $app['url'] = function($app) {
-            return new UrlGenerator($app['router'], $app['locator'], $app['events']);
+            return new UrlProvider($app['router'], $app['locator'], $app['events']);
         };
     }
 
@@ -66,7 +66,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
      */
     public function boot(Application $app)
     {
-        $app['events']->addSubscriber(new UrlAliasListener($app['router']->getUrlAliases()));
+        $app['events']->addSubscriber(new UrlAliasListener($app['router']));
         $app['events']->addSubscriber(new ParamFetcherListener(new ParamReader, new ParamFetcher(new FilterManager)));
         $app['events']->addSubscriber(new RouterListener($app['router']->getUrlMatcher(), null, null, $app['request_stack']));
         $app['events']->addSubscriber(new LoaderListener($app['router']));

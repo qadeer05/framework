@@ -2,45 +2,131 @@
 
 namespace Pagekit\Component\Routing;
 
-class UrlAliasManager
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext as Context;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+class UrlAliasManager implements RequestMatcherInterface, UrlGeneratorInterface
 {
     /**
-     * @var array
+     * @var Context
      */
-    protected $aliases = array();
+    protected $context;
 
     /**
-     * Register alias
-     *
-     * @param string $alias
-     * @param string $source
+     * @var RouteCollection
      */
-    public function register($alias, $source)
-    {
-        $alias = preg_replace('/^[^\/]/', '/$0', $alias);
+    protected $routes;
 
-        $this->aliases = array($alias => $source) + $this->aliases;
+    /**
+     * @var UrlMatcher
+     */
+    protected $matcher;
+
+    /**
+     * @var UrlGenerator
+     */
+    protected $generator;
+
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     */
+    public function __construct(Context $context)
+    {
+        $this->context   = $context;
+        $this->routes    = new RouteCollection;
+        $this->matcher   = new UrlMatcher($this->routes, $context);
+        $this->generator = new UrlGenerator($this->routes, $context);
     }
 
     /**
-     * Get alias by source
+     * {@inheritdoc}
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContext(Context $context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     * Gets an alias.
      *
      * @param  string $source
-     * @return string
+     * @return Route
      */
-    public function alias($source)
+    public function get($source)
     {
-        return array_search($source, $this->aliases);
+        return $this->routes->get($source);
     }
 
     /**
-     * Get source by alias
+     * Adds an alias.
      *
-     * @param  string $alias
-     * @return string
+     * @param string   $path
+     * @param string   $source
+     * @param callable $inbound
+     * @param callable $outbound
      */
-    public function source($alias)
+    public function add($path, $source, $inbound = null, $outbound = null)
     {
-        return isset($this->aliases[$alias]) ? $this->aliases[$alias] : null;
+        $this->routes->add($source, new Route($path, array(), array(), array('_inbound' => $inbound, '_outbound' => $outbound)));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    {
+        try {
+
+            if (!$route = $this->routes->get($name)) {
+                return false;
+            }
+
+            if ($outbound = $route->getOption(('_outbound'))) {
+                $parameters = call_user_func($outbound, $parameters);
+            }
+
+            return $this->generator->generate($name, $parameters, $referenceType);
+
+        } catch (\Exception $e) {}
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function matchRequest(Request $request)
+    {
+        if ($parameters = $this->matcher->matchRequest($request)) {
+
+            if ($route = $this->routes->get($parameters['_route'])) {
+                if ($inbound = $route->getOption('_inbound')) {
+                    $parameters = call_user_func($inbound, $parameters);;
+                }
+            }
+
+            if ($query = substr(strstr($parameters['_route'], '?'), 1)) {
+                $parameters['_route'] = strstr($parameters['_route'], '?', true);
+                parse_str($query, $params);
+                $parameters = array_merge($parameters, $params);
+            }
+
+            return $parameters;
+        }
     }
 }

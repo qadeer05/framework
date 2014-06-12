@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -137,7 +138,7 @@ class Router
     public function getUrlAliases()
     {
         if (!$this->aliases) {
-            $this->aliases = new UrlAliasManager;
+            $this->aliases = new UrlAliasManager($this->getContext());
         }
 
         return $this->aliases;

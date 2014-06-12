@@ -2,13 +2,19 @@
 
 namespace Pagekit\Component\Routing\EventListener;
 
-use Pagekit\Component\Routing\Event\GenerateUrlEvent;
+use Pagekit\Component\Routing\Event\GenerateRouteEvent;
+use Pagekit\Component\Routing\Router;
 use Pagekit\Component\Routing\UrlAliasManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UrlAliasListener implements EventSubscriberInterface
 {
+    /**
+     * @var Router
+     */
+    protected $router;
+
     /**
      * @var UrlAliasManager
      */
@@ -17,11 +23,12 @@ class UrlAliasListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param UrlAliasManager $aliases
+     * @param Router $router
      */
-    public function __construct(UrlAliasManager $aliases)
+    public function __construct(Router $router)
     {
-        $this->aliases = $aliases;
+        $this->router  = $router;
+        $this->aliases = $router->getUrlAliases();
     }
 
     /**
@@ -33,20 +40,36 @@ class UrlAliasListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if ($source = $this->aliases->source($request->getPathInfo())) {
-            $request->attributes->set('_system_path', $source);
-        }
+        try {
+
+            if ($params = $this->aliases->matchRequest($request)) {
+                if (isset($params['_route'])) {
+                    if ($route = $this->router->getRoute($params['_route'])) {
+
+                        $params['_controller'] = $route->getDefault('_controller');
+
+                        $request->attributes->add($params);
+                        unset($params['_route']);
+                        unset($params['_controller']);
+                        $request->attributes->set('_route_params', $params);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {}
     }
 
     /**
      * Handles alias mapping.
      *
-     * @param GenerateUrlEvent $event
+     * @param GenerateRouteEvent $event
      */
-    public function onGenerateUrl(GenerateUrlEvent $event)
+    public function onGenerateRoute(GenerateRouteEvent $event)
     {
-        if ($path = $this->aliases->alias($event->getPathInfo())) {
-            $event->setPathInfo($path);
+        if ($url = $this->aliases->generate($event->getInternal(), array_diff_key($event->getParameters(), $event->getPathParameters()), $event->getReferenceType())
+            or $url = $this->aliases->generate($event->getPath(), $event->getParameters(), $event->getReferenceType())) {
+
+            $event->setUrl($url);
         }
     }
 
@@ -57,7 +80,7 @@ class UrlAliasListener implements EventSubscriberInterface
     {
         return array(
             'kernel.request' => array('onKernelRequest', 40),
-            'url.generate'   => 'onGenerateUrl'
+            'route.generate' => 'onGenerateRoute'
         );
     }
 }
