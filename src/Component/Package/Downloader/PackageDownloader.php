@@ -2,13 +2,13 @@
 
 namespace Pagekit\Component\Package\Downloader;
 
-use Guzzle\Common\Exception\GuzzleException;
-use Guzzle\Http\Exception\BadResponseException;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Exception\BadResponseException;
 use Pagekit\Component\File\Archive\Zip;
 use Pagekit\Component\File\Filesystem;
 use Pagekit\Component\File\FilesystemInterface;
-use Pagekit\Component\Http\Client;
-use Pagekit\Component\Http\ClientInterface;
 use Pagekit\Component\Package\Exception\ArchiveExtractionException;
 use Pagekit\Component\Package\Exception\ChecksumVerificationException;
 use Pagekit\Component\Package\Exception\DownloadErrorException;
@@ -66,7 +66,7 @@ class PackageDownloader implements DownloaderInterface
 
         try {
 
-            $data = $this->client->get($url)->send()->getBody();
+            $data = $this->client->get($url)->getBody();
 
             if ($shasum && sha1($data) !== $shasum) {
                 throw new ChecksumVerificationException("The file checksum verification failed");
@@ -86,7 +86,7 @@ class PackageDownloader implements DownloaderInterface
 
             $this->files->delete($path);
 
-            if ($e instanceof GuzzleException) {
+            if ($e instanceof TransferException) {
 
                 if ($e instanceof BadResponseException) {
                     throw new UnauthorizedDownloadException("Unauthorized download ($url)");

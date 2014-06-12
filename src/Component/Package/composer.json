@@ -5,9 +5,9 @@
     "homepage": "http://pagekit.com",
     "license": "MIT",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4.0",
         "pagekit/file": "1.*",
-        "pagekit/http": "1.*"
+        "guzzlehttp/guzzle": "4.*"
     },
     "autoload": {
         "psr-0": { "Pagekit\\Component\\Package\\": "" }
