@@ -26,9 +26,7 @@ class DefaultCsrfProvider implements CsrfProviderInterface
      */
     public function generate()
     {
-        $algo = in_array('sha512', hash_algos()) ? 'sha512' : 'sha1';
-
-        return hash($algo, $this->getSessionId().$this->getSessionToken());
+        return sha1($this->getSessionId().$this->getSessionToken());
     }
 
     /**
