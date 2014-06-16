@@ -73,7 +73,7 @@ class Response
 	 * @param  array    $headers
 	 * @return StreamedResponse
 	 */
-	public function stream($callback, $status = 200, $headers = array())
+	public function stream(callable $callback, $status = 200, $headers = array())
 	{
 		return new StreamedResponse($callback, $status, $headers);
 	}

@@ -39,7 +39,7 @@ interface RepositoryInterface extends \Countable
      * @param  string   $class
      * @return bool
      */
-    public function filterPackages($callback, $class = 'Pagekit\Component\Package\Package');
+    public function filterPackages(callable $callback, $class = 'Pagekit\Component\Package\Package');
 
     /**
      * Returns list of registered packages.

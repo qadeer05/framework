@@ -80,7 +80,7 @@ class UrlAliasManager implements RequestMatcherInterface, UrlGeneratorInterface
      * @param callable $inbound
      * @param callable $outbound
      */
-    public function add($path, $source, $inbound = null, $outbound = null)
+    public function add($path, $source, callable $inbound = null, callable $outbound = null)
     {
         $path = preg_replace('/^[^\/]/', '/$0', $path);
 

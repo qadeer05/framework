@@ -66,8 +66,10 @@ class UrlAliasListener implements EventSubscriberInterface
      */
     public function onGenerateRoute(GenerateRouteEvent $event)
     {
-        if ($url = $this->aliases->generate($event->getInternal(), array_diff_key($event->getParameters(), $event->getPathParameters()), $event->getReferenceType())
-            or $url = $this->aliases->generate($event->getPath(), $event->getParameters(), $event->getReferenceType())) {
+        $link = $event->getLink();
+
+        if ($url = $this->aliases->generate($link->getLink(), array_diff_key($link->getParameters(), $link->getPathParameters()), $event->getReferenceType())
+            or $url = $this->aliases->generate($link->getName(), $link->getParameters(), $event->getReferenceType())) {
 
             $event->setUrl($url);
         }

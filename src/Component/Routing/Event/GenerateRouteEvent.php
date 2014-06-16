@@ -2,45 +2,25 @@
 
 namespace Pagekit\Component\Routing\Event;
 
+use Pagekit\Component\Routing\Link;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 class GenerateRouteEvent extends Event
 {
     protected $url;
-    protected $route;
-    protected $path;
-    protected $parameters;
+    protected $link;
     protected $referenceType;
-    protected $fragment;
-    protected $internal;
 
     /**
      * Constructor.
      *
-     * @param RouteCollection $routes
-     * @param string          $path
-     * @param array           $parameters
-     * @param mixed           $referenceType
+     * @param Link $link
+     * @param bool $referenceType
      */
-    public function __construct(RouteCollection $routes, $path = '', array $parameters = array(), $referenceType = false)
+    public function __construct(Link $link, $referenceType = false)
     {
-        if ($fragment = strstr($path, '#')) {
-            $path = strstr($path, '#', true);
-        }
-
-        if ($query = substr(strstr($path, '?'), 1)) {
-            $path = strstr($path, '?', true);
-            parse_str($query, $params);
-            $parameters = array_merge($params, $parameters);
-        }
-
-        $this->route         = $routes->get($path);
-        $this->path          = $path;
-        $this->parameters    = $parameters;
+        $this->link = $link;
         $this->referenceType = $referenceType;
-        $this->fragment      = $fragment;
     }
 
     public function getUrl()
@@ -55,57 +35,19 @@ class GenerateRouteEvent extends Event
     }
 
     /**
-     * @return Route
+     * @param Link $link
      */
-    public function getRoute()
+    public function setLink ($link)
     {
-        return $this->route;
-    }
-
-    public function getPathParameters()
-    {
-        if (!$this->route) {
-            return array();
-        }
-
-        return array_intersect_key($this->getParameters(), array_flip($this->route->compile()->getPathVariables()));
-    }
-
-    public function getInternal()
-    {
-        return $this->path . (($params = $this->getPathParameters()) ? '?' . http_build_query($params) : '');
+        $this->link = $link;
     }
 
     /**
-     * @return string
+     * @return Link
      */
-    public function getPath()
+    public function getLink ()
     {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param array $parameters
-     */
-    public function setParameters($parameters)
-    {
-        $this->parameters = $parameters;
+        return $this->link;
     }
 
     /**
@@ -122,21 +64,5 @@ class GenerateRouteEvent extends Event
     public function setReferenceType($referenceType)
     {
         $this->referenceType = $referenceType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFragment()
-    {
-        return $this->fragment;
-    }
-
-    /**
-     * @param string $fragment
-     */
-    public function setFragment($fragment)
-    {
-        $this->fragment = $fragment;
     }
 }

@@ -90,7 +90,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function filterPackages($callback, $class = 'Pagekit\Component\Package\Package')
+    public function filterPackages(callable $callback, $class = 'Pagekit\Component\Package\Package')
     {
         foreach ($this->getPackages() as $package) {
             if (false === call_user_func($callback, $package)) {

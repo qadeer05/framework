@@ -34,12 +34,12 @@ class UrlProvider
     /**
      * @var UrlGenerator
      */
-    protected $generator;
+    private $url;
 
     /**
-     * @var string
+     * @var LinkGenerator
      */
-    protected $base;
+    protected $link;
 
     /**
      * Constructor.
@@ -47,23 +47,30 @@ class UrlProvider
      * @param Router                   $router
      * @param ResourceLocator          $locator
      * @param EventDispatcherInterface $events
-     * @param UrlGenerator             $generator
+     * @param UrlGenerator             $url
+     * @param LinkGenerator            $link
      */
-    public function __construct(Router $router, ResourceLocator $locator, EventDispatcherInterface $events, UrlGenerator $generator = null)
+    public function __construct(Router $router, ResourceLocator $locator, EventDispatcherInterface $events, UrlGenerator $url = null, LinkGenerator $link = null)
     {
-        $this->routes    = $router->getRoutes();
-        $this->context   = $router->getContext();
-        $this->locator   = $locator;
-        $this->events    = $events;
-        $this->generator = $generator ?: new UrlGenerator($this->routes, $this->context);
+        $this->routes  = $router->getRoutes();
+        $this->context = $router->getContext();
+        $this->locator = $locator;
+        $this->events  = $events;
+        $this->url     = $url  ?: new UrlGenerator($this->routes, $this->context);
+        $this->link    = $link ?: new LinkGenerator($this->routes);
     }
 
     /**
      * @return UrlGenerator
      */
-    public function getGenerator()
+    public function getUrlGenerator()
     {
-        return $this->generator;
+        return $this->url;
+    }
+
+    public function getLinkGenerator()
+    {
+        return $this->link;
     }
 
     /**
@@ -149,7 +156,7 @@ class UrlProvider
             $query = '?'.$query;
         }
 
-        return $this->generator->generateUrl($this->base($referenceType).'/'.trim($path, '/').$query, $referenceType);
+        return $this->url->generateUrl($this->base($referenceType).'/'.trim($path, '/').$query, $referenceType);
     }
 
     /**
@@ -168,13 +175,15 @@ class UrlProvider
 
         try {
 
-            $event = $this->events->dispatch('route.generate', new GenerateRouteEvent($this->routes, $path, $parameters, $referenceType));
+            $event = $this->events->dispatch('route.generate', new GenerateRouteEvent($this->link->generate($path, $parameters), $referenceType));
 
             if ($url = $event->getUrl()) {
                 return $url;
             }
 
-            return $this->generator->generate($event->getPath(), $event->getParameters(), $event->getReferenceType()) . $event->getFragment();
+            $link = $event->getLink();
+
+            return $this->url->generate($link->getName(), $link->getParameters(), $event->getReferenceType()) . $link->getFragment();
 
         } catch (RouteNotFoundException $e) {
 
@@ -187,7 +196,7 @@ class UrlProvider
             $url = $this->context->getBaseUrl().$path;
         }
 
-        return $this->generator->generateUrl($url, $referenceType);
+        return $this->url->generateUrl($url, $referenceType);
     }
 
     /**

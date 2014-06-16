@@ -28,8 +28,7 @@ class AuthServiceProvider implements ServiceProviderInterface, EventSubscriberIn
         };
 
         $app['auth.random'] = function() {
-            $factory = new Factory;
-            return $factory->getMediumStrengthGenerator();
+            return (new Factory())->getMediumStrengthGenerator();
         };
     }
 

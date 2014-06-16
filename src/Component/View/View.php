@@ -160,7 +160,7 @@ class View
      * @param callable $listener
      * @param integer  $priority
      */
-    public function addAction($name, $listener, $priority = 0)
+    public function addAction($name, callable $listener, $priority = 0)
     {
         $this->events->addListener($this->prefix.$name, $listener, $priority);
     }
