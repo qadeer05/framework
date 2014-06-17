@@ -224,7 +224,7 @@ class ControllerReader implements ControllerReaderInterface
     {
         extract($this->parseControllerAndActionName($class, $method));
 
-        $name = "@".$options['name']."/$controller/$action";
+        $name = '@'.$options['name'].'/'.$controller.($action == 'index' ? '' : '/'.$action);
 
         if ($this->routeIndex > 0) {
             $name .= '_'.$this->routeIndex;
