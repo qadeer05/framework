@@ -8,17 +8,20 @@ use Pagekit\Razr\TokenStream;
 class FunctionDirective extends Directive
 {
     protected $function;
+    protected $escape;
 
     /**
      * Constructor.
      *
      * @param string   $name
      * @param callable $function
+     * @param bool     $escape
      */
-    public function __construct($name, $function)
+    public function __construct($name, $function, $escape = true)
     {
         $this->name = $name;
         $this->function = $function;
+        $this->escape = $escape;
     }
 
     /**
@@ -39,13 +42,13 @@ class FunctionDirective extends Directive
     {
         if ($stream->nextIf($this->name)) {
 
-            if ($stream->test('(')) {
-                $out = sprintf("echo(\$this->escape(\$this->getDirective('%s')->call(array%s)))", $this->name, $this->parser->parseExpression());
-            } else {
-                $out = sprintf("echo(\$this->escape(\$this->getDirective('%s')->call()))", $this->name);
+            $out = sprintf("\$this->getDirective('%s')->call(%s)", $this->name, $stream->test('(') ? 'array'.$this->parser->parseExpression() : '');
+
+            if ($this->escape) {
+                $out = sprintf("\$this->escape(%s)", $out);
             }
 
-            return $out;
+            return sprintf("echo(%s)", $out);
         }
     }
 }

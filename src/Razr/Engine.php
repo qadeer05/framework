@@ -8,8 +8,8 @@ use Pagekit\Razr\Exception\LogicException;
 use Pagekit\Razr\Exception\RuntimeException;
 use Pagekit\Razr\Extension\CoreExtension;
 use Pagekit\Razr\Extension\ExtensionInterface;
-use Pagekit\Razr\Storage\Storage;
 use Pagekit\Razr\Storage\FileStorage;
+use Pagekit\Razr\Storage\Storage;
 use Pagekit\Razr\Storage\StringStorage;
 
 class Engine

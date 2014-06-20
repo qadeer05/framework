@@ -2,16 +2,15 @@
 
 namespace Pagekit\Razr\Extension;
 
-use Pagekit\Razr\Engine;
 use Pagekit\Razr\Directive\BlockDirective;
 use Pagekit\Razr\Directive\ControlDirective;
 use Pagekit\Razr\Directive\ExtendDirective;
-use Pagekit\Razr\Directive\FunctionDirective;
 use Pagekit\Razr\Directive\IncludeDirective;
 use Pagekit\Razr\Directive\RawDirective;
 use Pagekit\Razr\Directive\SetDirective;
+use Pagekit\Razr\Engine;
 use Pagekit\Razr\Exception\InvalidArgumentException;
-use Pagekit\Razr\Exception\LogicException;
+use Pagekit\Razr\Exception\RuntimeException;
 
 class CoreExtension implements ExtensionInterface
 {
@@ -54,6 +53,8 @@ class CoreExtension implements ExtensionInterface
     /**
      * Gets or sets a block.
      *
+     * @param  string $name
+     * @param  mixed  $value
      * @return string
      */
     public function block($name, $value = null)
@@ -68,7 +69,8 @@ class CoreExtension implements ExtensionInterface
     /**
      * Starts a block.
      *
-     * @param string $name
+     * @param  string $name
+     * @throws InvalidArgumentException
      */
     public function startBlock($name)
     {
@@ -89,12 +91,13 @@ class CoreExtension implements ExtensionInterface
     /**
      * Stops a block.
      *
+     * @throws RuntimeException
      * @return string
      */
     public function endBlock()
     {
         if (!$this->openBlocks) {
-            throw new LogicException('No block started.');
+            throw new RuntimeException('No block started.');
         }
 
         $name  = array_pop($this->openBlocks);
@@ -121,6 +124,8 @@ class CoreExtension implements ExtensionInterface
     /**
      * Gets a constant from an object.
      *
+     * @param  string $name
+     * @param  object $object
      * @return mixed
      */
     public function getConstant($name, $object = null)
