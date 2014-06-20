@@ -25,7 +25,7 @@ class SetDirective extends Directive
             $out = '';
 
             while (!$stream->test(T_CLOSE_TAG)) {
-                $out .= $stream->next()->getValue();
+                $out .= $this->parser->parseExpression();
             }
 
             return $out;

@@ -141,7 +141,6 @@ class Lexer
 
                 $this->addCode('<?php /* OUTPUT */');
                 $this->pushState(self::STATE_OUTPUT);
-                $this->moveCursor($match[0]);
                 $this->lexExpression();
 
             }
@@ -153,8 +152,7 @@ class Lexer
      */
     protected function lexOutput()
     {
-        if (empty($this->brackets) && preg_match(self::REGEX_END, $this->code, $match, null, $this->cursor)) {
-            $this->moveCursor($match[1]);
+        if (empty($this->brackets)) {
             $this->addCode(' ?>');
             $this->popState();
         } else {
