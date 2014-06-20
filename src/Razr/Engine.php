@@ -2,15 +2,16 @@
 
 namespace Pagekit\Razr;
 
+use Pagekit\Razr\Directive\Directive;
 use Pagekit\Razr\Directive\DirectiveInterface;
 use Pagekit\Razr\Exception\InvalidArgumentException;
-use Pagekit\Razr\Exception\LogicException;
 use Pagekit\Razr\Exception\RuntimeException;
 use Pagekit\Razr\Extension\CoreExtension;
 use Pagekit\Razr\Extension\ExtensionInterface;
 use Pagekit\Razr\Storage\FileStorage;
 use Pagekit\Razr\Storage\Storage;
 use Pagekit\Razr\Storage\StringStorage;
+use Razr\Extension\Extension;
 
 class Engine
 {
@@ -42,7 +43,7 @@ class Engine
      */
     public function __construct($cachePath = null)
     {
-        $this->lexer = new Lexer($this);
+        $this->lexer  = new Lexer($this);
         $this->parser = new Parser($this);
         $this->addExtension(new CoreExtension);
 
@@ -144,12 +145,13 @@ class Engine
     /**
      * Adds a directive.
      *
-     * @param DirectiveInterface $directive
+     * @param  DirectiveInterface $directive
+     * @throws Exception\RuntimeException
      */
     public function addDirective(DirectiveInterface $directive)
     {
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to add directive "%s" as they have already been initialized.', $directive->getName()));
+            throw new RuntimeException(sprintf('Unable to add directive "%s" as they have already been initialized.', $directive->getName()));
         }
 
         $directive->setEngine($this);
@@ -191,11 +193,12 @@ class Engine
      *
      * @param string   $name
      * @param callable $function
+     * @throws RuntimeException
      */
     public function addFunction($name, $function)
     {
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to add function "%s" as they have already been initialized.', $directive->getName()));
+            throw new RuntimeException(sprintf('Unable to add function "%s" as they have already been initialized.', $directive->getName()));
         }
 
         $this->functions[$name] = $function;
@@ -204,7 +207,7 @@ class Engine
     /**
      * Gets an extension.
      *
-     * @param  string   $name
+     * @param  string $name
      * @return Extension
      */
     public function getExtension($name)
@@ -225,12 +228,13 @@ class Engine
     /**
      * Adds an extension.
      *
-     * @param ExtensionInterface $extension
+     * @param  ExtensionInterface $extension
+     * @throws Exception\RuntimeException
      */
     public function addExtension(ExtensionInterface $extension)
     {
         if ($this->initialized) {
-            throw new LogicException(sprintf('Unable to add extension "%s" as they have already been initialized.', $extension->getName()));
+            throw new RuntimeException(sprintf('Unable to add extension "%s" as they have already been initialized.', $extension->getName()));
         }
 
         $this->extensions[$extension->getName()] = $extension;
@@ -243,6 +247,8 @@ class Engine
      * @param  mixed  $name
      * @param  array  $args
      * @param  string $type
+     * @throws \BadMethodCallException
+     * @throws \Exception
      * @return mixed
      */
     public function getAttribute($object, $name, array $args = array(), $type = self::ANY_CALL)
@@ -344,6 +350,9 @@ class Engine
     /**
      * Renders a template.
      *
+     * @param  string $name
+     * @param  array  $parameters
+     * @throws RuntimeException
      * @return string
      */
     public function render($name, array $parameters = array())
@@ -420,6 +429,7 @@ class Engine
      * Loads a template.
      *
      * @param  string $name
+     * @throws InvalidArgumentException
      * @return Storage
      */
     protected function load($name)

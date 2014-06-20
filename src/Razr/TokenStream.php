@@ -97,6 +97,7 @@ class TokenStream
      * @param  array|integer     $type
      * @param  array|string|null $value
      * @param  string|null       $message
+     * @throws SyntaxErrorException
      * @return Token|null
      */
     public function expect($type, $value = null, $message = null)

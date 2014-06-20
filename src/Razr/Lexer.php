@@ -43,6 +43,7 @@ class Lexer
      *
      * @param  string $code
      * @param  string $filename
+     * @throws SyntaxErrorException
      * @return TokenStream
      */
     public function tokenize($code, $filename = null)

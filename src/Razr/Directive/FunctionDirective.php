@@ -19,9 +19,9 @@ class FunctionDirective extends Directive
      */
     public function __construct($name, $function, $escape = true)
     {
-        $this->name = $name;
+        $this->name     = $name;
         $this->function = $function;
-        $this->escape = $escape;
+        $this->escape   = $escape;
     }
 
     /**
@@ -42,7 +42,7 @@ class FunctionDirective extends Directive
     {
         if ($stream->nextIf($this->name)) {
 
-            $out = sprintf("\$this->getDirective('%s')->call(%s)", $this->name, $stream->test('(') ? 'array'.$this->parser->parseExpression() : '');
+            $out = sprintf("\$this->getDirective('%s')->call(%s)", $this->name, $stream->test('(') ? 'array' . $this->parser->parseExpression() : '');
 
             if ($this->escape) {
                 $out = sprintf("\$this->escape(%s)", $out);
