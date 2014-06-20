@@ -198,7 +198,7 @@ class Engine
     public function addFunction($name, $function)
     {
         if ($this->initialized) {
-            throw new RuntimeException(sprintf('Unable to add function "%s" as they have already been initialized.', $directive->getName()));
+            throw new RuntimeException(sprintf('Unable to add function "%s" as they have already been initialized.', $name));
         }
 
         $this->functions[$name] = $function;
