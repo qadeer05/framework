@@ -12,7 +12,7 @@ class Lexer
     const STATE_DIRECTIVE = 2;
     const REGEX_CHAR      = '/@{2}|@(?=\(|[a-zA-Z_])/s';
     const REGEX_START     = '/\(|([a-zA-Z_][a-zA-Z0-9_]*)(\s*\()?/A';
-    const REGEX_END       = '/(\s*\))\n?/A';
+    const REGEX_STRING    = '/"([^#"\\\\]*(?:\\\\.[^#"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\'/As';
 
     protected $engine;
     protected $tokens;
@@ -178,18 +178,23 @@ class Lexer
      */
     protected function lexExpression()
     {
+        if (preg_match(self::REGEX_STRING, $this->code, $match, null, $this->cursor)) {
+            $this->addCode($match[0]);
+            $this->moveCursor($match[0]);
+        }
+
         if (strpos('([{', $this->code[$this->cursor]) !== false) {
             $this->brackets[] = array($this->code[$this->cursor], $this->lineno);
         } elseif (strpos(')]}', $this->code[$this->cursor]) !== false) {
 
             if (empty($this->brackets)) {
-                throw new SyntaxErrorException(sprintf('Unexpected "%s"', $this->code[$this->cursor]), $this->lineno, $this->filename);
+                throw new SyntaxErrorException(sprintf('Unexpected "%s" at line %d in file %s', $this->code[$this->cursor], $this->lineno, $this->filename));
             }
 
             list($expect, $lineno) = array_pop($this->brackets);
 
             if ($this->code[$this->cursor] != strtr($expect, '([{', ')]}')) {
-                throw new SyntaxErrorException(sprintf('Unclosed "%s"', $expect), $lineno, $this->filename);
+                throw new SyntaxErrorException(sprintf('Unclosed "%s" at line %d in file %s', $expect, $lineno, $this->filename));
             }
         }
 
