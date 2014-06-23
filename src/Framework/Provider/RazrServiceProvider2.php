@@ -19,7 +19,7 @@ class RazrServiceProvider2 implements ServiceProviderInterface
             $parser->addEngine('razr2', '.razr');
 
             $engine = new RazrEngine2($parser, $app['path'].'/app/cache/templates');
-            $engine->addDirective(new FunctionDirective('gravatar', array(new GravatarHelper, 'get'), false));
+            $engine->addDirective(new FunctionDirective('gravatar', array(new GravatarHelper, 'get')));
             $engine->addGlobal('app', $app);
 
             if (isset($app['view'])) {
@@ -47,8 +47,8 @@ class RazrServiceProvider2 implements ServiceProviderInterface
             }
 
             if (isset($app['translator'])) {
-                $engine->addDirective(new FunctionDirective('trans', array($app['translator'], 'trans'), false));
-                $engine->addDirective(new FunctionDirective('transchoice', array($app['translator'], 'transChoice'), false));
+                $engine->addDirective(new FunctionDirective('trans', array($app['translator'], 'trans')));
+                $engine->addDirective(new FunctionDirective('transchoice', array($app['translator'], 'transChoice')));
                 $engine->addFunction('trans', array($app['translator'], 'trans'));
                 $engine->addFunction('transchoice', array($app['translator'], 'transChoice'));
             }

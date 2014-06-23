@@ -17,7 +17,7 @@ class FunctionDirective extends Directive
      * @param callable $function
      * @param bool     $escape
      */
-    public function __construct($name, $function, $escape = true)
+    public function __construct($name, $function, $escape = false)
     {
         $this->name     = $name;
         $this->function = $function;
