@@ -7,6 +7,7 @@ use Pagekit\Framework\ServiceProviderInterface;
 use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
 use Pagekit\Framework\Templating\RazrEngine;
+use Pagekit\Framework\Templating\RazrExceptionHandler;
 use Pagekit\Razr\Directive\FunctionDirective;
 
 class RazrServiceProvider implements ServiceProviderInterface
@@ -60,5 +61,6 @@ class RazrServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         $app['tmpl']->addEngine($app['tmpl.razr']);
+        $app['exception']->pushHandler(new RazrExceptionHandler);
     }
 }

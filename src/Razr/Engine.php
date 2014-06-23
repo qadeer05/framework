@@ -442,7 +442,7 @@ class Engine
             throw new InvalidArgumentException(sprintf('The template "%s" does not exist.', $name));
         }
 
-        $cache = $this->cachePath ? $this->cachePath.'/'.sha1($name) : false;
+        $cache = $this->cachePath ? sprintf('%s/%s.cache', $this->cachePath, sha1($name)) : false;
 
         if (!$cache) {
 
