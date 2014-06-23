@@ -272,34 +272,30 @@ class Engine
             return null;
         }
 
-        $call = false;
+        // property
+        if ($type == self::ANY_CALL && isset($object->$name)) {
+            return $object->$name;
+        }
 
-        if ($type == self::ANY_CALL) {
+        // method
+        $call  = false;
+        $name  = (string) $name;
+        $item  = strtolower($name);
+        $class = get_class($object);
 
-            // property
-            if (isset($object->$name)) {
-                return $object->$name;
-            }
+        if (!isset(self::$classes[$class])) {
+            self::$classes[$class] = array_change_key_case(array_flip(get_class_methods($object)));
+        }
 
-            // method
-            $name  = (string) $name;
-            $item  = strtolower($name);
-            $class = get_class($object);
-
-            if (!isset(self::$classes[$class])) {
-                self::$classes[$class] = array_change_key_case(array_flip(get_class_methods($object)));
-            }
-
-            if (!isset(self::$classes[$class][$item])) {
-                if (isset(self::$classes[$class]["get$item"])) {
-                    $name = "get$name";
-                } elseif (isset(self::$classes[$class]["is$item"])) {
-                    $name = "is$name";
-                } elseif (isset(self::$classes[$class]["__call"])) {
-                    $call = true;
-                } else {
-                    return null;
-                }
+        if (!isset(self::$classes[$class][$item])) {
+            if (isset(self::$classes[$class]["get$item"])) {
+                $name = "get$name";
+            } elseif (isset(self::$classes[$class]["is$item"])) {
+                $name = "is$name";
+            } elseif (isset(self::$classes[$class]["__call"])) {
+                $call = true;
+            } else {
+                return null;
             }
         }
 
