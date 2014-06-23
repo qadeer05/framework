@@ -47,9 +47,8 @@ class RazrServiceProvider2 implements ServiceProviderInterface
             }
 
             if (isset($app['translator'])) {
-                $engine->addDirective(new FunctionDirective('trans', array($app['translator'], 'trans')));
-                $engine->addDirective(new FunctionDirective('transchoice', array($app['translator'], 'transChoice')));
-
+                $engine->addDirective(new FunctionDirective('trans', array($app['translator'], 'trans'), false));
+                $engine->addDirective(new FunctionDirective('transchoice', array($app['translator'], 'transChoice'), false));
                 $engine->addFunction('trans', array($app['translator'], 'trans'));
                 $engine->addFunction('transchoice', array($app['translator'], 'transChoice'));
             }
