@@ -56,6 +56,10 @@ class RazrEngine2 extends Engine implements EngineInterface
     {
         $template = $this->nameParser->parse($name);
 
-        return parent::load($template->getPath());
+        if (!file_exists($path = $template->getPath())) {
+            throw new InvalidArgumentException(sprintf('The template "%s" does not exist.', $name));
+        }
+
+        return parent::load($path);
     }
 }
