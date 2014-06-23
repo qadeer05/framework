@@ -7,9 +7,7 @@ use Pagekit\Framework\ServiceProviderInterface;
 use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
 use Pagekit\Framework\Templating\RazrEngine;
-use Razr\Environment;
-use Razr\Loader\FilesystemLoader;
-use Razr\SimpleFunction;
+use Pagekit\Razr\Directive\FunctionDirective;
 
 class RazrServiceProvider implements ServiceProviderInterface
 {
@@ -18,41 +16,44 @@ class RazrServiceProvider implements ServiceProviderInterface
         $app['tmpl.razr'] = function($app) {
 
             $parser = $app['tmpl.parser'];
-            $parser->addEngine('razr', '.razr.php');
+            $parser->addEngine('razr', '.razr');
 
-            $env = new Environment(new FilesystemLoader, array('cache' => $app['path'].'/app/cache/templates'));
-            $env->addFunction(new SimpleFunction('gravatar', array(new GravatarHelper, 'get')));
+            $engine = new RazrEngine($parser, $app['path'].'/app/cache/templates');
+            $engine->addDirective(new FunctionDirective('gravatar', array(new GravatarHelper, 'get')));
+            $engine->addGlobal('app', $app);
 
             if (isset($app['view'])) {
-                $env->addFunction(new SimpleFunction('action', array($app['view'], 'callAction')));
+                $engine->addDirective(new FunctionDirective('action', array($app['view'], 'callAction')));
             }
 
             if (isset($app['view.styles'])) {
-                $env->addFunction(new SimpleFunction('style', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
+                $engine->addDirective(new FunctionDirective('style', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
                     $app['view.styles']->queue($name, $asset, $dependencies, $options);
                 }));
             }
 
             if (isset($app['view.scripts'])) {
-                $env->addFunction(new SimpleFunction('script', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
+                $engine->addDirective(new FunctionDirective('script', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
                     $app['view.scripts']->queue($name, $asset, $dependencies, $options);
                 }));
             }
 
             if (isset($app['csrf'])) {
-                $env->addFunction(new SimpleFunction('token', array(new TokenHelper($app['csrf']), 'generate')));
+                $engine->addDirective(new FunctionDirective('token', array(new TokenHelper($app['csrf']), 'generate')));
             }
 
             if (isset($app['markdown'])) {
-                $env->addFunction(new SimpleFunction('markdown', array($app['markdown'], 'parse')));
+                $engine->addDirective(new FunctionDirective('markdown', array($app['markdown'], 'parse')));
             }
 
             if (isset($app['translator'])) {
-                $env->addFunction(new SimpleFunction('trans', array($app['translator'], 'trans')));
-                $env->addFunction(new SimpleFunction('transchoice', array($app['translator'], 'transChoice')));
+                $engine->addDirective(new FunctionDirective('trans', array($app['translator'], 'trans')));
+                $engine->addDirective(new FunctionDirective('transchoice', array($app['translator'], 'transChoice')));
+                $engine->addFunction('trans', array($app['translator'], 'trans'));
+                $engine->addFunction('transchoice', array($app['translator'], 'transChoice'));
             }
 
-            return new RazrEngine($parser, $env);
+            return $engine;
         };
     }
 

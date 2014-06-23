@@ -2,66 +2,37 @@
 
 namespace Pagekit\Framework\Templating;
 
-use Razr\Environment;
-use Razr\Exception\RuntimeException;
-use Razr\Template;
+use Pagekit\Razr\Engine;
+use Pagekit\Razr\Exception\InvalidArgumentException;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 
-class RazrEngine implements EngineInterface
+class RazrEngine extends Engine implements EngineInterface
 {
-    /**
-     * @var Environment
-     */
-    protected $environment;
-
     /**
      * @var TemplateNameParserInterface
      */
-    protected $parser;
+    protected $nameParser;
 
     /**
      * @param TemplateNameParserInterface $parser
      * @param Environment                 $environment
      */
-    public function __construct(TemplateNameParserInterface $parser, Environment $environment)
+    public function __construct(TemplateNameParserInterface $nameParser, $cachePath = null)
     {
-        $this->environment = $environment;
-        $this->parser = $parser;
-    }
+        parent::__construct($cachePath);
 
-    /**
-     * Gets the environment.
-     *
-     * @return Environment
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
+        $this->nameParser = $nameParser;
     }
 
     /**
      * {@inheritdoc}
-     */
-    public function render($name, array $parameters = array())
-    {
-        return $this->load($name)->render($parameters);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * It also supports Template as name parameter.
      */
     public function exists($name)
     {
-        if ($name instanceof Template) {
-            return true;
-        }
-
         try {
-            $this->environment->getLoader()->getSource($name);
-        } catch (RuntimeException $e) {
+            $this->load($name);
+        } catch (InvalidArgumentException $e) {
             return false;
         }
 
@@ -73,29 +44,22 @@ class RazrEngine implements EngineInterface
      */
     public function supports($name)
     {
-        if ($name instanceof Template) {
-            return true;
-        }
-
-        $template = $this->parser->parse($name);
+        $template = $this->nameParser->parse($name);
 
         return 'razr' === $template->get('engine');
     }
 
     /**
-     * Loads a template.
-     *
-     * @param  string $name
-     * @return Template
+     * {@inheritdoc}
      */
     protected function load($name)
     {
-        if ($name instanceof Template) {
-            return $name;
+        $template = $this->nameParser->parse($name);
+
+        if (!file_exists($path = $template->getPath())) {
+            throw new InvalidArgumentException(sprintf('The template "%s" does not exist.', $name));
         }
 
-        $template = $this->parser->parse($name);
-
-        return $this->environment->loadTemplate($template->getPath());
+        return parent::load($path);
     }
 }
