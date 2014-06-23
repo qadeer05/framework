@@ -6,6 +6,7 @@ class Parser
 {
     protected $engine;
     protected $stream;
+    protected $filename;
     protected $variables;
 
     /**
@@ -22,11 +23,13 @@ class Parser
      * Parsing method.
      *
      * @param  TokenStream $stream
+     * @param  string      $filename
      * @return string
      */
-    public function parse($stream)
+    public function parse($stream, $filename = null)
     {
         $this->stream = $stream;
+        $this->filename = $filename;
         $this->variables = array();
 
         return $this->parseMain();
@@ -52,10 +55,12 @@ class Parser
         }
 
         if ($this->variables) {
-            $out = sprintf('<?php extract(%s, EXTR_SKIP) ?>', var_export($this->variables, true)).$out;
+            $info = sprintf('<?php /* %s */ extract(%s, EXTR_SKIP) ?>', $this->filename, str_replace("\n", '', var_export($this->variables, true)));
+        } else {
+            $info = sprintf('<?php /* %s */ ?>', $this->filename);
         }
 
-        return $out;
+        return $info.$out;
     }
 
     /**

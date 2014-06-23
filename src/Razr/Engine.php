@@ -416,7 +416,7 @@ class Engine
     protected function compile($source, $filename = null)
     {
         $tokens = $this->lexer->tokenize($source, $filename);
-        $source = $this->parser->parse($tokens);
+        $source = $this->parser->parse($tokens, $filename);
 
         return $source;
     }
