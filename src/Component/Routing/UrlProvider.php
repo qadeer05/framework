@@ -135,6 +135,10 @@ class UrlProvider
      */
     public function to($path, $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
     {
+        if (0 === strpos($path, '@')) {
+            return $this->route($path, $parameters, $referenceType);
+        }
+
         if (filter_var($path, FILTER_VALIDATE_URL) !== false) {
 
             try {
@@ -160,22 +164,18 @@ class UrlProvider
     }
 
     /**
-     * Get the URL to a route path or name route.
+     * Get the URL to a named route.
      *
-     * @param  string $path
+     * @param  string $name
      * @param  mixed  $parameters
      * @param  mixed  $referenceType
      * @return string|false
      */
-    public function route($path = '', $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function route($name = '', $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
     {
-        if (filter_var($path, FILTER_VALIDATE_URL) !== false || $this->isAbsolutePath($path)) {
-            return $path;
-        }
-
         try {
 
-            $event = $this->events->dispatch('route.generate', new GenerateRouteEvent($this->link->generate($path, $parameters), $referenceType));
+            $event = $this->events->dispatch('route.generate', new GenerateRouteEvent($this->link->generate($name, $parameters), $referenceType));
 
             if ($url = $event->getUrl()) {
                 return $url;
@@ -185,18 +185,10 @@ class UrlProvider
 
             return $this->url->generate($link->getName(), $link->getParameters(), $event->getReferenceType()) . $link->getFragment();
 
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException $e) {}
 
-            if (strpos($path, '@') === 0) {
-                return false;
-            } elseif ($path !== '') {
-                $path = "/$path";
-            }
+        return false;
 
-            $url = $this->context->getBaseUrl().$path;
-        }
-
-        return $this->url->generateUrl($url, $referenceType);
     }
 
     /**
