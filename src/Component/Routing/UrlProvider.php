@@ -133,7 +133,7 @@ class UrlProvider
      * @param  mixed  $referenceType
      * @return string
      */
-    public function to($path, $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function to($path = '', $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
     {
         if (0 === strpos($path, '@')) {
             return $this->route($path, $parameters, $referenceType);
