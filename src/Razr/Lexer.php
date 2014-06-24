@@ -83,14 +83,14 @@ class Lexer
             }
         }
 
+        if ($this->state != self::STATE_DATA) {
+            $this->addCode(' ?>');
+            $this->popState();
+        }
+
         if (!empty($this->brackets)) {
             list($expect, $lineno) = array_pop($this->brackets);
             throw new SyntaxErrorException(sprintf('Unclosed "%s" at line %d in file %s', $expect, $lineno, $this->filename));
-        }
-
-        if ($this->state == self::STATE_DIRECTIVE) {
-            $this->addCode(' ?>');
-            $this->popState();
         }
 
         if (isset($encoding)) {
