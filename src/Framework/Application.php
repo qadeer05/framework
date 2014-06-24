@@ -42,8 +42,6 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
         if (version_compare(PHP_VERSION, '5.4', '>=')) {
             ApplicationTrait::setApplication($this);
         }
-
-        ApplicationAware::setApplication($this);
     }
 
     /**

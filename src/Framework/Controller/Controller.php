@@ -2,11 +2,13 @@
 
 namespace Pagekit\Framework\Controller;
 
-use Pagekit\Framework\ApplicationAware;
+use Pagekit\Framework\ApplicationTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class Controller extends ApplicationAware
+class Controller implements \ArrayAccess
 {
+    use ApplicationTrait;
+
     /**
      * Returns a redirect response.
      *
@@ -18,6 +20,6 @@ class Controller extends ApplicationAware
      */
     public function redirect($url = '', $parameters = array(), $status = 302, $headers = array())
     {
-        return new RedirectResponse(self::$app['url']->route($url, $parameters), $status, $headers);
+        return new RedirectResponse($this['url']->to($url, $parameters), $status, $headers);
     }
 }

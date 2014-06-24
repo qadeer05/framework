@@ -425,7 +425,8 @@ class Engine
      * Loads a template.
      *
      * @param  string $name
-     * @throws InvalidArgumentException
+     * @throws Exception\RuntimeException
+     * @throws Exception\InvalidArgumentException
      * @return Storage
      */
     protected function load($name)

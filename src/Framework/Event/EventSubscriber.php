@@ -2,8 +2,9 @@
 
 namespace Pagekit\Framework\Event;
 
-use Pagekit\Framework\ApplicationAware;
+use Pagekit\Framework\ApplicationTrait;
 
-abstract class EventSubscriber extends ApplicationAware implements EventSubscriberInterface
+abstract class EventSubscriber implements EventSubscriberInterface, \ArrayAccess
 {
+    use ApplicationTrait;
 }

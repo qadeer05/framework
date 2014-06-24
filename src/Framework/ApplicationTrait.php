@@ -14,7 +14,7 @@ trait ApplicationTrait
      *
      * @return Application
      */
-    public static function getApplication()
+    public function getApplication()
     {
         return self::$app;
     }
@@ -30,13 +30,45 @@ trait ApplicationTrait
     }
 
     /**
-     * Gets an application parameter or an object.
+     * Whether an application parameter or an object exists.
      *
-     * @param  string $id
+     * @param  string $offset
      * @return mixed
      */
-    public function __invoke($id)
+    public function offsetExists($offset)
     {
-        return self::$app[$id];
+        return isset(self::$app[$offset]);
+    }
+
+    /**
+     * Gets an application parameter or an object.
+     *
+     * @param  string $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return self::$app[$offset];
+    }
+
+    /**
+     * Sets an application parameter or an object.
+     *
+     * @param  string $offset
+     * @param  mixed  $value
+     */
+    public function offsetSet($offset, $value)
+    {
+        self::$app[$offset] = $value;
+    }
+
+    /**
+     * Unsets an application parameter or an object.
+     *
+     * @param  string $offset
+     */
+    public function offsetUnset($offset)
+    {
+        unset(self::$app[$offset]);
     }
 }
