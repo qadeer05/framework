@@ -163,11 +163,7 @@ class Router implements RequestMatcherInterface, RouterInterface, LinkGeneratorI
         $file = sprintf('app://app/cache/urlmatcher_%s.php', $this->getCacheKey());
 
         if (!file_exists($file)) {
-            $dumper = new PhpMatcherDumper($this->getRouteCollection());
-
-            $dump = $dumper->dump();
-
-            file_put_contents($file, $dump);
+            file_put_contents($file, (new PhpMatcherDumper($this->getRouteCollection()))->dump());
         }
 
         require_once($file);
@@ -189,11 +185,7 @@ class Router implements RequestMatcherInterface, RouterInterface, LinkGeneratorI
         $file = sprintf('app://app/cache/urlgenerator_%s.php', $this->getCacheKey());
 
         if (!file_exists($file)) {
-            $dumper = new PhpGeneratorDumper($this->getRouteCollection());
-
-            $dump = $dumper->dump(array('base_class' => 'Pagekit\Component\Routing\UrlGenerator'));
-
-            file_put_contents($file, $dump);
+            file_put_contents($file, (new PhpGeneratorDumper($this->getRouteCollection()))->dump(array('base_class' => 'Pagekit\Component\Routing\UrlGenerator')));
         }
 
         require_once($file);

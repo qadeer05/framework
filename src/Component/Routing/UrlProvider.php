@@ -4,7 +4,6 @@ namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\File\Exception\InvalidArgumentException;
 use Pagekit\Component\File\ResourceLocator;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class UrlProvider
