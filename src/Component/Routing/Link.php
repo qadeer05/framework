@@ -2,28 +2,26 @@
 
 namespace Pagekit\Component\Routing;
 
-use Symfony\Component\Routing\Route;
-
 class Link
 {
-    protected $route;
     protected $name;
     protected $parameters;
+    protected $variables;
     protected $fragment;
 
     /**
      * Constructor.
      *
-     * @param Route  $route
-     * @param string $name
-     * @param array  $parameters
-     * @param string $fragment
+     * @param string     $name
+     * @param array      $parameters
+     * @param array      $variables
+     * @param string     $fragment
      */
-    public function __construct(Route $route, $name, array $parameters = array(), $fragment = '')
+    public function __construct($name, $variables = array(), array $parameters = array(), $fragment = '')
     {
-        $this->route      = $route;
         $this->name       = $name;
         $this->parameters = $parameters;
+        $this->variables  = $variables;
         $this->fragment   = $fragment;
     }
 
@@ -80,7 +78,7 @@ class Link
      */
     public function getPathParameters()
     {
-        return array_intersect_key($this->getParameters(), array_flip($this->route->compile()->getPathVariables()));
+        return array_intersect_key($this->getParameters(), array_flip($this->variables));
     }
 
     /**

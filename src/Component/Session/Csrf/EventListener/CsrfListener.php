@@ -47,7 +47,7 @@ class CsrfListener implements EventSubscriberInterface
         }
 
         if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\Session\Csrf\Annotation\Token')) {
-            $event->getRoute()->setOption('_csrf_name', $annotation->getName());
+            $event->getRoute()->setDefault('_csrf_name', $annotation->getName());
         }
     }
 
@@ -61,7 +61,7 @@ class CsrfListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        if ($name = $request->attributes->get('_route_options[_csrf_name]', false, true) and !$this->provider->validate($request->get($name))) {
+        if ($name = $request->attributes->get('_csrf_name') and !$this->provider->validate($request->get($name))) {
             throw new BadTokenException(401, 'Invalid CSRF token.');
         }
     }

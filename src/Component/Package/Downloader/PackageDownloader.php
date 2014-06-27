@@ -4,8 +4,8 @@ namespace Pagekit\Component\Package\Downloader;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\TransferException;
 use Pagekit\Component\File\Archive\Zip;
 use Pagekit\Component\File\Filesystem;
 use Pagekit\Component\File\FilesystemInterface;

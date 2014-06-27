@@ -49,8 +49,14 @@ class ViewListener implements EventSubscriberInterface
 
         if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\View\Annotation\View')) {
             $route = $event->getRoute();
-            $route->setOption('view', $annotation->getTemplate());
-            $route->setOption('view_layout', $annotation->getLayout());
+
+            if ($view = $annotation->getTemplate()) {
+                $route->setDefault('_view', $view);
+            }
+
+            if (null !== $layout = $annotation->getLayout()) {
+                $route->setDefault('_view_layout', $layout);
+            }
         }
     }
 
@@ -66,11 +72,11 @@ class ViewListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $result  = $event->getControllerResult();
 
-        if (null !== $template = $request->attributes->get('_route_options[view]', null, true) and (null === $result || is_array($result))) {
+        if (null !== $template = $request->attributes->get('_view') and (null === $result || is_array($result))) {
             $response = $result = $this->view->render($template, $result ?: array());
         }
 
-        if (null !== $layout = $request->attributes->get('_route_options[view_layout]', null, true)) {
+        if (null !== $layout = $request->attributes->get('_view_layout')) {
             $this->view->setLayout($layout);
         }
 

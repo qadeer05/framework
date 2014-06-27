@@ -61,7 +61,7 @@ class ToolbarListener implements EventSubscriberInterface
 
             return new Response($content);
 
-        })->setOption('maintenance', true);
+        })->setDefault('_maintenance', true);
     }
 
     public function onKernelResponse(FilterResponseEvent $event)

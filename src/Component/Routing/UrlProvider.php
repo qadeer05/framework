@@ -4,17 +4,15 @@ namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\File\Exception\InvalidArgumentException;
 use Pagekit\Component\File\ResourceLocator;
-use Pagekit\Component\Routing\Event\GenerateRouteEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\RouteCollection;
 
 class UrlProvider
 {
     /**
-     * @var RouteCollection
+     * @var Router
      */
-    protected $routes;
+    protected $router;
 
     /**
      * @var RequestContext
@@ -27,50 +25,16 @@ class UrlProvider
     protected $locator;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
-
-    /**
-     * @var UrlGenerator
-     */
-    private $url;
-
-    /**
-     * @var LinkGenerator
-     */
-    protected $link;
-
-    /**
      * Constructor.
      *
-     * @param Router                   $router
-     * @param ResourceLocator          $locator
-     * @param EventDispatcherInterface $events
-     * @param UrlGenerator             $url
-     * @param LinkGenerator            $link
+     * @param Router          $router
+     * @param ResourceLocator $locator
      */
-    public function __construct(Router $router, ResourceLocator $locator, EventDispatcherInterface $events, UrlGenerator $url = null, LinkGenerator $link = null)
+    public function __construct(Router $router, ResourceLocator $locator)
     {
-        $this->routes  = $router->getRoutes();
+        $this->router  = $router;
         $this->context = $router->getContext();
         $this->locator = $locator;
-        $this->events  = $events;
-        $this->url     = $url  ?: new UrlGenerator($this->routes, $this->context);
-        $this->link    = $link ?: new LinkGenerator($this->routes);
-    }
-
-    /**
-     * @return UrlGenerator
-     */
-    public function getUrlGenerator()
-    {
-        return $this->url;
-    }
-
-    public function getLinkGenerator()
-    {
-        return $this->link;
     }
 
     /**
@@ -160,7 +124,11 @@ class UrlProvider
             $query = '?'.$query;
         }
 
-        return $this->url->generateUrl($this->base($referenceType).'/'.trim($path, '/').$query, $referenceType);
+        if ($referenceType != UrlGenerator::BASE_PATH) {
+            $path = $this->base($referenceType).'/'.trim($path, '/');
+        }
+
+        return $path.$query;
     }
 
     /**
@@ -175,20 +143,11 @@ class UrlProvider
     {
         try {
 
-            $event = $this->events->dispatch('route.generate', new GenerateRouteEvent($this->link->generate($name, $parameters), $referenceType));
-
-            if ($url = $event->getUrl()) {
-                return $url;
-            }
-
-            $link = $event->getLink();
-
-            return $this->url->generate($link->getName(), $link->getParameters(), $event->getReferenceType()) . $link->getFragment();
+            return $this->router->generate($name, $parameters, $referenceType);
 
         } catch (RouteNotFoundException $e) {}
 
         return false;
-
     }
 
     /**
