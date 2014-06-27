@@ -23,6 +23,9 @@ class RazrServiceProvider implements ServiceProviderInterface
             $engine->addDirective(new FunctionDirective('gravatar', array(new GravatarHelper, 'get')));
             $engine->addGlobal('app', $app);
 
+            $engine->addDirective(new FunctionDirective('url', array($app['url'], 'to')));
+            $engine->addFunction('url', array($app['url'], 'to'));
+
             if (isset($app['view'])) {
                 $engine->addDirective(new FunctionDirective('action', array($app['view'], 'callAction')));
             }
