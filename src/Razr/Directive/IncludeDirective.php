@@ -21,7 +21,7 @@ class IncludeDirective extends Directive
     public function parse(TokenStream $stream, Token $token)
     {
         if ($stream->nextIf('include') && $stream->expect('(')) {
-            return sprintf("echo(\$this->render%s)", $this->parser->parseExpression());
+            return sprintf("\$_defined = array%s; echo(\$this->render(\$_defined[0], array_merge(get_defined_vars(), isset(\$_defined[1]) ? \$_defined[1] : [])))", $this->parser->parseExpression());
         }
     }
 }
