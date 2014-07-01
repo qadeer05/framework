@@ -59,7 +59,7 @@ class View
     }
 
     /**
-     * Get the layout template.
+     * Gets the layout template.
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class View
     }
 
     /**
-     * Set the layout template.
+     * Sets the layout template.
      *
      * @param string $layout
      */
@@ -131,7 +131,7 @@ class View
     }
 
     /**
-     * Render a template.
+     * Renders a template.
      *
      * @param  string $name
      * @param  array  $parameters

@@ -8,7 +8,8 @@ use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
 use Pagekit\Framework\Templating\RazrEngine;
 use Pagekit\Framework\Templating\RazrExceptionHandler;
-use Pagekit\Razr\Directive\FunctionDirective;
+use Razr\Directive\FunctionDirective;
+use Razr\Loader\FilesystemLoader;
 
 class RazrServiceProvider implements ServiceProviderInterface
 {
@@ -19,7 +20,7 @@ class RazrServiceProvider implements ServiceProviderInterface
             $parser = $app['tmpl.parser'];
             $parser->addEngine('razr', '.razr');
 
-            $engine = new RazrEngine($parser, $app['path'].'/app/cache/templates');
+            $engine = new RazrEngine($parser, new FilesystemLoader, $app['path'].'/app/cache/templates');
             $engine->addDirective(new FunctionDirective('gravatar', array(new GravatarHelper, 'get')));
             $engine->addGlobal('app', $app);
 

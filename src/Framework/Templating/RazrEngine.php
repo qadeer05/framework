@@ -2,8 +2,9 @@
 
 namespace Pagekit\Framework\Templating;
 
-use Pagekit\Razr\Engine;
-use Pagekit\Razr\Exception\InvalidArgumentException;
+use Razr\Engine;
+use Razr\Exception\InvalidArgumentException;
+use Razr\Loader\LoaderInterface;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 
@@ -15,12 +16,13 @@ class RazrEngine extends Engine implements EngineInterface
     protected $nameParser;
 
     /**
-     * @param TemplateNameParserInterface $parser
-     * @param Environment                 $environment
+     * @param TemplateNameParserInterface $nameParser
+     * @param LoaderInterface             $loader
+     * @param string                      $cachePath
      */
-    public function __construct(TemplateNameParserInterface $nameParser, $cachePath = null)
+    public function __construct(TemplateNameParserInterface $nameParser, LoaderInterface $loader, $cachePath = null)
     {
-        parent::__construct($cachePath);
+        parent::__construct($loader, $cachePath);
 
         $this->nameParser = $nameParser;
     }
