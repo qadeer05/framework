@@ -123,7 +123,7 @@ class UrlProvider
             $query = '?'.$query;
         }
 
-        if ($referenceType != UrlGenerator::BASE_PATH) {
+        if ($referenceType !== UrlGenerator::BASE_PATH) {
             $path = $this->base($referenceType).'/'.trim($path, '/');
         }
 
