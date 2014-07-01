@@ -46,10 +46,7 @@ class Engine
         $this->lexer  = new Lexer($this);
         $this->parser = new Parser($this);
         $this->addExtension(new CoreExtension);
-
-        if (is_dir($cachePath) || @mkdir($cachePath, 0777, true)) {
-            $this->cachePath = $cachePath;
-        }
+        $this->cachePath = $cachePath;
     }
 
     /**
@@ -454,8 +451,8 @@ class Engine
             if (!is_file($cache) || filemtime($name) > filemtime($cache)) {
 
                 $compiled = $this->compile(file_get_contents($name), $name);
-
-                if (!file_put_contents($cache, $compiled)) {
+                
+                if (!(is_dir($this->cachePath) || @mkdir($this->cachePath, 0777, true)) || !file_put_contents($cache, $compiled)) {
                     throw new RuntimeException("Failed to write cache file ($cache).");
                 }
             }
