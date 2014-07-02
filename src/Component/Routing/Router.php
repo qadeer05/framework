@@ -10,11 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
-class Router implements RouterInterface
+class Router implements RouterInterface, RequestMatcherInterface
 {
     /**
      * @var HttpKernelInterface
@@ -307,6 +308,14 @@ class Router implements RouterInterface
     public function match($pathinfo)
     {
         return $this->getMatcher()->match($pathinfo);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function matchRequest(Request $request)
+    {
+        return $this->getMatcher()->matchRequest($request);
     }
 
     /**

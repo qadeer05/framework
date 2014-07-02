@@ -3,6 +3,7 @@
 namespace Pagekit\Component\Routing\Matcher;
 
 use Pagekit\Component\Routing\AliasCollection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\UrlMatcher as BaseUrlMatcher;
 
 class UrlMatcher extends BaseUrlMatcher
@@ -35,9 +36,9 @@ class UrlMatcher extends BaseUrlMatcher
     /**
      * {@inheritdoc}
      */
-    public function match($pathinfo)
+    public function matchRequest(Request $request)
     {
-        $params = parent::match($pathinfo);
+        $params = parent::matchRequest($request);
 
         if (false !== $pos = strpos($params['_route'], '?')) {
             $params['_route'] = substr($params['_route'], 0, $pos);
