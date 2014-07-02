@@ -34,7 +34,9 @@ class ParamFetcherListener implements EventSubscriberInterface
      */
     public function onConfigureRoute(ConfigureRouteEvent $event)
     {
-        $event->getRoute()->setDefault('_params', $this->paramReader->read($event->getMethod()));
+        if ($params = $this->paramReader->read($event->getMethod())) {
+            $event->getRoute()->setDefault('_params', $params);
+        }
     }
 
     /**
