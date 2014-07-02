@@ -21,7 +21,7 @@ class TransDirective extends Directive
      */
     public function parse(TokenStream $stream, Token $token)
     {
-        if ($stream->nextIf(['trans', 'transChoice']) && $stream->expect('(')) {
+        if ($stream->nextIf(['trans', 'transchoice']) && $stream->expect('(')) {
 
             $out = 'echo ' . ($token->test('trans') ? '__' : '_c');
 
