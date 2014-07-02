@@ -6,6 +6,7 @@ use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
+use Pagekit\Framework\Templating\Razr\Directive\TransDirective;
 use Pagekit\Framework\Templating\RazrEngine;
 use Pagekit\Framework\Templating\RazrExceptionHandler;
 use Razr\Directive\FunctionDirective;
@@ -52,10 +53,7 @@ class RazrServiceProvider implements ServiceProviderInterface
             }
 
             if (isset($app['translator'])) {
-                $engine->addDirective(new FunctionDirective('trans', array($app['translator'], 'trans')));
-                $engine->addDirective(new FunctionDirective('transchoice', array($app['translator'], 'transChoice')));
-                $engine->addFunction('trans', array($app['translator'], 'trans'));
-                $engine->addFunction('transchoice', array($app['translator'], 'transChoice'));
+                $engine->addDirective(new TransDirective);
             }
 
             return $engine;
