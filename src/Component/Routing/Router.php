@@ -322,13 +322,17 @@ class Router implements RouterInterface
      */
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
+        if ($fragment = strstr($name, '#')) {
+            $name = strstr($name, '#', true);
+        }
+
         if ($query = substr(strstr($name, '?'), 1)) {
             parse_str($query, $params);
             $name = strstr($name, '?', true);
             $parameters = array_replace($parameters, $params);
         }
 
-        return $this->getGenerator()->generate($name, $parameters, $referenceType);
+        return $this->getGenerator()->generate($name, $parameters, $referenceType).$fragment;
     }
 
     /**
