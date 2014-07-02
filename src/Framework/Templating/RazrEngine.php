@@ -5,6 +5,7 @@ namespace Pagekit\Framework\Templating;
 use Razr\Engine;
 use Razr\Exception\InvalidArgumentException;
 use Razr\Loader\LoaderInterface;
+use Razr\Storage\Storage;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 
@@ -49,6 +50,17 @@ class RazrEngine extends Engine implements EngineInterface
         $template = $this->nameParser->parse($name);
 
         return 'razr' === $template->get('engine');
+    }
+
+    /**
+     * Loads a template by name.
+     *
+     * @param  string $name
+     * @return Storage
+     */
+    public function loadTemplate($name)
+    {
+        return $this->load($name);
     }
 
     /**
