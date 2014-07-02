@@ -10,12 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
-class Router implements RouterInterface, RequestMatcherInterface
+class Router implements RouterInterface
 {
     /**
      * @var HttpKernelInterface
@@ -83,7 +82,7 @@ class Router implements RouterInterface, RequestMatcherInterface
 
         $this->options = array_replace(array(
             'cache'     => null,
-            'matcher'   => 'Pagekit\Component\Routing\Matcher\UrlMatcher',
+            'matcher'   => 'Symfony\Component\Routing\Matcher\UrlMatcher',
             'generator' => 'Pagekit\Component\Routing\Generator\UrlGenerator'
         ), $options);
     }
@@ -160,14 +159,12 @@ class Router implements RouterInterface, RequestMatcherInterface
                 require_once($cache);
 
                 $this->matcher = new $class($this->context);
-                $this->matcher->setAliases($this->aliases);
 
             } else {
 
                 $class = $this->options['matcher'];
 
                 $this->matcher = new $class($this->getRouteCollection(), $this->context);
-                $this->matcher->setAliases($this->aliases);
             }
         }
 
@@ -307,15 +304,17 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function match($pathinfo)
     {
-        return $this->getMatcher()->match($pathinfo);
-    }
+        $params = $this->getMatcher()->match($pathinfo);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function matchRequest(Request $request)
-    {
-        return $this->getMatcher()->matchRequest($request);
+        if (false !== $pos = strpos($params['_route'], '?')) {
+            $params['_route'] = substr($params['_route'], 0, $pos);
+        }
+
+        if (isset($params['_route']) and $alias = $this->aliases->get($params['_route']) and is_callable($alias[1])) {
+            $params = call_user_func($alias[1], $params);
+        }
+
+        return $params;
     }
 
     /**
@@ -323,6 +322,12 @@ class Router implements RouterInterface, RequestMatcherInterface
      */
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
+        if ($query = substr(strstr($name, '?'), 1)) {
+            parse_str($query, $params);
+            $name = strstr($name, '?', true);
+            $parameters = array_replace($parameters, $params);
+        }
+
         return $this->getGenerator()->generate($name, $parameters, $referenceType);
     }
 

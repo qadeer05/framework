@@ -45,34 +45,21 @@ class UrlGenerator extends BaseUrlGenerator
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
-    {
-        if ($query = substr(strstr($name, '?'), 1)) {
-            parse_str($query, $params);
-            $name = strstr($name, '?', true);
-            $parameters = array_replace($parameters, $params);
-        }
-
-        return parent::generate($name, $parameters, $referenceType);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
     {
-        if ($params = array_intersect_key($parameters, array_flip($variables))) {
+        $link = $name;
 
-            $link = $name.'?'.http_build_query($params);
+        if ($params = array_intersect_key($parameters, array_flip(isset($defaults['_variables']) ? $defaults['_variables'] : $variables))) {
+
+            $link .= '?'.http_build_query($params);
 
             if ($properties = $this->getRouteProperties($link)) {
-                $name = $link;
                 list($variables, $defaults, $requirements, $tokens, $hostTokens, $requiredSchemes) = $properties;
             }
         }
 
         if ($referenceType === self::LINK_URL) {
-            return $name;
+            return $link;
         }
 
         if ($alias = $this->aliases->get($name) and is_callable($alias[2])) {
