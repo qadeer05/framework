@@ -58,7 +58,7 @@ class AliasCollection
             }
 
             if ($route = $routes->get($name)) {
-                $collection->add($source, new Route($alias[0], array_merge($route->getDefaults(), array_intersect_key($params, array_flip($route->compile()->getPathVariables())))));
+                $collection->add($source, new Route($alias[0], array_merge($route->getDefaults(), $params, ['_variables' => $route->compile()->getPathVariables()])));
             }
         }
 
