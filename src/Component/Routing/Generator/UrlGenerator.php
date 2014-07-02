@@ -2,7 +2,6 @@
 
 namespace Pagekit\Component\Routing\Generator;
 
-use Pagekit\Component\Routing\AliasCollection;
 use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 
 class UrlGenerator extends BaseUrlGenerator
@@ -16,31 +15,6 @@ class UrlGenerator extends BaseUrlGenerator
      * Generates a path relative to the executed script, e.g. "/dir/file".
      */
     const BASE_PATH = 'base';
-
-    /**
-     * @var AliasCollection
-     */
-    protected $aliases;
-
-    /**
-     * Gets the alias collection.
-     *
-     * @return AliasCollection
-     */
-    public function getAliases()
-    {
-        return $this->aliases;
-    }
-
-    /**
-     * Sets the alias collection.
-     *
-     * @param AliasCollection
-     */
-    public function setAliases(AliasCollection $aliases)
-    {
-        $this->aliases = $aliases;
-    }
 
     /**
      * {@inheritdoc}
@@ -62,10 +36,6 @@ class UrlGenerator extends BaseUrlGenerator
             return $link;
         }
 
-        if ($alias = $this->aliases->get($name) and is_callable($alias[2])) {
-            $parameters = call_user_func($alias[2], $parameters);
-        }
-
         $url = parent::doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, $requiredSchemes);
 
         if ($referenceType === self::BASE_PATH) {
@@ -76,7 +46,7 @@ class UrlGenerator extends BaseUrlGenerator
     }
 
     /**
-     * Gets the properties of a route (e.g. requirements).
+     * Gets the properties of a route.
      *
      * @param  string $name
      * @return array

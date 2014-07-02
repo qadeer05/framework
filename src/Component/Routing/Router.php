@@ -3,6 +3,7 @@
 namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\Routing\Controller\ControllerCollection;
+use Pagekit\Component\Routing\Generator\UrlGenerator;
 use Pagekit\Component\Routing\Generator\UrlGeneratorDumper;
 use Pagekit\Component\Routing\RequestContext as ExtendedRequestContext;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,14 +193,12 @@ class Router implements RouterInterface
                 require_once($cache);
 
                 $this->generator = new $class($this->context);
-                $this->generator->setAliases($this->aliases);
 
             } else {
 
                 $class = $this->options['generator'];
 
                 $this->generator = new $class($this->getRouteCollection(), $this->context);
-                $this->generator->setAliases($this->aliases);
             }
         }
 
@@ -320,7 +319,7 @@ class Router implements RouterInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
     {
         if ($fragment = strstr($name, '#')) {
             $name = strstr($name, '#', true);
@@ -332,7 +331,13 @@ class Router implements RouterInterface
             $parameters = array_replace($parameters, $params);
         }
 
-        return $this->getGenerator()->generate($name, $parameters, $referenceType).$fragment;
+        if ($referenceType !== UrlGenerator::LINK_URL) {
+            if ($alias = $this->aliases->get($name) and is_callable($alias[2])) {
+                $parameters = call_user_func($alias[2], $parameters);
+            }
+        }
+
+        return $this->getGenerator()->generate($name, $parameters, $referenceType) . $fragment;
     }
 
     /**
