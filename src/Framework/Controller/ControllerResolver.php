@@ -2,9 +2,9 @@
 
 namespace Pagekit\Framework\Controller;
 
-use Pagekit\Component\Routing\Controller\ControllerResolver as BaseControllerResolver;
 use Pagekit\Framework\Application;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 
 class ControllerResolver extends BaseControllerResolver
 {

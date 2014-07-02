@@ -1,40 +1,23 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Pagekit\Component\Routing\Generator;
 
-namespace Pagekit\Component\Routing\Generator\Dumper;
 use Symfony\Component\Routing\Generator\Dumper\GeneratorDumper;
 
 /**
- * PhpGeneratorDumper creates a PHP class able to generate URLs for a given set of routes.
+ * UrlGeneratorDumper creates a PHP class able to generate URLs for a given set of routes.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Tobias Schultze <http://tobion.de>
- *
- * @api
+ * @copyright (c) Fabien Potencier <fabien@symfony.com>
  */
-class PhpGeneratorDumper extends GeneratorDumper
+class UrlGeneratorDumper extends GeneratorDumper
 {
     /**
      * Dumps a set of routes to a PHP class.
      *
-     * Available options:
-     *
-     *  * class:      The class name
-     *  * base_class: The base class name
-     *
-     * @param array $options An array of options
-     *
-     * @return string A PHP class representing the generator class
-     *
-     * @api
+     * @param  array  $options
+     * @return string
      */
     public function dump(array $options = array())
     {
@@ -79,7 +62,7 @@ EOF;
      * Generates PHP code representing an array of defined routes
      * together with the routes properties (e.g. requirements).
      *
-     * @return string PHP code
+     * @return string
      */
     private function generateDeclaredRoutes()
     {
@@ -105,7 +88,7 @@ EOF;
     /**
      * Generates PHP code representing the `generate` method that implements the UrlGeneratorInterface.
      *
-     * @return string PHP code
+     * @return string
      */
     private function generateGenerateMethod()
     {
@@ -121,22 +104,11 @@ EOF;
         return \$this->doGenerate(\$variables, \$defaults, \$requirements, \$tokens, \$parameters, \$name, \$referenceType, \$hostTokens, \$requiredSchemes);
     }
 
-    public function getPathVariables(\$name)
+    protected function getRouteProperties(\$name)
     {
-        if (!isset(self::\$declaredRoutes[\$name])) {
-            throw new RouteNotFoundException(sprintf('Unable to get path variables for the named route "%s" as such route does not exist.', \$name));
+        if (isset(self::\$declaredRoutes[\$name])) {
+            return self::\$declaredRoutes[\$name];
         }
-
-        return self::\$declaredRoutes[\$name][0];
-    }
-
-    public function getDefaults(\$name)
-    {
-        if (!isset(self::\$declaredRoutes[\$name])) {
-            throw new RouteNotFoundException(sprintf('Unable to get defaults for the named route "%s" as such route does not exist.', \$name));
-        }
-
-        return self::\$declaredRoutes[\$name][1];
     }
 EOF;
     }

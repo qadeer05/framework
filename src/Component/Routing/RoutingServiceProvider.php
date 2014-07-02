@@ -4,6 +4,7 @@ namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\Filter\FilterManager;
 use Pagekit\Component\Routing\Controller\ControllerReader;
+use Pagekit\Component\Routing\Controller\ControllerCollection;
 use Pagekit\Component\Routing\EventListener\LoaderListener;
 use Pagekit\Component\Routing\EventListener\StringToResponseListener;
 use Pagekit\Component\Routing\Loader\RouteLoader;
@@ -26,15 +27,11 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['router'] = function($app) {
-
-            $reader = new ControllerReader($app['events']);
-            $loader = new RouteLoader($reader);
-
-            return new Router($app['kernel'], $loader, $app['resolver'], isset($app['config']) ? $app['config']['app.debug'] : true);
+            return new Router($app['kernel'], $app['controllers'], array('cache' => $app['path.cache']));
         };
 
         $app['kernel'] = function($app) {
-            return new HttpKernel($app['events'], $app['resolver'], $app['request_stack']);
+            return new HttpKernel($app['events'], $app['controllers'], $app['request_stack']);
         };
 
         $app['request_stack'] = function () {
@@ -49,6 +46,14 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new ControllerResolver;
         };
 
+        $app['controllers'] = function($app) {
+
+            $reader = new ControllerReader($app['events']);
+            $loader = new RouteLoader($reader);
+
+            return new ControllerCollection($loader, $app['resolver']);
+        };
+
         $app['url'] = function($app) {
             return new UrlProvider($app['router'], $app['locator']);
         };
@@ -61,7 +66,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $app['events']->addSubscriber(new ParamFetcherListener(new ParamReader, new ParamFetcher(new FilterManager)));
         $app['events']->addSubscriber(new RouterListener($app['router'], null, null, $app['request_stack']));
-        $app['events']->addSubscriber(new LoaderListener($app['router']));
         $app['events']->addSubscriber(new ResponseListener('UTF-8'));
         $app['events']->addSubscriber(new StringToResponseListener);
     }

@@ -4,6 +4,7 @@ namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\File\Exception\InvalidArgumentException;
 use Pagekit\Component\File\ResourceLocator;
+use Pagekit\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class UrlProvider
@@ -102,16 +103,14 @@ class UrlProvider
             return $this->route($path, $parameters, $referenceType);
         }
 
-        if (filter_var($path, FILTER_VALIDATE_URL) !== false) {
+        try {
 
-            try {
-
+            if (filter_var($path, FILTER_VALIDATE_URL) !== false) {
                 $path = $this->locator->findResource($path);
-
-            } catch (InvalidArgumentException $e) {
-                return $path;
             }
 
+        } catch (InvalidArgumentException $e) {
+            return $path;
         }
 
         if ($this->isAbsolutePath($path)) {

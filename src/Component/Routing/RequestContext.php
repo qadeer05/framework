@@ -12,6 +12,9 @@ class RequestContext extends BaseRequestContext
     protected $referer;
     protected $schemeAndHttpHost;
 
+    /**
+     * {@inheritdoc}
+     */
     public function fromRequest(Request $request)
     {
         parent::fromRequest($request);
