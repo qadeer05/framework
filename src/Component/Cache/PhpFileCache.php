@@ -16,11 +16,7 @@ class PhpFileCache extends BasePhpFileCache
      */
     protected function getFilename($id)
     {
-        $hash = sha1($id);
-        $path = implode(array_slice(str_split($hash, 2), 0, 2), DIRECTORY_SEPARATOR);
-        $path = $this->directory . DIRECTORY_SEPARATOR . $path;
-
-        return $path . DIRECTORY_SEPARATOR . $hash . $this->extension;
+        return $this->directory . DIRECTORY_SEPARATOR . sha1($id) . $this->extension;
     }
 
     /**
@@ -30,11 +26,7 @@ class PhpFileCache extends BasePhpFileCache
     {
         $file = $this->getFilename($id);
 
-        if ($unlink = @unlink($file)) {
-            $this->deleteEmptyDirectory(dirname($file));
-        }
-
-        return $unlink;
+        return @unlink($file);
     }
 
     /**
@@ -42,42 +34,10 @@ class PhpFileCache extends BasePhpFileCache
      */
     protected function doFlush()
     {
-        $dirs = array();
-
-        foreach ($this->getFileIterator() as $name => $file) {
-            @unlink($name);
-            $dirs[] = dirname($name);
-        }
-
-        foreach (array_unique($dirs) as $dir) {
-            $this->deleteEmptyDirectory($dir);
+        foreach (glob($this->directory . DIRECTORY_SEPARATOR . '*' . $this->extension) as $file) {
+            @unlink($file);
         }
 
         return true;
-    }
-
-    /**
-     * @return \Iterator
-     */
-    protected function getFileIterator()
-    {
-        $pattern = '/^.+\\' . $this->extension . '$/i';
-        $iterator = new \RecursiveDirectoryIterator($this->directory);
-        $iterator = new \RecursiveIteratorIterator($iterator);
-        return new \RegexIterator($iterator, $pattern);
-    }
-
-    /**
-     * @param string
-     */
-    protected function deleteEmptyDirectory($dir)
-    {
-        if (strpos($dir, $this->directory) !== 0 || !is_readable($dir) || !$scan = scandir($dir) or count($scan) != 2) {
-            return;
-        }
-
-        if (@rmdir($dir) && $this->directory != dirname($dir)) {
-            $this->deleteEmptyDirectory(dirname($dir));
-        }
     }
 }
