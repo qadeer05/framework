@@ -3,8 +3,8 @@
 namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\Routing\Controller\ControllerCollection;
-use Pagekit\Component\Routing\Generator\UrlGenerator;
 use Pagekit\Component\Routing\Generator\UrlGeneratorDumper;
+use Pagekit\Component\Routing\Generator\UrlGeneratorInterface;
 use Pagekit\Component\Routing\RequestContext as ExtendedRequestContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
-class Router implements RouterInterface
+class Router implements RouterInterface, UrlGeneratorInterface
 {
     /**
      * @var HttpKernelInterface
@@ -48,14 +48,14 @@ class Router implements RouterInterface
     protected $routes;
 
     /**
-     * @var AliasCollection
-     */
-    protected $aliases;
-
-    /**
      * @var ControllerCollection
      */
     protected $controllers;
+
+    /**
+     * @var array
+     */
+    protected $aliases;
 
     /**
      * @var array
@@ -78,7 +78,7 @@ class Router implements RouterInterface
     {
         $this->kernel      = $kernel;
         $this->controllers = $controllers;
-        $this->aliases     = new AliasCollection;
+        $this->aliases     = array();
         $this->context     = new ExtendedRequestContext;
 
         $this->options = array_replace(array(
@@ -132,8 +132,23 @@ class Router implements RouterInterface
     public function getRouteCollection()
     {
         if (!$this->routes) {
+
             $this->routes = $this->controllers->getRoutes();
-            $this->routes->addCollection($this->aliases->getRoutes($this->routes));
+
+            foreach ($this->aliases as $source => $alias) {
+
+                $name = $source;
+                $params = array();
+
+                if ($query = substr(strstr($source, '?'), 1)) {
+                    $name = strstr($source, '?', true);
+                    parse_str($query, $params);
+                }
+
+                if ($route = $this->routes->get($name)) {
+                    $this->routes->add($source, new Route($alias[0], array_merge($route->getDefaults(), $params, array('_variables' => $route->compile()->getPathVariables()))));
+                }
+            }
         }
 
         return $this->routes;
@@ -213,7 +228,7 @@ class Router implements RouterInterface
      */
     public function getAlias($name)
     {
-        return $this->aliases->get($name);
+        return isset($this->aliases[$name]) ? $this->aliases[$name] : false;
     }
 
     /**
@@ -226,7 +241,9 @@ class Router implements RouterInterface
      */
     public function addAlias($path, $name, callable $inbound = null, callable $outbound = null)
     {
-        $this->aliases->add($path, $name, $inbound, $outbound);
+        $path = preg_replace('/^[^\/]/', '/$0', $path);
+
+        $this->aliases[$name] = array($path, $inbound, $outbound);
     }
 
     /**
@@ -309,7 +326,7 @@ class Router implements RouterInterface
             $params['_route'] = substr($params['_route'], 0, $pos);
         }
 
-        if (isset($params['_route']) and $alias = $this->aliases->get($params['_route']) and is_callable($alias[1])) {
+        if (isset($params['_route']) and $alias = $this->getAlias($params['_route']) and is_callable($alias[1])) {
             $params = call_user_func($alias[1], $params);
         }
 
@@ -319,7 +336,7 @@ class Router implements RouterInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
         if ($fragment = strstr($name, '#')) {
             $name = strstr($name, '#', true);
@@ -331,8 +348,8 @@ class Router implements RouterInterface
             $parameters = array_replace($parameters, $params);
         }
 
-        if ($referenceType !== UrlGenerator::LINK_URL) {
-            if ($alias = $this->aliases->get($name) and is_callable($alias[2])) {
+        if ($referenceType !== self::LINK_URL) {
+            if ($alias = $this->getAlias($name) and is_callable($alias[2])) {
                 $parameters = call_user_func($alias[2], $parameters);
             }
         }
@@ -348,7 +365,10 @@ class Router implements RouterInterface
         if (!$this->cacheKey) {
 
             $resources = $this->controllers->getResources();
-            $resources['aliases'] = $this->aliases->getResources();
+
+            foreach ($this->aliases as $name => $alias) {
+                $resources['aliases'][] = $name.$alias[0];
+            }
 
             $this->cacheKey = sha1(json_encode($resources));
         }
