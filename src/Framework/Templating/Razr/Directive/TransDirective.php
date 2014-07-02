@@ -23,7 +23,7 @@ class TransDirective extends Directive
     {
         if ($stream->nextIf(['trans', 'transChoice']) && $stream->expect('(')) {
 
-            $out = 'echo ' . $token->test('trans') ? '__' : '_c';
+            $out = 'echo ' . ($token->test('trans') ? '__' : '_c');
 
             while (!$stream->test(T_CLOSE_TAG)) {
                 $out .= $this->parser->parseExpression();
