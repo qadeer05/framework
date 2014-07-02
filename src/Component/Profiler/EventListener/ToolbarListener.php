@@ -2,7 +2,7 @@
 
 namespace Pagekit\Component\Profiler\EventListener;
 
-use Pagekit\Component\Routing\Router;
+use Pagekit\Component\Routing\Controller\ControllerCollection;
 use Pagekit\Component\Routing\UrlProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,29 +24,29 @@ class ToolbarListener implements EventSubscriberInterface
     protected $url;
 
     /**
-     * @var Router
+     * @var ControllerCollection
      */
-    protected $router;
+    protected $controllers;
 
     /**
      * Constructor.
      *
-     * @param Profiler    $profiler
-     * @param UrlProvider $url
-     * @param Router      $router
+     * @param Profiler             $profiler
+     * @param UrlProvider          $url
+     * @param ControllerCollection $controllers
      */
-    public function __construct(Profiler $profiler, UrlProvider $url, Router $router)
+    public function __construct(Profiler $profiler, UrlProvider $url, ControllerCollection $controllers)
     {
-        $this->profiler = $profiler;
-        $this->url      = $url;
-        $this->router   = $router;
+        $this->profiler    = $profiler;
+        $this->url         = $url;
+        $this->controllers = $controllers;
     }
 
     public function onKernelRequest()
     {
         $profiler = $this->profiler;
 
-        $this->router->get('_profiler/{token}', '_profiler', function($token) use ($profiler) {
+        $this->controllers->get('_profiler/{token}', '_profiler', function($token) use ($profiler) {
 
             if (!$profile = $profiler->loadProfile($token)) {
                 return new Response;

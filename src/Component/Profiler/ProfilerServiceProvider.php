@@ -72,6 +72,6 @@ class ProfilerServiceProvider implements ServiceProviderInterface
 
         $app['events']->addSubscriber($request);
         $app['events']->addSubscriber(new ProfilerListener($app['profiler']));
-        $app['events']->addSubscriber(new ToolbarListener($app['profiler'], $app['url'], $app['router']));
+        $app['events']->addSubscriber(new ToolbarListener($app['profiler'], $app['url'], $app['controllers']));
     }
 }
