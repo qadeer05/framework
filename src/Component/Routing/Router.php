@@ -363,33 +363,27 @@ class Router implements RouterInterface, UrlGeneratorInterface
 
         if (!$this->cache) {
 
+            $modified  = 0;
             $resources = $this->controllers->getResources();
 
             foreach ($this->aliases as $name => $alias) {
                 $resources['aliases'][] = $name.$alias[0];
             }
 
-            $this->cache = array('key' => sha1(json_encode($resources)));
-        }
-
-        $file = sprintf($file, $this->options['cache'], $this->cache['key']);
-
-        if (!isset($this->cache['fresh'])) {
-
-            $fresh = true;
-            $time  = file_exists($file) ? filemtime($file) : 0;
-
             foreach ($resources['controllers'] as $controller) {
-                if (file_exists($controller) && filemtime($controller) > $time) {
-                    $fresh = false;
-                    break;
+                if (file_exists($controller) && ($time = filemtime($controller)) > $modified) {
+                    $modified = $time;
                 }
             }
 
-            $this->cache['fresh'] = $fresh;
+            $this->cache = array('key' => sha1(json_encode($resources)), 'modified' => $modified);
         }
 
-        return array_merge(compact('file'), $this->cache);
+        $file  = sprintf($file, $this->options['cache'], $this->cache['key']);
+        $time  = file_exists($file) ? filemtime($file) : 0;
+        $fresh = $time >= $this->cache['modified'];
+
+        return array_merge(compact('fresh', 'file'), $this->cache);
     }
 
     /**
