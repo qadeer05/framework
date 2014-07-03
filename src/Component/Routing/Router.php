@@ -64,9 +64,9 @@ class Router implements RouterInterface, UrlGeneratorInterface
     protected $options;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $cacheKey;
+    protected $cache;
 
     /**
      * Constructor.
@@ -163,17 +163,16 @@ class Router implements RouterInterface, UrlGeneratorInterface
     public function getMatcher()
     {
         if (!$this->matcher) {
-            if ($this->options['cache']) {
+            if ($cache = $this->getCache('%s/%s.matcher.cache')) {
 
-                $class   = sprintf('UrlMatcher%s', $this->getCacheKey());
-                $cache   = sprintf('%s/%s.matcher.cache', $this->options['cache'], $this->getCacheKey());
-                $options = array('class' => $class, 'base_class' => $this->options['matcher']);
+                $class = sprintf('UrlMatcher%s', $cache['key']);
 
-                if (!file_exists($cache)) {
-                    file_put_contents($cache, (new PhpMatcherDumper($this->getRouteCollection()))->dump($options));
+                if (!$cache['fresh']) {
+                    $options = array('class' => $class, 'base_class' => $this->options['matcher']);
+                    $this->writeCache($cache['file'], (new PhpMatcherDumper($this->getRouteCollection()))->dump($options));
                 }
 
-                require_once($cache);
+                require_once($cache['file']);
 
                 $this->matcher = new $class($this->context);
 
@@ -196,17 +195,16 @@ class Router implements RouterInterface, UrlGeneratorInterface
     public function getGenerator()
     {
         if (!$this->generator) {
-            if ($this->options['cache']) {
+            if ($cache = $this->getCache('%s/%s.generator.cache')) {
 
-                $class   = sprintf('UrlGenerator%s', $this->getCacheKey());
-                $cache   = sprintf('%s/%s.generator.cache', $this->options['cache'], $this->getCacheKey());
-                $options = array('class' => $class, 'base_class' => $this->options['generator']);
+                $class = sprintf('UrlGenerator%s', $cache['key']);
 
-                if (!file_exists($cache)) {
-                    file_put_contents($cache, (new UrlGeneratorDumper($this->getRouteCollection()))->dump($options));
+                if (!$cache['fresh']) {
+                    $options = array('class' => $class, 'base_class' => $this->options['generator']);
+                    $this->writeCache($cache['file'], (new UrlGeneratorDumper($this->getRouteCollection()))->dump($options));
                 }
 
-                require_once($cache);
+                require_once($cache['file']);
 
                 $this->generator = new $class($this->context);
 
@@ -300,7 +298,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @throws \RuntimeException
      * @return Response
      */
-    public function call($name, array $parameters = [])
+    public function call($name, $parameters = array())
     {
         if (empty($this->request)) {
             throw new \RuntimeException('No Request set.');
@@ -352,11 +350,18 @@ class Router implements RouterInterface, UrlGeneratorInterface
     }
 
     /**
-     * @return string
+     * Gets cache info.
+     *
+     * @param  string $file
+     * @return array|null
      */
-    protected function getCacheKey()
+    protected function getCache($file)
     {
-        if (!$this->cacheKey) {
+        if (!$this->options['cache']) {
+            return null;
+        }
+
+        if (!$this->cache) {
 
             $resources = $this->controllers->getResources();
 
@@ -364,9 +369,39 @@ class Router implements RouterInterface, UrlGeneratorInterface
                 $resources['aliases'][] = $name.$alias[0];
             }
 
-            $this->cacheKey = sha1(json_encode($resources));
+            $this->cache = array('key' => sha1(json_encode($resources)));
         }
 
-        return $this->cacheKey;
+        $file = sprintf($file, $this->options['cache'], $this->cache['key']);
+
+        if (!isset($this->cache['fresh'])) {
+
+            $fresh = true;
+            $time  = file_exists($file) ? filemtime($file) : 0;
+
+            foreach ($resources['controllers'] as $controller) {
+                if (file_exists($controller) && filemtime($controller) > $time) {
+                    $fresh = false;
+                    break;
+                }
+            }
+
+            $this->cache['fresh'] = $fresh;
+        }
+
+        return array_merge(compact('file'), $this->cache);
+    }
+
+    /**
+     * Writes cache file.
+     *
+     * @param string $file
+     * @param string $content
+     */
+    protected function writeCache($file, $content)
+    {
+        if (!file_put_contents($file, $content)) {
+            throw new \RuntimeException("Failed to write cache file ($file).");
+        }
     }
 }
