@@ -227,7 +227,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      */
     public function getAlias($name)
     {
-        return isset($this->aliases[$name]) ? $this->aliases[$name] : false;
+        return isset($this->aliases[$name]) || isset($this->aliases[$name = strtok($name, '?')]) ? $this->aliases[$name] : false;
     }
 
     /**
@@ -314,12 +314,12 @@ class Router implements RouterInterface, UrlGeneratorInterface
     {
         $params = $this->getMatcher()->match($pathinfo);
 
-        if (false !== $pos = strpos($params['_route'], '?')) {
-            $params['_route'] = substr($params['_route'], 0, $pos);
+        if ($alias = $this->getAlias($params['_route']) and is_callable($alias[1])) {
+            $params = call_user_func($alias[1], $params);
         }
 
-        if (isset($params['_route']) and $alias = $this->getAlias($params['_route']) and is_callable($alias[1])) {
-            $params = call_user_func($alias[1], $params);
+        if (false !== $pos = strpos($params['_route'], '?')) {
+            $params['_route'] = substr($params['_route'], 0, $pos);
         }
 
         return $params;
@@ -341,7 +341,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
         }
 
         if ($referenceType !== self::LINK_URL) {
-            if ($alias = $this->getAlias($name) and is_callable($alias[2])) {
+            if ($alias = $this->getAlias($this->getGenerator()->generate($name, $parameters, 'link')) and is_callable($alias[2])) {
                 $parameters = call_user_func($alias[2], $parameters);
             }
         }
