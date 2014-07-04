@@ -7,197 +7,120 @@ class Migration
     /**
      * @var string
      */
-    protected $path;
-
-    /**
-     * @var string
-     */
     protected $current;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $pattern;
+    protected $parameters;
+
+    /**
+     * @var array
+     */
+    protected $files = [];
 
     /**
      * Constructor.
      *
-     * @param string $path
-     * @param string $current
-     * @param string $pattern
+     * @param Migrator $migrator
+     * @param string   $path
+     * @param string   $current
+     * @param array    $parameters
      */
-    public function __construct($path, $current = null, $pattern = '/^(\d{4}_\d{2}_\d{2}_\d{6})_(.*)\.php$/')
+    public function __construct(Migrator $migrator, $path, $current = null, $parameters = [])
     {
-        $this->path    = $path;
-        $this->current = $current;
-        $this->pattern = $pattern;
+        $this->current    = $current;
+        $this->parameters = array_replace($migrator->getGlobals(), $parameters);
+        $this->files      = $this->load($path, $migrator->getPattern());
     }
 
     /**
-     * Gets the migrations from this migrations path
-     *
-     * @param  string|null $start version to start migrations from, or null to start at the beginning
-     * @param  string|null $end   version to end migrations at, or null to migrate to the end
-     * @return MigrationInterface[]
-     */
-    public function get($start = null, $end = null)
-    {
-        $migrations = array();
-
-        if (!is_dir($this->path)) {
-            return $migrations;
-        }
-
-        foreach (new \DirectoryIterator($this->path) as $file) {
-
-            if (!$file->isFile() || !preg_match($this->pattern, $file->getFilename(), $matches) || ($start !== null && strnatcmp($start, $matches[1]) >= 0) || ($end !== null && strnatcmp($end, $matches[1]) < 0)) {
-                continue;
-            }
-
-            include_once($file->getPathname());
-
-            $class = $this->findClass($file->getPathname());
-
-            if (!class_exists($class)) {
-                continue;
-            }
-
-            $migration = new $class;
-
-            if (!$migration instanceof MigrationInterface) {
-                continue;
-            }
-
-            $migrations[$matches[1]] = $migration;
-        }
-
-        uksort($migrations, 'strnatcmp');
-
-        return $migrations;
-    }
-
-    /**
-     * Migrate up to the next version
+     * Migrate up to a version.
      *
      * @param  string|null $version
      * @return array
      */
     public function up($version = null)
     {
-        if (!$migrations = $this->get($this->current, $version)) {
-            return array();
-        }
-
-        // if no version was given, only apply the next migration
-        is_null($version) and reset($migrations) and $migrations = array(key($migrations) => current($migrations));
-
-        return $this->apply($migrations);
+        return $this->apply($this->current, $version);
     }
 
     /**
-     * Migrate down to the previous version
+     * Migrate down to a version.
      *
      * @param  string|null $version
      * @return array
      */
     public function down($version = null)
     {
-        if (!$migrations = array_reverse($this->get($version, $this->current), true)) {
-            return array();
-        }
-
-        // if no version was given, only apply the next migration
-        is_null($version) and reset($migrations) and $migrations = array(key($migrations) => current($migrations));
-
-        return $this->apply($migrations, 'down');
+        return $this->apply($version, $this->current, 'down');
     }
 
     /**
-     * Migrate to a specific version or range of versions
+     * Applies migrations.
      *
-     * @param  string|null $version
-     * @return array
-     * @throws \UnexpectedValueException
+     * @param  string|null $start
+     * @param  string|null $end
+     * @param  string      $method
+     * @return string|bool
      */
-    public function version($version = null)
+    protected function apply($start = null, $end = null, $method = 'up')
     {
-        // determine the direction
-        if (is_null($version) or is_null($this->current) or strnatcmp($this->current, $version) < 0) {
-            return $this->up($version);
-        } else {
-            return $this->down($version);
-        }
-    }
+        $files = [];
+        $value = false;
 
-    /**
-     * Migrate to the latest version
-     *
-     * @return array
-     */
-    public function latest()
-    {
-        if (!$migrations = $this->get($this->current)) {
-            return array();
-        }
-        return $this->apply($migrations);
-    }
+        foreach ($this->files as $version => $file) {
 
-    /**
-     * Applies a method to migrations
-     *
-     * @param  MigrationInterface[] $migrations
-     * @param  string               $method
-     * @return array
-     */
-    public function apply(array $migrations, $method = 'up')
-    {
-        foreach ($migrations as $migration) {
-            $migration->$method();
-        }
-        return array_keys($migrations);
-    }
-
-    /**
-     * Returns the full class name for the first class in the file.
-     *
-     * @param  string $file
-     * @return string|false
-     */
-    protected function findClass($file)
-    {
-        $class     = false;
-        $namespace = false;
-        $tokens    = token_get_all(file_get_contents($file));
-
-        for ($i = 0, $count = count($tokens); $i < $count; $i++) {
-
-            $token = $tokens[$i];
-
-            if (!is_array($token)) {
+            if (($start !== null && strnatcmp($start, $version) >= 0) || ($end !== null && strnatcmp($end, $version) < 0)) {
                 continue;
             }
 
-            if (true === $class && T_STRING === $token[0]) {
-                return $namespace . '\\' . $token[1];
-            }
+            $files[$version] = $file;
+        }
 
-            if (true === $namespace && T_STRING === $token[0]) {
-                $namespace = '';
-                do {
-                    $namespace .= $token[1];
-                    $token = $tokens[++$i];
-                } while ($i < $count && is_array($token) && in_array($token[0], array(T_NS_SEPARATOR, T_STRING)));
-            }
+        if ($method == 'down') {
+            $files = array_reverse($files, true);
+        }
 
-            if (T_CLASS === $token[0]) {
-                $class = true;
-            }
+        foreach ($files as $version => $file) {
 
-            if (T_NAMESPACE === $token[0]) {
-                $namespace = true;
+            extract($this->parameters, EXTR_SKIP);
+
+            $value  = $version;
+            $config = require $file;
+
+            if (is_array($config) && isset($config[$method])) {
+                call_user_func($config[$method]);
             }
         }
 
-        return false;
+        return $value;
+    }
+
+    /**
+     * Loads all migration files form a given path.
+     *
+     * @param  string $path
+     * @param  string $pattern
+     * @throws \InvalidArgumentException
+     * @return array
+     */
+    protected function load($path, $pattern)
+    {
+        $files = [];
+
+        if (!is_dir($path)) {
+            throw new \InvalidArgumentException(sprintf('Unable to run migrations. Could not find path "%s"', $path));
+        }
+
+        foreach (new \DirectoryIterator($path) as $file) {
+            if ($file->isFile() && preg_match($pattern, $file->getFilename(), $matches)) {
+                $files[$matches['version']] = $file->getPathname();
+            }
+        }
+
+        uksort($files, 'strnatcmp');
+
+        return $files;
     }
 }

@@ -5,46 +5,67 @@ namespace Pagekit\Component\Migration;
 class Migrator
 {
     /**
-     * Run the outstanding migrations at a given path.
-     *
-     * @param  string $path
-     * @param  string $current
-     * @param  string $pattern
-     * @throws \InvalidArgumentException
-     * @return string|boolean
+     * @var array
      */
-    public function run($path, $current = null, $pattern = '/^(\d{4}_\d{2}_\d{2}_\d{6})_(.*)\.php$/')
+    protected $globals = [];
+
+    /**
+     * @var string
+     */
+    protected $pattern = '/^(?<version>.+)\.php$/';
+
+    /**
+     * Gets all global parameters.
+     *
+     * @return array
+     */
+    public function getGlobals()
     {
-        if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('Unable to run migrations. Could not find path "%s"', $path));
-        }
-
-        $migration = new Migration($path, $current, $pattern);
-
-        if ($result = $migration->latest()) {
-            return end($result);
-        }
-
-        return false;
+        return $this->globals;
     }
 
     /**
-     * Returns the outstanding migrations at a given path.
+     * Adds a global parameter.
+     *
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function addGlobal($name, $value)
+    {
+        $this->globals[$name] = $value;
+    }
+
+    /**
+     * Gets the migration file pattern.
+     *
+     * @return array
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
+     * Sets the migration file pattern.
+     *
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function setPattern($pattern)
+    {
+        $this->pattern = $pattern;
+    }
+
+    /**
+     * Gets a migration object.
      *
      * @param  string $path
      * @param  string $current
-     * @param  string $pattern
-     * @throws \InvalidArgumentException
-     * @return MigrationInterface[]
+     * @param  array  $parameters
+     * @return Migration
      */
-    public function get($path, $current = null, $pattern = '/^(\d{4}_\d{2}_\d{2}_\d{6})_(.*)\.php$/')
+    public function get($path, $current = null, $parameters = [])
     {
-        if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('Unable to locate migrations. Couldn\'t find path "%s"', $path));
-        }
-
-        $migration = new Migration($path, $current, $pattern);
-
-        return $migration->get($current);
+        return new Migration($this, $path, $current, $parameters);
     }
 }
