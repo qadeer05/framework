@@ -5,7 +5,7 @@ namespace Pagekit\Component\View\Event;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
-use Pagekit\Component\View\View;
+use Pagekit\Component\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 class ViewListener implements EventSubscriberInterface
 {
     /**
-     * @var View
+     * @var ViewInterface
      */
     protected $view;
 
@@ -26,12 +26,12 @@ class ViewListener implements EventSubscriberInterface
     /**
      * Constructor.
      *
-     * @param View   $view
-     * @param Reader $reader
+     * @param ViewInterface $view
+     * @param Reader        $reader
      */
-    public function __construct(View $view, Reader $reader = null)
+    public function __construct(ViewInterface $view, Reader $reader = null)
     {
-        $this->view = $view;
+        $this->view   = $view;
         $this->reader = $reader;
     }
 

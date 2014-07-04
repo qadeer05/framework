@@ -3,8 +3,8 @@
 namespace Pagekit\Component\Routing;
 
 use Pagekit\Component\Filter\FilterManager;
-use Pagekit\Component\Routing\Controller\ControllerReader;
 use Pagekit\Component\Routing\Controller\ControllerCollection;
+use Pagekit\Component\Routing\Controller\ControllerReader;
 use Pagekit\Component\Routing\EventListener\LoaderListener;
 use Pagekit\Component\Routing\EventListener\StringToResponseListener;
 use Pagekit\Component\Routing\Loader\RouteLoader;

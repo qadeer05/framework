@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\EngineInterface;
 
-class View
+class View implements ViewInterface
 {
     /**
      * @var EngineInterface
@@ -49,9 +49,9 @@ class View
     }
 
     /**
-     * Get the template engine.
+     * Gets the template engine.
      *
-     * @return DelegatingEngine
+     * @return EngineInterface
      */
     public function getEngine()
     {
@@ -59,9 +59,17 @@ class View
     }
 
     /**
-     * Gets the layout template.
+     * Sets the template engine.
      *
-     * @return string
+     * @param EngineInterface $engine
+     */
+    public function setEngine(EngineInterface $engine)
+    {
+        $this->engine = $engine;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getLayout()
     {
@@ -69,9 +77,7 @@ class View
     }
 
     /**
-     * Sets the layout template.
-     *
-     * @param string $layout
+     * {@inheritdoc}
      */
     public function setLayout($layout)
     {
@@ -131,12 +137,7 @@ class View
     }
 
     /**
-     * Renders a template.
-     *
-     * @param  string $name
-     * @param  array  $parameters
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function render($name, array $parameters = array())
     {
@@ -166,12 +167,7 @@ class View
     }
 
     /**
-     * Calls an action callback
-     *
-     * @param string $action
-     * @param array  $parameters
-     *
-     * @return string The placeholder
+     * {@inheritdoc}
      */
     public function callAction($action, $parameters = array())
     {

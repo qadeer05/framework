@@ -2,22 +2,22 @@
 
 namespace Pagekit\Framework\Templating\Helper;
 
-use Pagekit\Component\View\View;
+use Pagekit\Component\View\ViewInterface;
 use Symfony\Component\Templating\Helper\Helper;
 
 class ActionHelper extends Helper
 {
     /**
-     * @var View
+     * @var ViewInterface
      */
     protected $view;
 
     /**
      * Constructor.
      *
-     * @param View $view
+     * @param ViewInterface $view
      */
-    public function __construct(View $view)
+    public function __construct(ViewInterface $view)
     {
         $this->view = $view;
     }

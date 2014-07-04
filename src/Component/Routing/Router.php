@@ -389,8 +389,9 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * Writes cache file.
      *
-     * @param string $file
-     * @param string $content
+     * @param  string $file
+     * @param  string $content
+     * @throws \RuntimeException
      */
     protected function writeCache($file, $content)
     {

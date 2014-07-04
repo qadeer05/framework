@@ -2,8 +2,8 @@
 
 namespace Pagekit\Component\Routing\Controller;
 
-use Pagekit\Component\Routing\Loader\LoaderInterface;
 use Pagekit\Component\Routing\Exception\LoaderException;
+use Pagekit\Component\Routing\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\Routing\Route;

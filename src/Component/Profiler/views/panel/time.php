@@ -1,11 +1,12 @@
 <?php
 
 $colors = array(
-    'default' =>                '#aacd4e',
-    'section' =>                '#666',
-    'event_listener' =>         '#3dd',
+    'default'                => '#aacd4e',
+    'section'                => '#666',
+    'event_listener'         => '#3dd',
     'event_listener_loading' => '#add',
-    'doctrine' =>               '#d3d',
+    'doctrine'               => '#d3d',
+    'views'                  => '#13d',
 );
 
 $dumpEvents = function($events) {
