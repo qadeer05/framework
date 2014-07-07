@@ -48,8 +48,7 @@ class Migrator
     /**
      * Sets the migration file pattern.
      *
-     * @param string $name
-     * @param mixed  $value
+     * @param string $pattern
      */
     public function setPattern($pattern)
     {
