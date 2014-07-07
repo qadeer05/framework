@@ -4,7 +4,6 @@ namespace Pagekit\Framework\Controller;
 
 use Pagekit\Framework\Application;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 
 class ControllerResolver extends BaseControllerResolver
@@ -30,18 +29,41 @@ class ControllerResolver extends BaseControllerResolver
     /**
      * @{inheritdoc}
      */
-    protected function doGetArguments(Request $request, $controller, array $parameters)
+    protected function createController($controller)
     {
-        foreach ($parameters as $param) {
-            if ($class = $param->getClass()) {
-                if ($class->isInstance($this->app)) {
-                    $request->attributes->set($param->getName(), $this->app);
-                } elseif ($extension = $this->app['extensions']->get($class->getName())) {
-                    $request->attributes->set($param->getName(), $extension);
-                }
-            }
+        if (strpos($controller, '::') === false) {
+            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
         }
 
-        return parent::doGetArguments($request, $controller, $parameters);
+        list($class, $method) = explode('::', $controller, 2);
+
+        if (!class_exists($class)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        }
+
+        $reflection = new \ReflectionClass($class);
+
+        if ($constructor = $reflection->getConstructor()) {
+
+            $args = array();
+
+            foreach ($constructor->getParameters() as $param) {
+                if ($class = $param->getClass()) {
+
+                    if ($class->isInstance($this->app)) {
+                        $args[] = $this->app;
+                    } elseif ($extension = $this->app['extensions']->get($class->getName())) {
+                        $args[] = $extension;
+                    }
+
+                } else {
+                    throw new \InvalidArgumentException(sprintf('Unknown constructor argument "$%s".', $param->getName()));
+                }
+            }
+
+            $instance = $reflection->newInstanceArgs($args);
+        }
+
+        return array(isset($instance) ? $instance : new $class, $method);
     }
 }
