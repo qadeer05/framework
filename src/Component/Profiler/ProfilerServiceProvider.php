@@ -4,7 +4,6 @@ namespace Pagekit\Component\Profiler;
 
 use Pagekit\Component\Database\DataCollector\DatabaseDataCollector;
 use Pagekit\Component\Profiler\EventListener\ToolbarListener;
-use Pagekit\Component\View\DataCollector\ViewDataCollector;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcherInterface;
@@ -50,8 +49,6 @@ class ProfilerServiceProvider implements ServiceProviderInterface
         $app->extend('events', function($dispatcher, $app) {
             return new TraceableEventDispatcher($dispatcher, $app['profiler.stopwatch']);
         });
-
-
     }
 
     public function boot(Application $app)
@@ -81,6 +78,6 @@ class ProfilerServiceProvider implements ServiceProviderInterface
 
         $app['events']->addSubscriber($request);
         $app['events']->addSubscriber(new ProfilerListener($app['profiler']));
-        $app['events']->addSubscriber(new ToolbarListener($app['profiler'], $app['url'], $app['controllers']));
+        $app['events']->addSubscriber(new ToolbarListener($app['profiler'], $app['view'], $app['url'], $app['controllers']));
     }
 }

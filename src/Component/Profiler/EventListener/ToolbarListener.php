@@ -4,6 +4,7 @@ namespace Pagekit\Component\Profiler\EventListener;
 
 use Pagekit\Component\Routing\Controller\ControllerCollection;
 use Pagekit\Component\Routing\UrlProvider;
+use Pagekit\Component\View\ViewInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -24,6 +25,11 @@ class ToolbarListener implements EventSubscriberInterface
     protected $url;
 
     /**
+     * @var ViewInterface
+     */
+    protected $view;
+
+    /**
      * @var ControllerCollection
      */
     protected $controllers;
@@ -32,34 +38,27 @@ class ToolbarListener implements EventSubscriberInterface
      * Constructor.
      *
      * @param Profiler             $profiler
+     * @param ViewInterface        $view
      * @param UrlProvider          $url
      * @param ControllerCollection $controllers
      */
-    public function __construct(Profiler $profiler, UrlProvider $url, ControllerCollection $controllers)
+    public function __construct(Profiler $profiler, ViewInterface $view, UrlProvider $url, ControllerCollection $controllers)
     {
         $this->profiler    = $profiler;
+        $this->view        = $view;
         $this->url         = $url;
         $this->controllers = $controllers;
     }
 
     public function onKernelRequest()
     {
-        $profiler = $this->profiler;
+        $this->controllers->get('_profiler/{token}', '_profiler', function($token) {
 
-        $this->controllers->get('_profiler/{token}', '_profiler', function($token) use ($profiler) {
-
-            if (!$profile = $profiler->loadProfile($token)) {
+            if (!$profile = $this->profiler->loadProfile($token)) {
                 return new Response;
             }
 
-            $viewpath = __DIR__.'/../views';
-
-            ob_start();
-            include $viewpath.'/toolbar.php';
-            $content = ob_get_contents();
-            ob_get_clean();
-
-            return new Response($content);
+            return new Response($this->view->render(__DIR__.'/../views/toolbar.php', ['profiler' => $this->profiler, 'profile' => $profile, 'token' => $token]));
 
         })->setDefault('_maintenance', true);
     }
