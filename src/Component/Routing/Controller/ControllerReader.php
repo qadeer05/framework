@@ -63,8 +63,8 @@ class ControllerReader implements ControllerReaderInterface
         }
 
         $options = array_replace(array(
-            'path'         => '',
-            'name'         => '',
+            'path'         => null,
+            'name'         => null,
             'requirements' => array(),
             'options'      => array(),
             'defaults'     => array(),
@@ -91,6 +91,14 @@ class ControllerReader implements ControllerReaderInterface
             if ($annotation->getDefaults() !== null) {
                 $options['defaults'] = $annotation->getDefaults();
             }
+        }
+
+        if ($options['path'] === null) {
+            $options['path'] = strtolower($this->parseControllerName($class));
+        }
+
+        if ($options['name'] === null) {
+            $options['name'] = '@'.strtolower($this->parseControllerName($class));
         }
 
         $this->routes = new RouteCollection;
@@ -207,9 +215,13 @@ class ControllerReader implements ControllerReaderInterface
      */
     protected function getDefaultRoutePath(ReflectionClass $class, ReflectionMethod $method, array $options)
     {
-        extract($this->parseControllerAndActionName($class, $method));
+        $action = strtolower('/'.$this->parseControllerActionName($method));
 
-        return strtolower('/'.($action == 'index' ? '' : $action));
+        if ($action == '/index') {
+            $action = '';
+        }
+
+        return $action;
     }
 
     /**
@@ -222,9 +234,13 @@ class ControllerReader implements ControllerReaderInterface
      */
     protected function getDefaultRouteName(ReflectionClass $class, ReflectionMethod $method, array $options)
     {
-        extract($this->parseControllerAndActionName($class, $method));
+        $action = strtolower('/'.$this->parseControllerActionName($method));
 
-        $name = '@'.$options['name'].'/'.$controller.($action == 'index' ? '' : '/'.$action);
+        if ($action == '/index') {
+            $action = '';
+        }
+
+        $name = $options['name'].$action;
 
         if ($this->routeIndex > 0) {
             $name .= '_'.$this->routeIndex;
@@ -232,31 +248,38 @@ class ControllerReader implements ControllerReaderInterface
 
         $this->routeIndex++;
 
-        return strtolower($name);
+        return $name;
     }
 
     /**
-     * Parses the controller and action name.
+     * Parses the controller name.
      *
      * @param  ReflectionClass $class
-     * @param  ReflectionMethod $method
      * @throws \LogicException
-     * @return array
+     * @return string
      */
-    protected function parseControllerAndActionName(ReflectionClass $class, ReflectionMethod $method)
+    protected function parseControllerName(ReflectionClass $class)
     {
         if (!preg_match('/([a-zA-Z0-9]+)Controller$/', $class->name, $matches)) {
-            throw new \LogicException(sprintf('Unable to retrieve controller name. The controller class %s does not follow the naming convention. (e.g. PostController)', $class->name));
+            throw new \LogicException(sprintf('Unable to retrieve controller name. The controller class %s does not follow the naming convention. (e.g. MyController)', $class->name));
         }
 
-        $controller = $matches[1];
+        return $matches[1];
+    }
 
+    /**
+     * Parses the controller action name.
+     *
+     * @param  ReflectionMethod $method
+     * @throws \LogicException
+     * @return string
+     */
+    protected function parseControllerActionName(ReflectionMethod $method)
+    {
         if (!preg_match('/([a-zA-Z0-9]+)Action$/', $method->name, $matches)) {
             throw new \LogicException(sprintf('Unable to retrieve action name. The controller class method %s does not follow the naming convention. (e.g. indexAction)', $method->name));
         }
 
-        $action = $matches[1];
-
-        return compact('controller', 'action');
+        return $matches[1];
     }
 }
