@@ -6,7 +6,7 @@ $colors = array(
     'event_listener'         => '#3dd',
     'event_listener_loading' => '#add',
     'doctrine'               => '#d3d',
-    'views'                  => '#13d',
+    'views'                  => '#F0DB56',
 );
 
 $dumpEvents = function($events) {
