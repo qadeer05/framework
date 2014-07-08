@@ -12,31 +12,16 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class ParamFetcherListener implements EventSubscriberInterface
 {
-    protected $paramReader;
     protected $paramFetcher;
 
     /**
      * Constructor.
      *
-     * @param ParamReaderInterface  $paramReader
      * @param ParamFetcherInterface $paramFetcher
      */
-    public function __construct(ParamReaderInterface $paramReader = null, ParamFetcherInterface $paramFetcher = null)
+    public function __construct(ParamFetcherInterface $paramFetcher = null)
     {
-        $this->paramReader = $paramReader ?: new ParamReader;
         $this->paramFetcher = $paramFetcher ?: new ParamFetcher;
-    }
-
-    /**
-     * Reads the @Request annotations from the controller stores them in the "params" attribute.
-     *
-     * @param ConfigureRouteEvent $event
-     */
-    public function onConfigureRoute(ConfigureRouteEvent $event)
-    {
-        if ($params = $this->paramReader->read($event->getMethod())) {
-            $event->getRoute()->setDefault('_params', $params);
-        }
     }
 
     /**
@@ -46,13 +31,15 @@ class ParamFetcherListener implements EventSubscriberInterface
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $request = $event->getRequest();
+        $request    = $event->getRequest();
         $controller = $event->getController();
+        $parameters = $request->attributes->get('_request[value]', array(), true);
+        $options    = $request->attributes->get('_request[options]', array(), true);
 
-        if (is_array($controller) && $params = $request->attributes->get('_params')) {
+        if (is_array($controller) && is_array($parameters)) {
 
             $this->paramFetcher->setRequest($request);
-            $this->paramFetcher->setParameters($params);
+            $this->paramFetcher->setParameters($parameters, $options);
 
             $r = new \ReflectionMethod($controller[0], $controller[1]);
 
@@ -70,7 +57,6 @@ class ParamFetcherListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            'route.configure'   => 'onConfigureRoute',
             'kernel.controller' => 'onKernelController'
         );
     }

@@ -43,9 +43,18 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function setParameters(array $params)
+    public function setParameters(array $params, array $options)
     {
-        $this->params = $params;
+        $this->params = array();
+
+        foreach ($params as $name => $type) {
+
+            if (is_numeric($name)) {
+                list($name, $type) = array($type, 'string');
+            }
+
+            $this->params[] = array('name' => $name, 'type' => $type, 'options' => isset($options[$name]) ? $options[$name] : array());
+        }
     }
 
     /**
