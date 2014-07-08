@@ -19,7 +19,7 @@
         <ul class="pf-navbar-nav">
 
         <?php foreach ($profiler->all() as $name => $collector) : ?>
-            <?php if ($toolbarview = $profiler->getToolbarView($name)) : ?>
+            <?php if ($toolbarview = $profiler->getToolbarView($name) and $profile->hasCollector($name)) : ?>
                 <li data-name="<?php echo $name ?>">
                     <?php $collector = $profile->getcollector($name); ?>
                     <?php include($toolbarview); ?>
@@ -33,7 +33,7 @@
     </div>
 
     <?php foreach ($profiler->all() as $name => $collector) : ?>
-        <?php if ($panelview = $profiler->getPanelView($name)) : ?>
+        <?php if ($panelview = $profiler->getPanelView($name) and $profile->hasCollector($name)) : ?>
             <div class="pf-profiler-panel" data-panel="<?php echo $name ?>">
                 <?php $collector = $profile->getcollector($name); ?>
                 <?php include($panelview); ?>

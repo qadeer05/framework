@@ -3,9 +3,9 @@
 namespace Pagekit\Framework\Provider;
 
 use Pagekit\Framework\Application;
-use Pagekit\Framework\Exception\ExceptionHandler;
 use Pagekit\Framework\ServiceProviderInterface;
 use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\Debug\ExceptionHandler;
 
 class ExceptionServiceProvider implements ServiceProviderInterface
 {

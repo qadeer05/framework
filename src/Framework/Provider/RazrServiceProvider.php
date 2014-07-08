@@ -63,6 +63,5 @@ class RazrServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         $app['tmpl']->addEngine($app['tmpl.razr']);
-        $app['exception']->pushHandler(new RazrExceptionHandler);
     }
 }

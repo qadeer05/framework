@@ -1,22 +1,28 @@
 <?php
 
 $request = $collector->getController();
+
+if ($request == 'n/a') {
+    $request = [];
+}
+
 $request['route'] = $collector->getRoute();
 $request['status'] = $collector->getStatusCode();
 
-if (isset($request['class'])) {
+$parent = false;
+if (isset($request['class']) && $request['class']) {
 	$request['link'] = getFileLink($request['file'], $request['line']);
 }
 
 ?>
 
-<a class="pf-parent" title="Request">
+<a<?php echo $parent ? ' class="pf-parent"' : '' ?> title="Request">
     <div class="pf-icon pf-icon-request"></div>
 	<span class="pf-badge"><?php echo $request['status'] ?></span>
 	<?php echo $request['route'] ? $request['route'] : '-' ?>
 </a>
 
-<?php if ($request['class']) : ?>
+<?php if ($parent) : ?>
 <div class="pf-dropdown">
 
     <table class="pf-table pf-table-dropdown">
