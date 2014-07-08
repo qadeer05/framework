@@ -31,56 +31,54 @@ class Migration
     {
         $this->current    = $current;
         $this->parameters = array_replace($migrator->getGlobals(), $parameters);
-        $this->files      = $this->load($path, $migrator->getPattern());
+        $this->files      = $this->loadFiles($path, $migrator->getPattern());
     }
 
     /**
-     * Migrate up to a version.
+     * Gets migration versions.
+     *
+     * @param  string|null $version
+     * @param  string      $method
+     * @return array
+     */
+    public function get($version = null, $method = 'up')
+    {
+        if ($method == 'up') {
+            $files = $this->load($this->current, $version);
+        } else {
+            $files = $this->load($version, $this->current, 'down');
+        }
+
+        return array_keys($files);
+    }
+
+    /**
+     * Migrate to a version.
      *
      * @param  string|null $version
      * @return array
      */
-    public function up($version = null)
+    public function run($version = null)
     {
-        return $this->apply($this->current, $version);
-    }
+        if (is_null($version) || is_null($this->current) || strnatcmp($this->current, $version) < 0) {
+            $value = $this->apply($this->load($this->current, $version));
+        } else {
+            $value = $this->apply($this->load($version, $this->current, 'down'), 'down');
+        }
 
-    /**
-     * Migrate down to a version.
-     *
-     * @param  string|null $version
-     * @return array
-     */
-    public function down($version = null)
-    {
-        return $this->apply($version, $this->current, 'down');
+        return $value;
     }
 
     /**
      * Applies migrations.
      *
-     * @param  string|null $start
-     * @param  string|null $end
-     * @param  string      $method
+     * @param  array  $files
+     * @param  string $method
      * @return string|bool
      */
-    protected function apply($start = null, $end = null, $method = 'up')
+    protected function apply(array $files, $method = 'up')
     {
-        $files = [];
         $value = false;
-
-        foreach ($this->files as $version => $file) {
-
-            if (($start !== null && strnatcmp($start, $version) >= 0) || ($end !== null && strnatcmp($end, $version) < 0)) {
-                continue;
-            }
-
-            $files[$version] = $file;
-        }
-
-        if ($method == 'down') {
-            $files = array_reverse($files, true);
-        }
 
         foreach ($files as $version => $file) {
 
@@ -98,6 +96,35 @@ class Migration
     }
 
     /**
+     * Loads migrations.
+     *
+     * @param  string|null $start
+     * @param  string|null $end
+     * @param  string      $method
+     * @return string|bool
+     */
+    protected function load($start = null, $end = null, $method = 'up')
+    {
+        $files = [];
+        $value = false;
+
+        foreach ($this->files as $version => $file) {
+
+            if (($start !== null && strnatcmp($start, $version) >= 0) || ($end !== null && strnatcmp($end, $version) < 0)) {
+                continue;
+            }
+
+            $files[$version] = $file;
+        }
+
+        if ($method == 'down') {
+            $files = array_reverse($files, true);
+        }
+
+        return $files;
+    }
+
+    /**
      * Loads all migration files form a given path.
      *
      * @param  string $path
@@ -105,7 +132,7 @@ class Migration
      * @throws \InvalidArgumentException
      * @return array
      */
-    protected function load($path, $pattern)
+    protected function loadFiles($path, $pattern)
     {
         $files = [];
 

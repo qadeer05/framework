@@ -56,14 +56,14 @@ class Migrator
     }
 
     /**
-     * Gets a migration object.
+     * Creates a migration object.
      *
      * @param  string $path
      * @param  string $current
      * @param  array  $parameters
      * @return Migration
      */
-    public function get($path, $current = null, $parameters = [])
+    public function create($path, $current = null, $parameters = [])
     {
         return new Migration($this, $path, $current, $parameters);
     }
