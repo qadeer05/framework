@@ -35,25 +35,28 @@ class Markdown
      */
     public function __construct(array $options = array())
     {
-        $options = array_merge(static::$defaults, $options);
-
         if (!isset($options['renderer'])) {
-            $options['renderer'] = new Renderer($options);
+            $options['renderer'] = new Renderer;
         }
 
-        $this->options = $options;
-        $this->lexer = new BlockLexer($options);
-        $this->parser = new Parser($options);
+        $this->options = array_merge(static::$defaults, $options);
     }
 
     /**
      * Parses the markdown syntax and returns HTML.
      *
      * @param  string $text
+     * @param  array  $options
      * @return string
      */
-    public function parse($text)
+    public function parse($text, array $options = array())
     {
+        $options = array_merge($this->options, $options);
+        $options['renderer']->init($options);
+
+        $this->lexer = new BlockLexer($options);
+        $this->parser = new Parser($options);
+
         return $this->parser->parse($this->lexer->lex($text));
     }
 
@@ -66,7 +69,6 @@ class Markdown
      */
     public static function escape($text, $encode = false)
     {
-
         $text = preg_replace(!$encode ? '/&(?!#?\w+;)/':'/&/', '&amp;', $text);
         $text = str_replace(array('<', '>', '"', '\''), array('&lt;', '&gt;', '&quot;', '&#39;'), $text);
 
