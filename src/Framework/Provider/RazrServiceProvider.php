@@ -8,7 +8,6 @@ use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
 use Pagekit\Framework\Templating\Razr\Directive\TransDirective;
 use Pagekit\Framework\Templating\RazrEngine;
-use Pagekit\Framework\Templating\RazrExceptionHandler;
 use Razr\Directive\FunctionDirective;
 use Razr\Loader\FilesystemLoader;
 
