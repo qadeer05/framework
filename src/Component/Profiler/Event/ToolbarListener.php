@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagekit\Component\Profiler\EventListener;
+namespace Pagekit\Component\Profiler\Event;
 
 use Pagekit\Component\Routing\Controller\ControllerCollection;
 use Pagekit\Component\Routing\UrlProvider;

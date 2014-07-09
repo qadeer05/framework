@@ -3,7 +3,7 @@
 namespace Pagekit\Component\Profiler;
 
 use Pagekit\Component\Database\DataCollector\DatabaseDataCollector;
-use Pagekit\Component\Profiler\EventListener\ToolbarListener;
+use Pagekit\Component\Profiler\Event\ToolbarListener;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcherInterface;

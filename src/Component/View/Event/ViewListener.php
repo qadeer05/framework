@@ -2,11 +2,7 @@
 
 namespace Pagekit\Component\View\Event;
 
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Annotations\SimpleAnnotationReader;
-use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
 use Pagekit\Component\View\ViewInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -19,45 +15,13 @@ class ViewListener implements EventSubscriberInterface
     protected $view;
 
     /**
-     * @var Reader
-     */
-    protected $reader;
-
-    /**
      * Constructor.
      *
      * @param ViewInterface $view
-     * @param Reader        $reader
      */
-    public function __construct(ViewInterface $view, Reader $reader = null)
+    public function __construct(ViewInterface $view)
     {
-        $this->view   = $view;
-        $this->reader = $reader;
-    }
-
-    /**
-     * Reads the @View annotations from the controller stores them in the "view" option.
-     *
-     * @param ConfigureRouteEvent $event
-     */
-    public function onConfigureRoute(ConfigureRouteEvent $event)
-    {
-        if (!$this->reader) {
-            $this->reader = new SimpleAnnotationReader;
-            $this->reader->addNamespace('Pagekit\Component\View\Annotation');
-        }
-
-        if ($annotation = $this->reader->getMethodAnnotation($event->getMethod(), 'Pagekit\Component\View\Annotation\View')) {
-            $route = $event->getRoute();
-
-            if ($view = $annotation->getTemplate()) {
-                $route->setDefault('_view', $view);
-            }
-
-            if (null !== $layout = $annotation->getLayout()) {
-                $route->setDefault('_view_layout', $layout);
-            }
-        }
+        $this->view = $view;
     }
 
     /**
@@ -67,16 +31,16 @@ class ViewListener implements EventSubscriberInterface
      * @param string                              $name
      * @param EventDispatcherInterface            $dispatcher
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event, $name, EventDispatcherInterface $dispatcher)
+    public function onKernelView(GetResponseForControllerResultEvent $event, $name, $dispatcher)
     {
         $request = $event->getRequest();
         $result  = $event->getControllerResult();
 
-        if (null !== $template = $request->attributes->get('_view') and (null === $result || is_array($result))) {
+        if (null !== $template = $request->attributes->get('_response[value]', null, true) and (null === $result || is_array($result))) {
             $response = $result = $this->view->render($template, $result ?: array());
         }
 
-        if (null !== $layout = $request->attributes->get('_view_layout')) {
+        if (null !== $layout = $request->attributes->get('_response[layout]', null, true)) {
             $this->view->setLayout($layout);
         }
 
@@ -97,8 +61,7 @@ class ViewListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            'route.configure' => 'onConfigureRoute',
-            'kernel.view'     => array('onKernelView', -5)
+            'kernel.view' => array('onKernelView', -5)
         );
     }
 }

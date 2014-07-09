@@ -5,7 +5,6 @@ namespace Pagekit\Component\Routing\Controller;
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
-use Pagekit\Component\Routing\Annotation\Method;
 use Pagekit\Component\Routing\Annotation\Route as RouteAnnotation;
 use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
 use ReflectionClass;
@@ -195,13 +194,6 @@ class ControllerReader implements ControllerReaderInterface
     protected function configureRoute(Route $route, ReflectionClass $class, ReflectionMethod $method, array $options)
     {
         $route->setDefault('_controller', $class->name.'::'.$method->name);
-
-        foreach ($this->getAnnotationReader()->getMethodAnnotations($method) as $annotation) {
-            if ($annotation instanceof Method) {
-                $route->setRequirement('_method', implode('|', $annotation->getMethods()));
-            }
-        }
-
         $this->events->dispatch('route.configure', new ConfigureRouteEvent($route, $class, $method, $options));
     }
 

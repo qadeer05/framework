@@ -5,8 +5,9 @@ namespace Pagekit\Component\Routing;
 use Pagekit\Component\Filter\FilterManager;
 use Pagekit\Component\Routing\Controller\ControllerCollection;
 use Pagekit\Component\Routing\Controller\ControllerReader;
-use Pagekit\Component\Routing\EventListener\ConfigureRouteListener;
-use Pagekit\Component\Routing\EventListener\StringToResponseListener;
+use Pagekit\Component\Routing\Event\ConfigureRouteListener;
+use Pagekit\Component\Routing\Event\JsonResponseListener;
+use Pagekit\Component\Routing\Event\StringResponseListener;
 use Pagekit\Component\Routing\Loader\RouteLoader;
 use Pagekit\Component\Routing\Request\EventListener\ParamFetcherListener;
 use Pagekit\Component\Routing\Request\ParamFetcher;
@@ -68,6 +69,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $app['events']->addSubscriber(new ParamFetcherListener(new ParamFetcher(new FilterManager)));
         $app['events']->addSubscriber(new RouterListener($app['router'], null, null, $app['request_stack']));
         $app['events']->addSubscriber(new ResponseListener('UTF-8'));
-        $app['events']->addSubscriber(new StringToResponseListener);
+        $app['events']->addSubscriber(new JsonResponseListener);
+        $app['events']->addSubscriber(new StringResponseListener);
     }
 }
