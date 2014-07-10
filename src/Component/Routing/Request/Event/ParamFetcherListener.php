@@ -1,12 +1,9 @@
 <?php
 
-namespace Pagekit\Component\Routing\Request\EventListener;
+namespace Pagekit\Component\Routing\Request\Event;
 
-use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
 use Pagekit\Component\Routing\Request\ParamFetcher;
 use Pagekit\Component\Routing\Request\ParamFetcherInterface;
-use Pagekit\Component\Routing\Request\ParamReader;
-use Pagekit\Component\Routing\Request\ParamReaderInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 

@@ -2,7 +2,7 @@
 
 namespace Pagekit\Component\Session;
 
-use Pagekit\Component\Session\Csrf\EventListener\CsrfListener;
+use Pagekit\Component\Session\Csrf\Event\CsrfListener;
 use Pagekit\Component\Session\Csrf\Provider\SessionCsrfProvider;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;

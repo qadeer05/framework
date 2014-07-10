@@ -9,7 +9,7 @@ use Pagekit\Component\Routing\Event\ConfigureRouteListener;
 use Pagekit\Component\Routing\Event\JsonResponseListener;
 use Pagekit\Component\Routing\Event\StringResponseListener;
 use Pagekit\Component\Routing\Loader\RouteLoader;
-use Pagekit\Component\Routing\Request\EventListener\ParamFetcherListener;
+use Pagekit\Component\Routing\Request\Event\ParamFetcherListener;
 use Pagekit\Component\Routing\Request\ParamFetcher;
 use Pagekit\Component\Routing\Request\ParamReader;
 use Pagekit\Framework\Application;
