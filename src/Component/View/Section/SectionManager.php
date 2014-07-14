@@ -41,10 +41,18 @@ class SectionManager
      * @param  string $options
      * @throws \InvalidArgumentException
      */
-    public function start($name, $options = '')
+    public function start($name, $options = 'overwrite')
     {
         if (in_array($name, $this->openSections)) {
             throw new \InvalidArgumentException(sprintf('A section named "%s" is already started.', $name));
+        }
+
+        if (is_string($options)) {
+            $options = ['mode' => $options];
+        }
+
+        if (!isset($options['mode'])) {
+            $options['mode'] = 'overwrite';
         }
 
         $this->openSections[] = [$name, $options];
@@ -69,15 +77,20 @@ class SectionManager
 
         $section = ob_get_clean();
 
-        switch($options) {
+        switch($options['mode']) {
             case 'append':
-                $section = $this->sections[$name] . $section;
+                $this->sections[$name] .= $section;
                 break;
             case 'prepend':
-                $section .= $this->sections[$name];
+                $this->sections[$name] = $section . $this->sections[$name];
+                break;
+            case 'show':
+                $this->sections[$name] = $section;
+                $this->output($name, $options);
+                break;
+            default:
+                $this->sections[$name] = $section;
         }
-
-        $this->sections[$name] = $section;
     }
 
     /**
@@ -111,36 +124,23 @@ class SectionManager
      */
     public function set($name, $content)
     {
-        $this->sections[$name] = $content;
+        $this->sections[$name] = is_string($content) ? $content : [$content];
     }
 
     /**
      * Appends to a section.
      *
      * @param string $name
-     * @param string $content
+     * @param mixed  $content
      */
     public function append($name, $content)
     {
         if (!isset($this->sections[$name])) {
             $this->set($name, $content);
-            return;
-        }
-
-        if (is_callable($content)) {
-            if (!is_array($this->sections[$name])) {
-                $this->sections[$name] = [$this->sections[$name]];
-            }
-            array_push($this->sections[$name], $content);
-            return;
-        }
-
-        if (is_array($this->sections[$name])) {
-            $this->sections[$name] = array_merge($this->sections[$name], $content);
-        }
-
-        if (is_string($this->sections[$name])) {
+        } elseif (is_string($this->sections[$name])) {
             $this->sections[$name] .= $content;
+        } else {
+            array_push($this->sections[$name], $content);
         }
     }
 
@@ -148,29 +148,16 @@ class SectionManager
      * Prepends to a section.
      *
      * @param string $name
-     * @param string $content
+     * @param mixed  $content
      */
     public function prepend($name, $content)
     {
         if (!isset($this->sections[$name])) {
             $this->set($name, $content);
-            return;
-        }
-
-        if (is_callable($content)) {
-            if (!is_array($this->sections[$name])) {
-                $this->sections[$name] = [$this->sections[$name]];
-            }
-            array_unshift($this->sections[$name], $content);
-            return;
-        }
-
-        if (is_array($this->sections[$name])) {
-            $this->sections[$name] = array_merge((array) $content, $this->sections[$name]);
-        }
-
-        if (is_string($this->sections[$name])) {
+        } elseif (is_string($this->sections[$name])) {
             $this->sections[$name] = $content . $this->sections[$name];
+        } else {
+            array_unshift($this->sections[$name], $content);
         }
     }
 
@@ -179,9 +166,9 @@ class SectionManager
      *
      * @param  string $name
      * @param  array  $options
-     * @return bool
+     * @return string
      */
-    public function render($name, $options = [])
+    public function render($name, array $options = [])
     {
         if (!isset($this->sections[$name])) {
             return false;
@@ -191,9 +178,18 @@ class SectionManager
 
         $renderer = isset($options['renderer'], $this->renderer[$options['renderer']]) ? $options['renderer'] : false;
 
-        echo $renderer ? $this->renderer[$renderer]($name, $this->sections[$name], $options) : $this->renderDefault($this->sections[$name]);
+        return $renderer ? $this->renderer[$renderer]($name, $this->sections[$name], $options) : $this->renderDefault($this->sections[$name]);
+    }
 
-        return true;
+    /**
+     * Outputs a section.
+     *
+     * @param  string $name
+     * @param  array  $options
+     */
+    public function output($name, array $options = [])
+    {
+        echo $this->render($name, $options);
     }
 
     /**
