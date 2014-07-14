@@ -68,31 +68,31 @@ class ZipTest extends \PHPUnit_Framework_TestCase
 
     public function provideErrorCodes()
     {
-        return array(
-            array(ZipArchive::ER_EXISTS, "File already exists"),
-            array(ZipArchive::ER_INCONS, "Zip archive is inconsistent"),
-            array(ZipArchive::ER_INVAL, "Invalid argument"),
-            array(ZipArchive::ER_MEMORY, "Memory allocation failure"),
-            array(ZipArchive::ER_NOENT, "No such ZIP file"),
-            array(ZipArchive::ER_NOZIP, "Is not a ZIP archive"),
-            array(ZipArchive::ER_OPEN, "Can't open ZIP file"),
-            array(ZipArchive::ER_READ, "Zip read error"),
-            array(ZipArchive::ER_SEEK, "Zip seek error"),
-            array(ZipArchive::ER_MULTIDISK, "Multidisk ZIP Archives not supported"),
-            array(ZipArchive::ER_RENAME, "Failed to rename the temporary file for ZIP"),
-            array(ZipArchive::ER_CLOSE, "Failed to close the ZIP Archive"),
-            array(ZipArchive::ER_WRITE, "Failure while writing the ZIP Archive"),
-            array(ZipArchive::ER_CRC, "CRC failure within the ZIP Archive"),
-            array(ZipArchive::ER_ZIPCLOSED, "ZIP Archive already closed"),
-            array(ZipArchive::ER_TMPOPEN, "Failure creating temporary ZIP Archive"),
-            array(ZipArchive::ER_CHANGED, "ZIP Entry has been changed"),
-            array(ZipArchive::ER_ZLIB, "ZLib Problem"),
-            array(ZipArchive::ER_COMPNOTSUPP, "Compression method not supported within ZLib"),
-            array(ZipArchive::ER_EOF, "Premature EOF within ZIP Archive"),
-            array(ZipArchive::ER_INTERNAL, "Internal error while working on a ZIP Archive"),
-            array(ZipArchive::ER_REMOVE, "Can not remove ZIP Archive"),
-            array(ZipArchive::ER_DELETED, "ZIP Entry has been deleted"),
-            array('default', "Not a valid ZIP archive, got error code: default")
-        );
+        return [
+            [ZipArchive::ER_EXISTS, "File already exists"],
+            [ZipArchive::ER_INCONS, "Zip archive is inconsistent"],
+            [ZipArchive::ER_INVAL, "Invalid argument"],
+            [ZipArchive::ER_MEMORY, "Memory allocation failure"],
+            [ZipArchive::ER_NOENT, "No such ZIP file"],
+            [ZipArchive::ER_NOZIP, "Is not a ZIP archive"],
+            [ZipArchive::ER_OPEN, "Can't open ZIP file"],
+            [ZipArchive::ER_READ, "Zip read error"],
+            [ZipArchive::ER_SEEK, "Zip seek error"],
+            [ZipArchive::ER_MULTIDISK, "Multidisk ZIP Archives not supported"],
+            [ZipArchive::ER_RENAME, "Failed to rename the temporary file for ZIP"],
+            [ZipArchive::ER_CLOSE, "Failed to close the ZIP Archive"],
+            [ZipArchive::ER_WRITE, "Failure while writing the ZIP Archive"],
+            [ZipArchive::ER_CRC, "CRC failure within the ZIP Archive"],
+            [ZipArchive::ER_ZIPCLOSED, "ZIP Archive already closed"],
+            [ZipArchive::ER_TMPOPEN, "Failure creating temporary ZIP Archive"],
+            [ZipArchive::ER_CHANGED, "ZIP Entry has been changed"],
+            [ZipArchive::ER_ZLIB, "ZLib Problem"],
+            [ZipArchive::ER_COMPNOTSUPP, "Compression method not supported within ZLib"],
+            [ZipArchive::ER_EOF, "Premature EOF within ZIP Archive"],
+            [ZipArchive::ER_INTERNAL, "Internal error while working on a ZIP Archive"],
+            [ZipArchive::ER_REMOVE, "Can not remove ZIP Archive"],
+            [ZipArchive::ER_DELETED, "ZIP Entry has been deleted"],
+            ['default', "Not a valid ZIP archive, got error code: default"]
+        ];
     }
 }

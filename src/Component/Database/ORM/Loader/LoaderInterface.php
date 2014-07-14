@@ -11,7 +11,7 @@ interface LoaderInterface
      * @param  array            $config
      * @return array
      */
-    public function load(\ReflectionClass $class, array $config = array());
+    public function load(\ReflectionClass $class, array $config = []);
 
     /**
      * A transient class is NOT annotated with either @Entity or @MappedSuperclass.

@@ -18,7 +18,7 @@ class Event extends BaseEvent implements \ArrayAccess
      */
     public function __construct($parameters = null)
     {
-        $this->parameters = $parameters ?: array();
+        $this->parameters = $parameters ?: [];
     }
 
     /**

@@ -46,8 +46,8 @@ class CsrfListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'kernel.request' => array('onKernelRequest', -10)
-        );
+        return [
+            'kernel.request' => ['onKernelRequest', -10]
+        ];
     }
 }

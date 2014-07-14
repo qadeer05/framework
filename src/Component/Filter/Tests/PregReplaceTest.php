@@ -64,10 +64,10 @@ class PregReplaceTest extends \PHPUnit_Framework_TestCase
 
     public function provider()
     {
-        return array(
-            array('/foo/i', '', 'Foobar', 'bar'),
-            array(array('/foo/', '/bar/'), array('FOO', 'BAR'), 'foobar', 'FOOBAR')
-        );
+        return [
+            ['/foo/i', '', 'Foobar', 'bar'],
+            [['/foo/', '/bar/'], ['FOO', 'BAR'], 'foobar', 'FOOBAR']
+        ];
     }
 
 }

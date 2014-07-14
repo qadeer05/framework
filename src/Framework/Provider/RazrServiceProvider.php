@@ -22,20 +22,20 @@ class RazrServiceProvider implements ServiceProviderInterface
             $parser->addEngine('razr', '.razr');
 
             $engine = new RazrEngine($parser, new FilesystemLoader, $app['path'].'/app/cache/templates');
-            $engine->addDirective(new FunctionDirective('gravatar', array(new GravatarHelper, 'get')));
+            $engine->addDirective(new FunctionDirective('gravatar', [new GravatarHelper, 'get']));
             $engine->addGlobal('app', $app);
 
-            $engine->addDirective(new FunctionDirective('url', array($app['url'], 'to')));
-            $engine->addFunction('url', array($app['url'], 'to'));
+            $engine->addDirective(new FunctionDirective('url', [$app['url'], 'to']));
+            $engine->addFunction('url', [$app['url'], 'to']);
 
             if (isset($app['view.styles'])) {
-                $engine->addDirective(new FunctionDirective('style', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
+                $engine->addDirective(new FunctionDirective('style', function($name, $asset = null, $dependencies = [], $options = []) use ($app) {
                     $app['view.styles']->queue($name, $asset, $dependencies, $options);
                 }));
             }
 
             if (isset($app['view.scripts'])) {
-                $engine->addDirective(new FunctionDirective('script', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
+                $engine->addDirective(new FunctionDirective('script', function($name, $asset = null, $dependencies = [], $options = []) use ($app) {
                     $app['view.scripts']->queue($name, $asset, $dependencies, $options);
                 }));
             }
@@ -46,11 +46,11 @@ class RazrServiceProvider implements ServiceProviderInterface
             }
 
             if (isset($app['csrf'])) {
-                $engine->addDirective(new FunctionDirective('token', array(new TokenHelper($app['csrf']), 'generate')));
+                $engine->addDirective(new FunctionDirective('token', [new TokenHelper($app['csrf']), 'generate']));
             }
 
             if (isset($app['markdown'])) {
-                $engine->addDirective(new FunctionDirective('markdown', array($app['markdown'], 'parse')));
+                $engine->addDirective(new FunctionDirective('markdown', [$app['markdown'], 'parse']));
             }
 
             if (isset($app['translator'])) {

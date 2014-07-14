@@ -45,7 +45,7 @@ class ControllerResolver extends BaseControllerResolver
 
         if ($constructor = $reflection->getConstructor()) {
 
-            $args = array();
+            $args = [];
 
             foreach ($constructor->getParameters() as $param) {
                 if ($class = $param->getClass()) {
@@ -64,6 +64,6 @@ class ControllerResolver extends BaseControllerResolver
             $instance = $reflection->newInstanceArgs($args);
         }
 
-        return array(isset($instance) ? $instance : new $class, $method);
+        return [isset($instance) ? $instance : new $class, $method];
     }
 }

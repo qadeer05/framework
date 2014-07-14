@@ -8,9 +8,9 @@ namespace Pagekit\Component\Markdown;
  */
 class Renderer
 {
-    protected $options = array();
+    protected $options = [];
 
-    public function init(array $options = array())
+    public function init(array $options = [])
     {
         $this->options = $options;
     }
@@ -80,7 +80,7 @@ class Renderer
         return "<tr>\n".$content."</tr>\n";
     }
 
-    public function tablecell($content, array $flags = array())
+    public function tablecell($content, array $flags = [])
     {
         $type = $flags['header'] ? 'th' : 'td';
         $tag = $flags['align']

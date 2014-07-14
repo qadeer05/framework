@@ -115,6 +115,6 @@ class Connection
             throw new \BadMethodCallException(sprintf('Undefined method call "%s::%s"', get_class($this->connection), $method));
         }
 
-        return call_user_func_array(array($this->connection, $method), $args);
+        return call_user_func_array([$this->connection, $method], $args);
     }
 }

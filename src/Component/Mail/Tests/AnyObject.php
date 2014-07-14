@@ -4,7 +4,7 @@ namespace Pagekit\Component\Mail\Tests;
 
 class AnyObject
 {
-	public $methods = array();
+	public $methods = [];
 
     public function __set($name , $value)
     {

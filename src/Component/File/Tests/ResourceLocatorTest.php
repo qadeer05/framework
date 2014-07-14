@@ -29,9 +29,9 @@ class ResourceLocatorTest extends \PHPUnit_Framework_TestCase
 
 	public function testLocator()
 	{
-		$this->locator->addPath('test', 'foo/bar', array($this->workspace.'/path/to/foo/bar/1', $this->workspace.'/path/to/foo/bar/2/'));
+		$this->locator->addPath('test', 'foo/bar', [$this->workspace.'/path/to/foo/bar/1', $this->workspace.'/path/to/foo/bar/2/']);
 		$this->locator->addPath('test', 'bar', $this->workspace.'/path/to/bar');
-		$this->locator->addPath('test2', 'foo/bar', array($this->workspace.'/path/to/foo/bar/1', $this->workspace.'/path/to/foo/bar/3'));
+		$this->locator->addPath('test2', 'foo/bar', [$this->workspace.'/path/to/foo/bar/1', $this->workspace.'/path/to/foo/bar/3']);
 
 		mkdir($this->workspace.'/path/to/foo/bar/1' , 0775, true);
 		mkdir($this->workspace.'/path/to/foo/bar/2' , 0775, true);
@@ -43,9 +43,9 @@ class ResourceLocatorTest extends \PHPUnit_Framework_TestCase
 		touch($this->locator->findResource('test://bar').'/2/1.txt');
 
 		$this->assertEquals($this->workspace.'/path/to/foo/bar/1/1.txt', $this->locator->findResource('test://foo/bar/1.txt'));
-		$this->assertEquals(array($this->workspace.'/path/to/foo/bar/1/1.txt', $this->workspace.'/path/to/foo/bar/2/1.txt'), $this->locator->findResourceVariants('test://foo/bar/1.txt'));
+		$this->assertEquals([$this->workspace.'/path/to/foo/bar/1/1.txt', $this->workspace.'/path/to/foo/bar/2/1.txt'], $this->locator->findResourceVariants('test://foo/bar/1.txt'));
 		$this->assertFalse($this->locator->findResource('test://foo/bar/2.txt'));
-		$this->assertEquals(array($this->workspace.'/path/to/foo/bar/1/1.txt'), $this->locator->findResourceVariants('test2://foo/bar/1.txt'));
+		$this->assertEquals([$this->workspace.'/path/to/foo/bar/1/1.txt'], $this->locator->findResourceVariants('test2://foo/bar/1.txt'));
 	}
 
     /**

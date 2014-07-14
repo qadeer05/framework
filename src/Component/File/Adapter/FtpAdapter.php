@@ -12,7 +12,7 @@ class FtpAdapter implements AdapterInterface
     protected $password;
     protected $passive;
     protected $mode;
-    protected $fileData = array();
+    protected $fileData = [];
 
     /**
      * Constructor
@@ -247,9 +247,9 @@ class FtpAdapter implements AdapterInterface
     {
         $directory = $this->computePath($directory);
 
-        $files = $dirs = array();
+        $files = $dirs = [];
 
-        $items = $this->parseRawlist(ftp_rawlist($this->getConnection(), $directory ) ? : array());
+        $items = $this->parseRawlist(ftp_rawlist($this->getConnection(), $directory ) ? : []);
 
         foreach ($items as $itemData) {
 
@@ -265,10 +265,10 @@ class FtpAdapter implements AdapterInterface
             }
         }
 
-        return array(
+        return [
            'files'   => $files,
            'dirs'   => $dirs
-        );
+        ];
     }
 
     /**
@@ -431,19 +431,19 @@ class FtpAdapter implements AdapterInterface
      */
     protected function parseRawlist(array $rawlist)
     {
-        $parsed = array();
+        $parsed = [];
         foreach ($rawlist as $line) {
             $infos = preg_split("/[\s]+/", $line, 9);
             $infos[7] = (strrpos($infos[7], ':') != 2 ) ? ($infos[7] . ' 00:00') : (date('Y') . ' ' . $infos[7]);
 
             if ('total' !== $infos[0]) {
-                $parsed[] = array(
+                $parsed[] = [
                     'perms' => $infos[0],
                     'num'   => $infos[1],
                     'size'  => $infos[4],
                     'time'  => strtotime($infos[5] . ' ' . $infos[6] . '. ' . $infos[7]),
                     'name'  => $infos[8]
-                );
+                ];
             }
         }
 

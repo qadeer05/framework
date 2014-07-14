@@ -45,15 +45,15 @@ class ParamFetcher implements ParamFetcherInterface
      */
     public function setParameters(array $params, array $options)
     {
-        $this->params = array();
+        $this->params = [];
 
         foreach ($params as $name => $type) {
 
             if (is_numeric($name)) {
-                list($name, $type) = array($type, 'string');
+                list($name, $type) = [$type, 'string'];
             }
 
-            $this->params[] = array('name' => $name, 'type' => $type, 'options' => isset($options[$name]) ? $options[$name] : array());
+            $this->params[] = ['name' => $name, 'type' => $type, 'options' => isset($options[$name]) ? $options[$name] : []];
         }
     }
 
@@ -77,7 +77,7 @@ class ParamFetcher implements ParamFetcherInterface
         // $name, $type, $options
         extract($this->params[$index]);
 
-        foreach (array('query', 'request') as $bag) {
+        foreach (['query', 'request'] as $bag) {
 
             $value = $this->request->$bag->get($name);
 

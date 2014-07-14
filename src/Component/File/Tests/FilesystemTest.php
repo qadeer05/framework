@@ -217,7 +217,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $dir = $this->workspace.DIRECTORY_SEPARATOR.'dir';
         mkdir($dir);
 
-        $files = array('file1', 'file2', 'file3');
+        $files = ['file1', 'file2', 'file3'];
         foreach ($files as $file) {
             touch($dir.DIRECTORY_SEPARATOR.$file);
         }
@@ -245,7 +245,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 
         $directory = $this->workspace.DIRECTORY_SEPARATOR.'directory';
         $file = $this->workspace.DIRECTORY_SEPARATOR.'file';
-        $files = array($directory, $file);
+        $files = [$directory, $file];
 
         mkdir($directory);
         touch($file);
@@ -262,7 +262,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 
         $directory = $this->workspace.DIRECTORY_SEPARATOR.'directory';
         $file = $this->workspace.DIRECTORY_SEPARATOR.'file';
-        $files = new \ArrayObject(array($directory, $file));
+        $files = new \ArrayObject([$directory, $file]);
 
         mkdir($directory);
         touch($file);

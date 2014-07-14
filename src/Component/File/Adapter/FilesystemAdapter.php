@@ -127,7 +127,7 @@ class FilesystemAdapter implements AdapterInterface
     {
         $dir = $this->normalizePath($dir);
 
-        $files = $dirs = array();
+        $files = $dirs = [];
 
         if (is_dir($dir)) {
             foreach (new \DirectoryIterator($dir) as $fileinfo) {
@@ -139,10 +139,10 @@ class FilesystemAdapter implements AdapterInterface
             }
         }
 
-        return array(
+        return [
            'files'   => $files,
            'dirs'   => $dirs
-        );
+        ];
     }
 
     /**
@@ -169,11 +169,11 @@ class FilesystemAdapter implements AdapterInterface
      */
     public function normalizePath($path)
     {
-        $path   = str_replace(array('\\', '//'), '/', $path);
+        $path   = str_replace(['\\', '//'], '/', $path);
         $prefix = preg_match('|^(?P<prefix>([a-zA-Z]+:)?//?)|', $path, $matches) ? $matches['prefix'] : '';
         $path   = substr($path, strlen($prefix));
         $parts  = array_filter(explode('/', $path), 'strlen');
-        $tokens = array();
+        $tokens = [];
 
         foreach ($parts as $part) {
             if ('..' === $part) {

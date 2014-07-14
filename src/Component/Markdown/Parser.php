@@ -21,7 +21,7 @@ class Parser
      *
      * @param array $options
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->options = $options;
         $this->renderer = $options['renderer'];
@@ -119,7 +119,7 @@ class Parser
                 $cell   = '';
 
                 for ($i = 0; $i < count($this->token['header']); $i++) {
-                    $flags = array('header' => true, 'align' => $this->token['align'][$i]);
+                    $flags = ['header' => true, 'align' => $this->token['align'][$i]];
                     $cell .= $this->renderer->tablecell($this->inline->output($this->token['header'][$i]), $flags);
                 }
 
@@ -131,7 +131,7 @@ class Parser
                     $cell = '';
 
                     for ($j = 0; $j < count($row); $j++) {
-                        $flags = array('header' => false, 'align' => $this->token['align'][$j]);
+                        $flags = ['header' => false, 'align' => $this->token['align'][$j]];
                         $cell .= $this->renderer->tablecell($this->inline->output($row[$j]), $flags);
                     }
 

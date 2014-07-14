@@ -14,20 +14,20 @@ class DatabaseServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $default = array(
+        $default = [
             'wrapperClass'        => 'Pagekit\Component\Database\ConnectionWrapper',
-            'defaultTableOptions' => array()
-        );
+            'defaultTableOptions' => []
+        ];
 
         $app['dbs'] = function($app) use ($default) {
 
-            $dbs = array();
+            $dbs = [];
 
             foreach ($app['config']['database.connections'] as $name => $params) {
 
                 $params = array_replace($default, $params);
 
-                foreach (array('engine', 'charset', 'collate') as $option) {
+                foreach (['engine', 'charset', 'collate'] as $option) {
                     if (isset($params[$option])) {
                         $params['defaultTableOptions'][$option] = $params[$option];
                     }

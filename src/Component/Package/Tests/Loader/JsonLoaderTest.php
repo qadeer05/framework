@@ -20,7 +20,7 @@ class JsonLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $package = $this->loader->load(__DIR__.'/../Fixtures/Package/extension.json');
 
-        $this->assertEquals($value, call_user_func(array($package, 'get'.ucfirst($key))));
+        $this->assertEquals($value, call_user_func([$package, 'get'.ucfirst($key)]));
     }
 
     /**
@@ -30,44 +30,44 @@ class JsonLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $package = $this->loader->load(file_get_contents(__DIR__.'/../Fixtures/Package/extension.json'));
 
-        $this->assertEquals($value, call_user_func(array($package, 'get'.ucfirst($key))));
+        $this->assertEquals($value, call_user_func([$package, 'get'.ucfirst($key)]));
     }
 
     public function getKeys()
     {
-        return array(
-            array(
+        return [
+            [
                 'name',
                 'test'
-            ),
-            array(
+            ],
+            [
                 'version',
                 '0.0.1'
-            ),
-            array(
+            ],
+            [
                 'type',
                 'extension'
-            ),
-            array(
+            ],
+            [
                 'title',
                 'Test'
-            ),
-            array(
+            ],
+            [
                 'authors',
                 null
-            ),
-            array(
+            ],
+            [
                 'homepage',
                 'http://pagekit.com'
-            ),
-            array(
+            ],
+            [
                 'description',
                 'Test Extension Package ...'
-            ),
-            array(
+            ],
+            [
                 'license',
-                array('MIT')
-            )
-        );
+                ['MIT']
+            ]
+        ];
     }    
 }

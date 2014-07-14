@@ -175,7 +175,7 @@ class RememberMe
      */
     protected function generateCookieValue($username, $expires, $password)
     {
-        return $this->encodeCookie(array(base64_encode($username), $expires, $this->generateCookieHash($username, $expires, $password)));
+        return $this->encodeCookie([base64_encode($username), $expires, $this->generateCookieHash($username, $expires, $password)]);
     }
 
     /**

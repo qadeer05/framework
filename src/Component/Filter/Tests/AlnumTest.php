@@ -10,7 +10,7 @@ class AlnumTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new Alnum;
 
-        $values = array(
+        $values = [
             /* here are the ones the filter should not change */
             "abc"   => "abc", 
             "123"   => "123",
@@ -21,7 +21,7 @@ class AlnumTest extends \PHPUnit_Framework_TestCase
             "     " => "",
             "!§$%&/()="   => "",
             "abc123!?) abc" => "abc123abc"
-        );
+        ];
         foreach ($values as $in => $out) {
             $this->assertEquals($filter->filter($in), $out);
         }

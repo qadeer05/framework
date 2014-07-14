@@ -9,7 +9,7 @@ class PhpLoader implements LoaderInterface
      */
     public function load($filename)
     {
-        return (!($config = require $filename) || 1 === $config) ? array() : $config;
+        return (!($config = require $filename) || 1 === $config) ? [] : $config;
     }
 
     /**

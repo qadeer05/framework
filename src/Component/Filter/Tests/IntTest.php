@@ -10,7 +10,7 @@ class IntTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new Int;
 
-        $values = array(
+        $values = [
             "23"    => 23, 
             "-23"   => -23,
             "123"   => 123,
@@ -18,7 +18,7 @@ class IntTest extends \PHPUnit_Framework_TestCase
             "äöü"   => 0, // unicode support please
             "2147483647" => 2147483647, // largest INT that php can handle 
             "abc123!?) abc" => 0
-        );
+        ];
         foreach ($values as $in => $out) {
             $this->assertSame($filter->filter($in), $out);
             $this->assertTrue(is_int($out));

@@ -49,7 +49,7 @@ class ArrayLoader implements LoaderInterface
         }
 
         if (!empty($config['license'])) {
-            $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
+            $package->setLicense(is_array($config['license']) ? $config['license'] : [$config['license']]);
         }
 
         if (!empty($config['authors']) && is_array($config['authors'])) {

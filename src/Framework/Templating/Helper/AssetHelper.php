@@ -24,7 +24,7 @@ abstract class AssetHelper extends Helper
 
     public function __call($method, $args)
     {
-        if (!is_callable($callable = array($this->manager, $method))) {
+        if (!is_callable($callable = [$this->manager, $method])) {
             throw new \InvalidArgumentException(sprintf('Undefined method call "%s::%s"', get_class($this->manager), $method));
         }
 

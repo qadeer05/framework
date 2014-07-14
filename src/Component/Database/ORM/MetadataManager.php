@@ -26,7 +26,7 @@ class MetadataManager
     /**
      * @var Metadata[]
      */
-    protected $metadata = array();
+    protected $metadata = [];
 
     /**
      * The cache prefix
@@ -146,7 +146,7 @@ class MetadataManager
                 continue;
             }
 
-            $config = array();
+            $config = [];
 
             if ($parent) {
 
@@ -190,7 +190,7 @@ class MetadataManager
      */
     protected function getParentClasses(\ReflectionClass $class)
     {
-        $parents = array($class);
+        $parents = [$class];
 
         while ($parent = $class->getParentClass()) {
 

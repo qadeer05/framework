@@ -51,7 +51,7 @@ class ResourceLocatorBasedStreamWrapper extends StreamWrapper
             return $path;
         }
 
-        if (in_array($mode, array('r', 'r+'))) {
+        if (in_array($mode, ['r', 'r+'])) {
             return false;
         }
 

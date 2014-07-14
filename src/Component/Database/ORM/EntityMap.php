@@ -14,12 +14,12 @@ class EntityMap
     /**
      * @var array
      */
-    protected $entities = array();
+    protected $entities = [];
 
     /**
      * @var array
      */
-    protected $identifiers = array();
+    protected $identifiers = [];
 
     /**
      * Constructor.

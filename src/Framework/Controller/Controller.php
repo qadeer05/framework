@@ -18,7 +18,7 @@ class Controller implements \ArrayAccess
      * @param  array   $headers
      * @return RedirectResponse
      */
-    public function redirect($url = '', $parameters = array(), $status = 302, $headers = array())
+    public function redirect($url = '', $parameters = [], $status = 302, $headers = [])
     {
         return new RedirectResponse($this['url']->to($url, $parameters), $status, $headers);
     }

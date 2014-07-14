@@ -32,7 +32,7 @@ class ConnectionWrapper extends BaseConnection
      *
      * @var array
      */
-    protected $regex = array();
+    protected $regex = [];
 
     /**
      * Initializes a new instance of the Connection class.
@@ -97,7 +97,7 @@ class ConnectionWrapper extends BaseConnection
      * @param  array  $args
      * @return mixed
      */
-    public function fetchObject($statement, array $params = array(), $class = 'stdClass', $args = array())
+    public function fetchObject($statement, array $params = [], $class = 'stdClass', $args = [])
     {
         return $this->executeQuery($statement, $params)->fetchObject($class, $args);
     }
@@ -111,7 +111,7 @@ class ConnectionWrapper extends BaseConnection
      * @param  array  $args
      * @return array
      */
-    public function fetchAllObjects($statement, array $params = array(), $class = 'stdClass', $args = array())
+    public function fetchAllObjects($statement, array $params = [], $class = 'stdClass', $args = [])
     {
         return $this->executeQuery($statement, $params)->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class, $args);
     }
@@ -135,7 +135,7 @@ class ConnectionWrapper extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function executeQuery($query, array $params = array(), $types = array(), QueryCacheProfile $qcp = null)
+    public function executeQuery($query, array $params = [], $types = [], QueryCacheProfile $qcp = null)
     {
         return parent::executeQuery($this->replacePrefix($query), $params, $types, $qcp);
     }
@@ -143,7 +143,7 @@ class ConnectionWrapper extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function executeUpdate($query, array $params = array(), array $types = array())
+    public function executeUpdate($query, array $params = [], array $types = [])
     {
         return parent::executeUpdate($this->replacePrefix($query), $params, $types);
     }

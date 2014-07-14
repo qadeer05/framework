@@ -56,42 +56,42 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
     	$this->assertEquals('', $this->message->getSender());
     	$this->assertInstanceOf('Pagekit\Component\Mail\Message', $this->message->sender('test@mail.com', 'test'));
-    	$this->assertEquals(array('test@mail.com' => 'test'), $this->message->getSender());
+    	$this->assertEquals(['test@mail.com' => 'test'], $this->message->getSender());
     }
 
     public function testFrom()
     {
-    	$this->assertEquals(array(), $this->message->getFrom());
+    	$this->assertEquals([], $this->message->getFrom());
     	$this->assertInstanceOf('Pagekit\Component\Mail\Message', $this->message->from('test@mail.com', 'test'));
-    	$this->assertEquals(array('test@mail.com' => 'test'), $this->message->getFrom());
+    	$this->assertEquals(['test@mail.com' => 'test'], $this->message->getFrom());
     }
 
     public function testReplyTo()
     {
     	$this->assertEquals('', $this->message->getReplyTo());
     	$this->assertInstanceOf('Pagekit\Component\Mail\Message', $this->message->replyTo('test@mail.com', 'test'));
-    	$this->assertEquals(array('test@mail.com' => 'test'), $this->message->getReplyTo());
+    	$this->assertEquals(['test@mail.com' => 'test'], $this->message->getReplyTo());
     }
 
     public function testTo()
     {
     	$this->assertEquals('', $this->message->getTo());
     	$this->assertInstanceOf('Pagekit\Component\Mail\Message', $this->message->to('test@mail.com', 'test'));
-    	$this->assertEquals(array('test@mail.com' => 'test'), $this->message->getTo());
+    	$this->assertEquals(['test@mail.com' => 'test'], $this->message->getTo());
     }
 
      public function testCc()
     {
     	$this->assertEquals('', $this->message->getCc());
     	$this->assertInstanceOf('Pagekit\Component\Mail\Message', $this->message->cc('test@mail.com', 'test'));
-    	$this->assertEquals(array('test@mail.com' => 'test'), $this->message->getCc());
+    	$this->assertEquals(['test@mail.com' => 'test'], $this->message->getCc());
     }
 
     public function testBcc()
     {
     	$this->assertEquals('', $this->message->getBcc());
     	$this->assertInstanceOf('Pagekit\Component\Mail\Message', $this->message->bcc('test@mail.com', 'test'));
-    	$this->assertEquals(array('test@mail.com' => 'test'), $this->message->getBcc());
+    	$this->assertEquals(['test@mail.com' => 'test'], $this->message->getBcc());
     }
 
     public function testAttach()

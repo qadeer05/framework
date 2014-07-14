@@ -14,10 +14,10 @@ class PregReplace extends AbstractFilter
      */
     public function __construct()
     {
-        $this->options = array(
+        $this->options = [
             'pattern' => null,
             'replacement' => '',
-        );
+        ];
     }
 
     /**

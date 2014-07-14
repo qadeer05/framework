@@ -10,12 +10,12 @@ class Config implements \ArrayAccess
     /**
      * @var array
      */
-    protected $values = array();
+    protected $values = [];
 
     /**
      * @var array
      */
-    protected $replace = array();
+    protected $replace = [];
 
     /**
      * @var LoaderInterface
@@ -28,7 +28,7 @@ class Config implements \ArrayAccess
      * @param array           $replace
      * @param LoaderInterface $loader
      */
-    public function __construct(array $replace = array(), LoaderInterface $loader = null)
+    public function __construct(array $replace = [], LoaderInterface $loader = null)
     {
         foreach ($replace as $name => $value) {
             $this->replace['%'.$name.'%'] = $value;
@@ -103,7 +103,7 @@ class Config implements \ArrayAccess
             $key = array_shift($keys);
 
             if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = array();
+                $array[$key] = [];
             }
 
             $array =& $array[$key];

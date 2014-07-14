@@ -14,7 +14,7 @@ interface ControllerReaderInterface
      * @param  array           $options
      * @return RouteCollection
      */
-    public function read(ReflectionClass $class, array $options = array());
+    public function read(ReflectionClass $class, array $options = []);
 
     /**
      * Returns true if this reader supports the given controller.

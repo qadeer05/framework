@@ -97,7 +97,7 @@ class UrlProvider
      * @param  mixed  $referenceType
      * @return string
      */
-    public function to($path = '', $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function to($path = '', $parameters = [], $referenceType = UrlGenerator::ABSOLUTE_PATH)
     {
         if (0 === strpos($path, '@')) {
             return $this->route($path, $parameters, $referenceType);
@@ -137,7 +137,7 @@ class UrlProvider
      * @param  mixed  $referenceType
      * @return string|false
      */
-    public function route($name = '', $parameters = array(), $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function route($name = '', $parameters = [], $referenceType = UrlGenerator::ABSOLUTE_PATH)
     {
         try {
 

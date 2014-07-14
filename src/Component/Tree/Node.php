@@ -14,7 +14,7 @@ class Node implements \IteratorAggregate, \Countable
     /**
      * @var Node[]
      */
-    protected $children = array();
+    protected $children = [];
 
     /**
      * @return Node|null
@@ -132,7 +132,7 @@ class Node implements \IteratorAggregate, \Countable
      * @param  (Node|string)[] $nodes
      * @return bool
      */
-    public function removeAll(array $nodes = array())
+    public function removeAll(array $nodes = [])
     {
         if (empty($nodes)) {
 
@@ -140,7 +140,7 @@ class Node implements \IteratorAggregate, \Countable
                 $child->setParent(null);
             }
 
-            $this->children = array();
+            $this->children = [];
 
             return true;
         }

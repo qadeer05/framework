@@ -26,7 +26,7 @@ class CompositeExpression implements \Countable
      *
      * @var array
      */
-    protected $parts = array();
+    protected $parts = [];
 
     /**
      * Constructor.
@@ -34,7 +34,7 @@ class CompositeExpression implements \Countable
      * @param string $type
      * @param array  $parts
      */
-    public function __construct($type, array $parts = array())
+    public function __construct($type, array $parts = [])
     {
         $this->type = $type;
         $this->addMultiple($parts);
@@ -71,7 +71,7 @@ class CompositeExpression implements \Countable
      * @param  array $parts
      * @return CompositeExpression
      */
-    public function addMultiple(array $parts = array())
+    public function addMultiple(array $parts = [])
     {
         foreach ((array) $parts as $part) {
             $this->add($part);

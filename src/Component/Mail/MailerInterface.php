@@ -22,7 +22,7 @@ interface MailerInterface
      * @param  array $errors
      * @return int
      */
-    public function send($message, &$errors = array());
+    public function send($message, &$errors = []);
 
     /**
      * Queues the given message and send it later.
@@ -31,7 +31,7 @@ interface MailerInterface
      * @param  array $errors
      * @return int
      */
-    public function queue($message, &$errors = array());
+    public function queue($message, &$errors = []);
 
     /**
      * Registers a plugin.

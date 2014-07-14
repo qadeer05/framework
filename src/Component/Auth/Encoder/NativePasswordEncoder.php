@@ -12,7 +12,7 @@ class NativePasswordEncoder implements PasswordEncoderInterface
      */
     public function hash($raw, $salt = null)
     {
-        $options = array('cost' => $this->cost);
+        $options = ['cost' => $this->cost];
 
         if (null !== $salt) {
             $options['salt'] = $salt;

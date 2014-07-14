@@ -35,7 +35,7 @@ class TemplatingServiceProvider implements ServiceProviderInterface
 
         $app['tmpl.php'] = function($app) {
 
-            $helpers = array(new SlotsHelper, new GravatarHelper);
+            $helpers = [new SlotsHelper, new GravatarHelper];
 
             if (isset($app['view.styles'])) {
                 $helpers[] = new StyleHelper($app['view.styles']);

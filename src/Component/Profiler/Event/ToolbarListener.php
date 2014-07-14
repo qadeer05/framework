@@ -122,9 +122,9 @@ class ToolbarListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 100),
-            KernelEvents::RESPONSE => array('onKernelResponse', -100)
-        );
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest', 100],
+            KernelEvents::RESPONSE => ['onKernelResponse', -100]
+        ];
     }
 }

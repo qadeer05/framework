@@ -4,7 +4,7 @@
     {
         $fileLinkFormat = ini_get('xdebug.file_link_format');
         if ($fileLinkFormat && file_exists($file)) {
-            return strtr($fileLinkFormat, array('%f' => $file, '%l' => $line));
+            return strtr($fileLinkFormat, ['%f' => $file, '%l' => $line]);
         }
 
         return false;

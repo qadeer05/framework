@@ -20,7 +20,7 @@ class AnnotationLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load(\ReflectionClass $class, array $config = array())
+    public function load(\ReflectionClass $class, array $config = [])
     {
         // @Entity
         if ($annotation = $this->getAnnotation($class, 'Entity')) {
@@ -73,7 +73,7 @@ class AnnotationLoader implements LoaderInterface
             } else {
 
                 // @BelongsTo, @HasOne, @HasMany, @ManyToMany
-                foreach (array('BelongsTo', 'HasOne', 'HasMany', 'ManyToMany') as $type) {
+                foreach (['BelongsTo', 'HasOne', 'HasMany', 'ManyToMany'] as $type) {
                     if ($annotation = $this->getAnnotation($property, $type)) {
 
                         if (isset($config['fields'][$name]) || isset($config['relations'][$name])) {
@@ -83,7 +83,7 @@ class AnnotationLoader implements LoaderInterface
                         if ($annot = $this->getAnnotation($property, 'OrderBy') and strpos($type, 'Many') !== false) {
                             $annotation->orderBy = $annot->value;
                         } else {
-                            $annotation->orderBy = array();
+                            $annotation->orderBy = [];
                         }
 
                         $config['relations'][$name] = array_merge(compact('name', 'type'), (array) $annotation);
@@ -103,7 +103,7 @@ class AnnotationLoader implements LoaderInterface
             }
 
             // @PreSave, @PostSave, @PreUpdate, @PostUpdate, @PreDelete, @PostDelete, @PostLoad
-            foreach (array('PreSave', 'PostSave', 'PreUpdate', 'PostUpdate', 'PreDelete', 'PostDelete', 'PostLoad') as $event) {
+            foreach (['PreSave', 'PostSave', 'PreUpdate', 'PostUpdate', 'PreDelete', 'PostDelete', 'PostLoad'] as $event) {
                 if ($annotation = $this->getAnnotation($method, $event)) {
                     $config['events'][lcfirst($event)][] = $name;
                 }

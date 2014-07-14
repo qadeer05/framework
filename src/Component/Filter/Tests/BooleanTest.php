@@ -10,12 +10,12 @@ class BooleanTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new Boolean;
 
-        $values = array(
+        $values = [
             0   => false,
             ""  => false,
             "1" => true
 
-        );
+        ];
         foreach ($values as $in => $out) {
             $this->assertSame($filter->filter($in), $out);
         }

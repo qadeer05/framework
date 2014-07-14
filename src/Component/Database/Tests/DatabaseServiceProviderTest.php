@@ -23,11 +23,11 @@ class DatabaseServiceProviderTest extends ServiceProviderTest
 	public function testDatabaseServiceProvider()
 	{
 
-		$conf = array(
-        'database' => array(
+		$conf = [
+        'database' => [
             'default' => 'mysql',
-            'connections' => array(
-                'mysql' => array(
+            'connections' => [
+                'mysql' => [
                     'driver'   => 'pdo_mysql',
                     'dbname'   => '',
                     'host'     => 'localhost',
@@ -37,11 +37,11 @@ class DatabaseServiceProviderTest extends ServiceProviderTest
                     'charset'  => 'utf8',
                     'collate'  => 'utf8_unicode_ci',
                     'prefix'   => ''
-                )
-            )
-        ));
+                ]
+            ]
+        ]];
 
-        $this->app['caches'] = array('phpfile' => new Cache(new ArrayCache));
+        $this->app['caches'] = ['phpfile' => new Cache(new ArrayCache)];
 
 		$this->app['config'] = $this->getConfig($conf);
 		$this->provider->register($this->app);

@@ -27,18 +27,18 @@ class MailServiceProvider implements ServiceProviderInterface
 
                 $transport = new \Swift_Transport_EsmtpTransport(
                     $app['swift.transport.buffer'],
-                    array($app['swift.transport.authhandler']),
+                    [$app['swift.transport.authhandler']],
                     $app['swift.transport.eventdispatcher']
                 );
 
-                $options = array_replace(array(
+                $options = array_replace([
                     'host'       => 'localhost',
                     'port'       => 25,
                     'username'   => '',
                     'password'   => '',
                     'encryption' => null,
                     'auth_mode'  => null,
-                ), $app['config']->get('mail', array()));
+                ], $app['config']->get('mail', []));
 
                 $transport->setHost($options['host']);
                 $transport->setPort($options['port']);
@@ -62,11 +62,11 @@ class MailServiceProvider implements ServiceProviderInterface
         };
 
         $app['swift.transport.authhandler'] = function () {
-            return new \Swift_Transport_Esmtp_AuthHandler(array(
+            return new \Swift_Transport_Esmtp_AuthHandler([
                 new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator,
                 new \Swift_Transport_Esmtp_Auth_LoginAuthenticator,
                 new \Swift_Transport_Esmtp_Auth_PlainAuthenticator,
-            ));
+            ]);
         };
 
         $app['swift.transport.eventdispatcher'] = function () {

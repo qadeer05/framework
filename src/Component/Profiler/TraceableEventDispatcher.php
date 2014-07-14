@@ -42,9 +42,9 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
         $this->dispatcher = $dispatcher;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
-        $this->called = array();
-        $this->wrappedListeners = array();
-        $this->firstCalledEvent = array();
+        $this->called = [];
+        $this->wrappedListeners = [];
+        $this->firstCalledEvent = [];
     }
 
     /**
@@ -186,7 +186,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
      */
     public function getNotCalledListeners()
     {
-        $notCalled = array();
+        $notCalled = [];
 
         foreach ($this->getListeners() as $name => $listeners) {
             foreach ($listeners as $listener) {
@@ -210,7 +210,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
      */
     public function __call($method, $arguments)
     {
-        return call_user_func_array(array($this->dispatcher, $method), $arguments);
+        return call_user_func_array([$this->dispatcher, $method], $arguments);
     }
 
     /**
@@ -285,9 +285,9 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
     {
         $listener = $this->unwrapListener($listener);
 
-        $info = array(
+        $info = [
             'event' => $eventName,
-        );
+        ];
         if ($listener instanceof \Closure) {
             try {
                 $r = new \ReflectionFunction($listener);
@@ -300,13 +300,13 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
 
             //Problem with caught exeptions (listener throws exeption -> not unwrapped -> wrong hash in $this->priorities)
 
-            $info += array(
+            $info += [
                 'type' => 'Closure',
                 'file'  => $file,
                 'line'  => $line,
                 'pretty' => spl_object_hash($listener),
                 'priority' => isset($this->priorities[spl_object_hash($listener)]) ? $this->priorities[spl_object_hash($listener)] : 'n/a'
-            );
+            ];
         } elseif (is_string($listener)) {
             try {
                 $r = new \ReflectionFunction($listener);
@@ -316,17 +316,17 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
                 $file = null;
                 $line = null;
             }
-            $info += array(
+            $info += [
                 'type'  => 'Function',
                 'function' => $listener,
                 'file'  => $file,
                 'line'  => $line,
                 'pretty' => $listener,
                 'priority' => isset($this->priorities[$file.'::'.$line]) ? $this->priorities[$file.'::'.$line] : 'n/a'
-            );
+            ];
         } elseif (is_array($listener) || (is_object($listener) && is_callable($listener))) {
             if (!is_array($listener)) {
-                $listener = array($listener, '__invoke');
+                $listener = [$listener, '__invoke'];
             }
             $class = is_object($listener[0]) ? get_class($listener[0]) : $listener[0];
             try {
@@ -337,7 +337,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
                 $file = null;
                 $line = null;
             }
-            $info += array(
+            $info += [
                 'type'  => 'Method',
                 'class' => $class,
                 'method' => $listener[1],
@@ -345,7 +345,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface, TraceableEve
                 'line'  => $line,
                 'pretty' => $class.'::'.$listener[1],
                 'priority' => isset($this->priorities[$class.'::'.$listener[1]]) ? $this->priorities[$class.'::'.$listener[1]] : 'n/a'
-            );
+            ];
         }
 
         return $info;

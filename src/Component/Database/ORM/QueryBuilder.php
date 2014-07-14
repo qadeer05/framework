@@ -27,7 +27,7 @@ class QueryBuilder
     /**
      * @var array
      */
-    protected $relations = array();
+    protected $relations = [];
 
     /**
      * Constructor.
@@ -89,19 +89,19 @@ class QueryBuilder
             $related = func_get_args();
         }
 
-        $relations = array();
+        $relations = [];
 
         foreach ($related as $name => $constraints) {
 
             // no constrains
             if (is_numeric($name)) {
-                list($name, $constraints) = array($constraints, function() {});
+                list($name, $constraints) = [$constraints, function() {}];
             }
 
             // is nested ?
             if (strpos($name, '.') !== false) {
 
-                $progress = array();
+                $progress = [];
 
                 foreach (explode('.', $name) as $part) {
 
@@ -128,7 +128,7 @@ class QueryBuilder
      */
     public function getRelations()
     {
-        $relations = array();
+        $relations = [];
 
         foreach ($this->relations as $name => $constraints) {
            if (strpos($name, '.') === false) {
@@ -157,7 +157,7 @@ class QueryBuilder
      */
     public function getNestedRelations($relation)
     {
-        $nested = array();
+        $nested = [];
         $prefix = $relation.'.';
 
         foreach ($this->relations as $name => $constraints) {
@@ -183,7 +183,7 @@ class QueryBuilder
             throw new \BadMethodCallException(sprintf('Undefined method call "%s::%s"', get_class($this), $method));
         }
 
-        $result = call_user_func_array(array($this->query, $method), $args);
+        $result = call_user_func_array([$this->query, $method], $args);
 
         return $result === $this->query ? $this : $result;
     }

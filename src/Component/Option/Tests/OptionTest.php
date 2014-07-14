@@ -14,7 +14,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $connection = $this->getConnection();
         $connection->expects($this->once())
                    ->method('fetchAssoc')
-                   ->will($this->returnValue(array('value' => json_encode('bar'))));
+                   ->will($this->returnValue(['value' => json_encode('bar')]));
 
         $options = $this->getOptions($connection, $cache = $this->getCache());
 
@@ -34,7 +34,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $connection = $this->getConnection();
         $connection->expects($this->once())
                    ->method('fetchAll')
-                   ->will($this->returnValue(array(array('name' => 'foo', 'value' => json_encode('bar')))));
+                   ->will($this->returnValue([['name' => 'foo', 'value' => json_encode('bar')]]));
 
         $options = $this->getOptions($connection, $cache = $this->getCache());
 
@@ -53,7 +53,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     {
         $connection = $this->getConnection();
         $options = $this->getOptions($connection, $cache = $this->getCache());
-        $cache->save('Options.Ignore', array('Ignored' => 'value'));
+        $cache->save('Options.Ignore', ['Ignored' => 'value']);
 
         $this->assertEquals(null, $options->get('Ignored'));
 
@@ -128,7 +128,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $connection->expects($this->exactly(3))
                    ->method('fetchAssoc')
                    ->will($this->returnCallback(function() {
-                        static $i; return $i++ == 1 ? array('id' => 1, 'autoload' => 0) : null;
+                        static $i; return $i++ == 1 ? ['id' => 1, 'autoload' => 0] : null;
                    }));
         $connection->expects($this->once())
                    ->method('delete')
@@ -164,7 +164,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 
     protected function getConnection()
     {
-        return $this->getMockBuilder('Pagekit\Component\Database\Connection')->disableOriginalConstructor()->setMethods(array('fetchAssoc', 'fetchAll', 'executeQuery', 'getDatabasePlatform', 'update', 'insert', 'delete'))->getMock();
+        return $this->getMockBuilder('Pagekit\Component\Database\Connection')->disableOriginalConstructor()->setMethods(['fetchAssoc', 'fetchAll', 'executeQuery', 'getDatabasePlatform', 'update', 'insert', 'delete'])->getMock();
     }
 
     protected function getCache()

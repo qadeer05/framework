@@ -14,7 +14,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * Constructor.
      */
-    public function __construct(array $packages = array())
+    public function __construct(array $packages = [])
     {
         foreach ($packages as $package) {
             $this->addPackage($package);
@@ -46,7 +46,7 @@ class ArrayRepository implements RepositoryInterface
         // normalize name
         $name = strtolower($name);
 
-        $packages = array();
+        $packages = [];
 
         foreach ($this->getPackages() as $package) {
             if ($package->getName() === $name && (null === $version || $version === $package->getVersion())) {
@@ -142,6 +142,6 @@ class ArrayRepository implements RepositoryInterface
      */
     protected function initialize()
     {
-        $this->packages = array();
+        $this->packages = [];
     }
 }

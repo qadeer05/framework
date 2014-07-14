@@ -75,18 +75,18 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @param ControllerCollection $controllers
      * @param array                $options
      */
-    public function __construct(HttpKernelInterface $kernel, ControllerCollection $controllers, array $options = array())
+    public function __construct(HttpKernelInterface $kernel, ControllerCollection $controllers, array $options = [])
     {
         $this->kernel      = $kernel;
         $this->controllers = $controllers;
-        $this->aliases     = array();
+        $this->aliases     = [];
         $this->context     = new ExtendedRequestContext;
 
-        $this->options = array_replace(array(
+        $this->options = array_replace([
             'cache'     => null,
             'matcher'   => 'Symfony\Component\Routing\Matcher\UrlMatcher',
             'generator' => 'Pagekit\Component\Routing\Generator\UrlGenerator'
-        ), $options);
+        ], $options);
     }
 
     /**
@@ -139,7 +139,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
             foreach ($this->aliases as $source => $alias) {
 
                 $name = $source;
-                $params = array();
+                $params = [];
 
                 if ($query = substr(strstr($source, '?'), 1)) {
                     $name = strstr($source, '?', true);
@@ -147,7 +147,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
                 }
 
                 if ($route = $this->routes->get($name)) {
-                    $this->routes->add($source, new Route($alias[0], array_merge($route->getDefaults(), $params, array('_variables' => $route->compile()->getPathVariables()))));
+                    $this->routes->add($source, new Route($alias[0], array_merge($route->getDefaults(), $params, ['_variables' => $route->compile()->getPathVariables()])));
                 }
             }
         }
@@ -168,7 +168,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
                 $class = sprintf('UrlMatcher%s', $cache['key']);
 
                 if (!$cache['fresh']) {
-                    $options = array('class' => $class, 'base_class' => $this->options['matcher']);
+                    $options = ['class' => $class, 'base_class' => $this->options['matcher']];
                     $this->writeCache($cache['file'], (new PhpMatcherDumper($this->getRouteCollection()))->dump($options));
                 }
 
@@ -200,7 +200,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
                 $class = sprintf('UrlGenerator%s', $cache['key']);
 
                 if (!$cache['fresh']) {
-                    $options = array('class' => $class, 'base_class' => $this->options['generator']);
+                    $options = ['class' => $class, 'base_class' => $this->options['generator']];
                     $this->writeCache($cache['file'], (new UrlGeneratorDumper($this->getRouteCollection()))->dump($options));
                 }
 
@@ -242,7 +242,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
     {
         $path = preg_replace('/^[^\/]/', '/$0', $path);
 
-        $this->aliases[$name] = array($path, $inbound, $outbound);
+        $this->aliases[$name] = [$path, $inbound, $outbound];
     }
 
     /**
@@ -254,7 +254,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @throws HttpException
      * @throws NotFoundHttpException
      */
-    public function abort($code, $message = '', array $headers = array())
+    public function abort($code, $message = '', array $headers = [])
     {
         if ($code == 404) {
             throw new NotFoundHttpException($message);
@@ -298,7 +298,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @throws \RuntimeException
      * @return Response
      */
-    public function call($name, $parameters = array())
+    public function call($name, $parameters = [])
     {
         if (empty($this->request)) {
             throw new \RuntimeException('No Request set.');
@@ -328,7 +328,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         if ($fragment = strstr($name, '#')) {
             $name = strstr($name, '#', true);
@@ -376,7 +376,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
                 }
             }
 
-            $this->cache = array('key' => sha1(json_encode($resources)), 'modified' => $modified);
+            $this->cache = ['key' => sha1(json_encode($resources)), 'modified' => $modified];
         }
 
         $file  = sprintf($file, $this->options['cache'], $this->cache['key']);

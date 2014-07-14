@@ -90,7 +90,7 @@ class Cache implements CacheInterface
      */
     public static function supports($name = null)
     {
-        $supports = array('phpfile', 'array', 'file');
+        $supports = ['phpfile', 'array', 'file'];
 
         if (extension_loaded('apc') && class_exists('\APCIterator')) {
             $supports[] = 'apc';

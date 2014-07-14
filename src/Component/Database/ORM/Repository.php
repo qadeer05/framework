@@ -71,7 +71,7 @@ class Repository
      * @param  array $params
      * @return QueryBuilder
      */
-    public function where($condition, array $params = array())
+    public function where($condition, array $params = [])
     {
         return $this->query()->where($condition, $params);
     }
@@ -89,7 +89,7 @@ class Repository
             return $entity;
         }
 
-        return $this->where(array($this->metadata->getIdentifier() => $id))->first();
+        return $this->where([$this->metadata->getIdentifier() => $id])->first();
     }
 
     /**
@@ -108,7 +108,7 @@ class Repository
      * @param object $entity
      * @param array  $data
      */
-    public function save($entity, array $data = array())
+    public function save($entity, array $data = [])
     {
         $this->manager->save($entity, $data);
     }

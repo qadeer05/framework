@@ -59,11 +59,11 @@ class RememberMeServiceProvider implements ServiceProviderInterface, EventSubscr
 
     public static function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::REQUEST => array('onKernelRequest', 20),
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest', 20],
             AuthEvents::SUCCESS   => 'onAuthSuccess',
             AuthEvents::FAILURE   => 'onFailureAndLogout',
             AuthEvents::LOGOUT    => 'onFailureAndLogout'
-        );
+        ];
     }
 }

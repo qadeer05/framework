@@ -19,7 +19,7 @@ class CookieJarTest extends \PHPUnit_Framework_TestCase
     protected $cookieJar;
 
 	public function setUp() {
-		$request = new Request(array(), array(), array(), array('testCookie' => 'testValue'));
+		$request = new Request([], [], [], ['testCookie' => 'testValue']);
 		$this->cookieJar = new CookieJar($request);
 	}
 

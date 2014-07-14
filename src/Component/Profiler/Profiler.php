@@ -10,12 +10,12 @@ class Profiler extends BaseProfiler
     /**
      * @var string[]
      */
-    protected $viewCollectorMap = array();
+    protected $viewCollectorMap = [];
 
     /**
     * @var Array
     */
-    protected $order = array();
+    protected $order = [];
 
     /**
      * Adds a Collector.
@@ -62,7 +62,7 @@ class Profiler extends BaseProfiler
      */
     public function all() {
         arsort($this->order);
-        $collectors = array();
+        $collectors = [];
 
         foreach ($this->order as $name => $priority) {
             $collectors[$name] = parent::get($name);

@@ -28,7 +28,7 @@ class SectionHelper extends Helper
             throw new \BadMethodCallException(sprintf('Undefined method call "%s::%s"', get_class($this->sections), $method));
         }
 
-        return call_user_func_array(array($this->sections, $method), $args);
+        return call_user_func_array([$this->sections, $method], $args);
     }
 
     /**

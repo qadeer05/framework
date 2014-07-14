@@ -1,20 +1,20 @@
 <?php
 
-$colors = array(
+$colors = [
     'default'                => '#aacd4e',
     'section'                => '#666',
     'event_listener'         => '#3dd',
     'event_listener_loading' => '#add',
     'doctrine'               => '#d3d',
     'views'                  => '#F0DB56',
-);
+];
 
 $dumpEvents = function($events) {
-    $result = array();
+    $result = [];
     foreach ($events as $name => $event) {
         if ($name === '__section__') continue;
 
-        $array = array(
+        $array = [
             'name' => $name,
             'category' => $event->getCategory(),
             'origin' => sprintf('%F', $event->getOrigin()),
@@ -22,14 +22,14 @@ $dumpEvents = function($events) {
             'endtime' => sprintf('%F', $event->getEndtime()),
             'duration' => sprintf('%F', $event->getDuration()),
             'memory' => sprintf('%.1F', $event->getMemory() / 1024 / 1024),
-            'periods' => array()
-        );
+            'periods' => []
+        ];
 
         foreach ($event->getPeriods() as $period) {
-            $array['periods'][] = array(
+            $array['periods'][] = [
                 'start' => sprintf('%F', $period->getStarttime()),
                 'end' => sprintf('%F', $period->getEndtime()),
-            );
+            ];
         }
 
         $result[] = $array;
@@ -386,7 +386,7 @@ $dumpEvents = function($events) {
 
     var requests_data = {
         "max": <?php echo printf("%F", $events['__section__']->getEndTime()) ?>,
-        "requests": [<?php echo json_encode(array('id' => $token, 'left' => 0, 'events' => $dumpEvents($events))) ?>
+        "requests": [<?php echo json_encode(['id' => $token, 'left' => 0, 'events' => $dumpEvents($events)]) ?>
         ]
     };
 

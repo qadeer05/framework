@@ -57,10 +57,10 @@ class AuthServiceProviderTest extends ServiceProviderTest
 
 	public function testGetSubscribedEvents()
 	{
-		$expected = array(
-					'auth.login'  => array('onLogin', -32),
-					'auth.logout' => array('onLogout', -32),
-					);
+		$expected = [
+					'auth.login'  => ['onLogin', -32],
+					'auth.logout' => ['onLogout', -32],
+					];
 		$this->assertEquals($expected, $this->provider->getSubscribedEvents());
 	}
 }

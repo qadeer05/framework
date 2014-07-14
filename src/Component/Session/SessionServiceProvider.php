@@ -86,17 +86,17 @@ class SessionServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         if ($app['session.test']) {
-            $app['events']->addListener(KernelEvents::REQUEST, array($this, 'onKernelRequest'), 100);
-            $app['events']->addListener(KernelEvents::RESPONSE, array($this, 'onKernelResponse'), -100);
+            $app['events']->addListener(KernelEvents::REQUEST, [$this, 'onKernelRequest'], 100);
+            $app['events']->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse'], -100);
         }
 
-        $app['events']->addListener(KernelEvents::REQUEST, array($this, 'onEarlyKernelRequest'), 100);
+        $app['events']->addListener(KernelEvents::REQUEST, [$this, 'onEarlyKernelRequest'], 100);
     }
 
     public function onEarlyKernelRequest(GetResponseEvent $event)
     {
         if (!isset($this->app['session.options']['cookie_path'])) {
-            $this->app['session.storage']->setOptions(array('cookie_path' => $event->getRequest()->getBasePath() ?: '/'));
+            $this->app['session.storage']->setOptions(['cookie_path' => $event->getRequest()->getBasePath() ?: '/']);
         }
 
         $event->getRequest()->setSession($this->app['session']);

@@ -28,7 +28,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['router'] = function($app) {
-            return new Router($app['kernel'], $app['controllers'], array('cache' => $app['path.cache']));
+            return new Router($app['kernel'], $app['controllers'], ['cache' => $app['path.cache']]);
         };
 
         $app['kernel'] = function($app) {

@@ -18,7 +18,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     const EARLY_EVENT = 512;
     const LATE_EVENT  = -512;
 
-    protected $providers = array();
+    protected $providers = [];
     protected $booted = false;
 
     /**
@@ -26,7 +26,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      *
      * @param array $values
      */
-    public function __construct(array $values = array())
+    public function __construct(array $values = [])
     {
         parent::__construct();
 
@@ -52,7 +52,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * @throws \InvalidArgumentException
      * @return Application
      */
-    public function register($provider, array $values = array())
+    public function register($provider, array $values = [])
     {
         if (is_string($provider)) {
             $provider = new $provider;
@@ -112,7 +112,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * @throws HttpException
      * @throws NotFoundHttpException
      */
-    public function abort($code, $message = '', array $headers = array())
+    public function abort($code, $message = '', array $headers = [])
     {
         $this['router']->abort($code, $message, $headers);
     }

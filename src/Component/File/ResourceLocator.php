@@ -16,7 +16,7 @@ class ResourceLocator
      *
      * @var array
      */
-    protected $schemes = array();
+    protected $schemes = [];
 
     /**
      * Add path(s) to locator.
@@ -28,7 +28,7 @@ class ResourceLocator
     public function addPath($scheme, $prefix, $paths)
     {
         $paths = array_map(function($path) use ($prefix) {
-            return array($prefix, rtrim($path, '\/'));
+            return [$prefix, rtrim($path, '\/')];
         }, (array) $paths);
 
         if (isset($this->schemes[$scheme])) {
@@ -80,7 +80,7 @@ class ResourceLocator
             throw new InvalidArgumentException("Invalid resource scheme {$scheme}://");
         }
 
-        $paths = $first ? false : array();
+        $paths = $first ? false : [];
 
         foreach ($this->schemes[$scheme] as $parts) {
 

@@ -43,7 +43,7 @@ class TraceableView implements ViewInterface
     /**
      * {@inheritdoc}
      */
-    public function render($name, array $parameters = array())
+    public function render($name, array $parameters = [])
     {
         $e = $this->stopwatch->start($name, 'views');
 
@@ -64,6 +64,6 @@ class TraceableView implements ViewInterface
      */
     public function __call($method, $arguments)
     {
-        return call_user_func_array(array($this->view, $method), $arguments);
+        return call_user_func_array([$this->view, $method], $arguments);
     }
 }

@@ -14,9 +14,9 @@ class Package implements PackageInterface
     protected $description;
     protected $keywords;
     protected $homepage;
-    protected $license = array();
+    protected $license = [];
     protected $authors;
-    protected $extra = array();
+    protected $extra = [];
     protected $releaseDate;
     protected $installationSource;
     protected $sourceType;
@@ -25,8 +25,8 @@ class Package implements PackageInterface
     protected $distUrl;
     protected $distSha1Checksum;
     protected $repository;
-    protected $autoload = array();
-    protected $resources = array();
+    protected $autoload = [];
+    protected $resources = [];
 
     /**
      * Creates a new package.
@@ -372,7 +372,7 @@ class Package implements PackageInterface
      *
      * @param array $resources
      */
-    public function setResources(array $resources = array())
+    public function setResources(array $resources = [])
     {
         $this->resources = $resources;
     }

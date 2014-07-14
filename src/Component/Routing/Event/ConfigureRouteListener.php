@@ -29,7 +29,7 @@ class ConfigureRouteListener implements EventSubscriberInterface
      */
     public function onConfigureRoute(ConfigureRouteEvent $event)
     {
-        foreach (array('_request' => 'Request', '_response' => 'Response') as $name => $class) {
+        foreach (['_request' => 'Request', '_response' => 'Response'] as $name => $class) {
             if ($annotation = $this->getAnnotation($event->getMethod(), $class)) {
                 if ($data = $annotation->getData()) {
                     $event->getRoute()->setDefault($name, $data);
@@ -43,9 +43,9 @@ class ConfigureRouteListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             'route.configure' => 'onConfigureRoute'
-        );
+        ];
     }
 
     /**

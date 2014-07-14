@@ -13,5 +13,5 @@ interface LoaderInterface
      * @param  array  $options
      * @return RouteCollection
      */
-    public function load($controller, array $options = array());
+    public function load($controller, array $options = []);
 }

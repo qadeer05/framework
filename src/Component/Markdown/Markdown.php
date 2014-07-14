@@ -13,7 +13,7 @@ class Markdown
     protected $parser;
     protected $options;
 
-    protected static $defaults = array(
+    protected static $defaults = [
         'gfm'          => true,
         'tables'       => true,
         'breaks'       => false,
@@ -26,14 +26,14 @@ class Markdown
         'smartypants'  => false,
         'headerPrefix' => '',
         'xhtml'        => false
-    );
+    ];
 
     /**
      * Constructor.
      *
      * @param array $options
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         if (!isset($options['renderer'])) {
             $options['renderer'] = new Renderer;
@@ -49,7 +49,7 @@ class Markdown
      * @param  array  $options
      * @return string
      */
-    public function parse($text, array $options = array())
+    public function parse($text, array $options = [])
     {
         $options = array_merge($this->options, $options);
         $options['renderer']->init($options);
@@ -70,7 +70,7 @@ class Markdown
     public static function escape($text, $encode = false)
     {
         $text = preg_replace(!$encode ? '/&(?!#?\w+;)/':'/&/', '&amp;', $text);
-        $text = str_replace(array('<', '>', '"', '\''), array('&lt;', '&gt;', '&quot;', '&#39;'), $text);
+        $text = str_replace(['<', '>', '"', '\''], ['&lt;', '&gt;', '&quot;', '&#39;'], $text);
 
         return $text;
     }

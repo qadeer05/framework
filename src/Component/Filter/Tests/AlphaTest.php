@@ -10,7 +10,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new Alpha;
 
-        $values = array(
+        $values = [
             /* here are the ones the filter should not change */
             "abc"   => "abc", 
             "äöü"   => "äöü", // unicode support please
@@ -21,7 +21,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
             "     " => "",
             "!§$%&/()="   => "",
             "abc123!?) abc" => "abcabc" 
-        );
+        ];
         foreach ($values as $in => $out) {
             $this->assertEquals($filter->filter($in), $out);
         }

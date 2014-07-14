@@ -59,7 +59,7 @@ class StreamWrapper implements StreamWrapperInterface
      */
     public function stream_lock($operation)
     {
-        if (in_array($operation, array(LOCK_SH, LOCK_EX, LOCK_UN, LOCK_NB))) {
+        if (in_array($operation, [LOCK_SH, LOCK_EX, LOCK_UN, LOCK_NB])) {
             return flock($this->handle, $operation);
         }
 

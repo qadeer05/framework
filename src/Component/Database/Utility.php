@@ -57,7 +57,7 @@ class Utility
      */
     public function tablesExist($tables)
     {
-        $tables = array_map(array($this, 'replacePrefix'), (array) $tables);
+        $tables = array_map([$this, 'replacePrefix'], (array) $tables);
 
         return $this->manager->tablesExist($tables);
     }
@@ -219,7 +219,7 @@ class Utility
             throw new \BadMethodCallException(sprintf('Undefined method call "%s::%s"', get_class($this->manager), $method));
         }
 
-        return call_user_func_array(array($this->manager, $method), $args);
+        return call_user_func_array([$this->manager, $method], $args);
     }
 
     /**

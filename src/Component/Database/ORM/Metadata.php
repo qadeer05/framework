@@ -34,19 +34,19 @@ class Metadata
     /**
      * @var array
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * An array to look up field names from column names.
      *
      * @var array
      */
-    protected $fieldNames = array();
+    protected $fieldNames = [];
 
     /**
      * @var array
      */
-    protected $relations = array();
+    protected $relations = [];
 
     /**
      * @var boolean
@@ -56,7 +56,7 @@ class Metadata
     /**
      * @var array
      */
-    protected $events = array();
+    protected $events = [];
 
     /**
      * @var string
@@ -85,7 +85,7 @@ class Metadata
      * @param string          $class
      * @param array           $config
      */
-    public function __construct($manager, $class, array $config = array())
+    public function __construct($manager, $class, array $config = [])
     {
         $this->manager = $manager;
         $this->class   = $class;
@@ -256,7 +256,7 @@ class Metadata
      */
     public function getValues($entity, $column = false, $convert = false)
     {
-        $data = array();
+        $data = [];
 
         foreach ($this->fields as $name => $field) {
             $key = $column ? $field['column'] : $name;
@@ -327,7 +327,7 @@ class Metadata
      */
     public function getConfig()
     {
-        return array(
+        return [
             'class' => $this->class,
             'repositoryClass' => $this->repositoryClass,
             'table' => $this->table,
@@ -336,7 +336,7 @@ class Metadata
             'isMappedSuperclass' => $this->isMappedSuperclass,
             'events' => $this->events,
             'eventPrefix' => $this->eventPrefix
-        );
+        ];
     }
 
     /**

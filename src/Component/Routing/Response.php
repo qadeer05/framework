@@ -33,7 +33,7 @@ class Response
 	 * @param  array $headers
 	 * @return HttpResponse
 	 */
-	public function create($content = '', $status = 200, $headers = array())
+	public function create($content = '', $status = 200, $headers = [])
 	{
 		return new HttpResponse($content, $status, $headers);
 	}
@@ -47,7 +47,7 @@ class Response
 	 * @param  array   $headers
 	 * @return RedirectResponse
 	 */
-	public function redirect($url, $parameters = array(), $status = 302, $headers = array())
+	public function redirect($url, $parameters = [], $status = 302, $headers = [])
 	{
 		return new RedirectResponse($this->url->to($url, $parameters), $status, $headers);
 	}
@@ -60,7 +60,7 @@ class Response
 	 * @param  array        $headers
 	 * @return JsonResponse
 	 */
-	public function json($data = array(), $status = 200, $headers = array())
+	public function json($data = [], $status = 200, $headers = [])
 	{
 		return new JsonResponse($data, $status, $headers);
 	}
@@ -73,7 +73,7 @@ class Response
 	 * @param  array    $headers
 	 * @return StreamedResponse
 	 */
-	public function stream(callable $callback, $status = 200, $headers = array())
+	public function stream(callable $callback, $status = 200, $headers = [])
 	{
 		return new StreamedResponse($callback, $status, $headers);
 	}
@@ -86,7 +86,7 @@ class Response
 	 * @param  array  $headers
 	 * @return BinaryFileResponse
 	 */
-	public function download($file, $name = null, $headers = array())
+	public function download($file, $name = null, $headers = [])
 	{
 		$response = new BinaryFileResponse($file, 200, $headers, true, 'attachment');
 

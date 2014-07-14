@@ -55,19 +55,19 @@ class ControllerReader implements ControllerReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(ReflectionClass $class, array $options = array())
+    public function read(ReflectionClass $class, array $options = [])
     {
         if ($class->isAbstract()) {
             throw new \InvalidArgumentException(sprintf('Annotations from class "%s" cannot be read as it is abstract.', $class));
         }
 
-        $options = array_replace(array(
+        $options = array_replace([
             'path'         => null,
             'name'         => null,
-            'requirements' => array(),
-            'options'      => array(),
-            'defaults'     => array(),
-        ), $options);
+            'requirements' => [],
+            'options'      => [],
+            'defaults'     => [],
+        ], $options);
 
         if ($annotation = $this->getAnnotationReader()->getClassAnnotation($class, $this->routeAnnotation)) {
 

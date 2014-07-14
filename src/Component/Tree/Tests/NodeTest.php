@@ -55,7 +55,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $tree = new Node;
 
-        $tree->addAll(array(new Node, New Node));
+        $tree->addAll([new Node, New Node]);
 
         $this->assertEquals(2, count($tree));
     }
@@ -77,7 +77,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function testRemoveAll()
     {
         $tree = new Node;
-        $nodes = array(new Node, new Node);
+        $nodes = [new Node, new Node];
 
         $tree->addAll($nodes);
         $tree->removeAll($nodes);
@@ -101,7 +101,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function testIterator()
     {
         $tree = new Node;
-        $nodes = array(new Node, new Node);
+        $nodes = [new Node, new Node];
 
         $tree->addAll($nodes);
 
@@ -119,17 +119,17 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $node1->add($node12 = new Node);
         $tree->add($node2 = new Node);
 
-        $nodes = array($node111, $node12, $node2);
+        $nodes = [$node111, $node12, $node2];
         foreach(new \RecursiveIteratorIterator($tree, \RecursiveIteratorIterator::LEAVES_ONLY) as $node) {
             $this->assertEquals(array_shift($nodes), $node);
         }
 
-        $nodes = array($node1, $node11, $node111, $node12, $node2);
+        $nodes = [$node1, $node11, $node111, $node12, $node2];
         foreach(new \RecursiveIteratorIterator($tree, \RecursiveIteratorIterator::SELF_FIRST) as $node) {
             $this->assertEquals(array_shift($nodes), $node);
         }
 
-        $nodes = array($node111, $node11, $node12, $node1, $node2);
+        $nodes = [$node111, $node11, $node12, $node1, $node2];
         foreach(new \RecursiveIteratorIterator($tree, \RecursiveIteratorIterator::CHILD_FIRST) as $node) {
             $this->assertEquals(array_shift($nodes), $node);
         }

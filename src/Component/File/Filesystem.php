@@ -251,7 +251,7 @@ class Filesystem implements FilesystemInterface
     protected function toIterator($files)
     {
         if (!$files instanceof \Traversable) {
-            $files = new \ArrayObject(is_array($files) ? $files : array($files));
+            $files = new \ArrayObject(is_array($files) ? $files : [$files]);
         }
 
         return $files;

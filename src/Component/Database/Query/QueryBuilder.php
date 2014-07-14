@@ -19,25 +19,25 @@ class QueryBuilder
      *
      * @var array
      */
-    protected $parts = array(
-        'select' => array(),
+    protected $parts = [
+        'select' => [],
         'from'   => null,
-        'join'   => array(),
-        'set'    => array(),
+        'join'   => [],
+        'set'    => [],
         'where'  => null,
-        'group'  => array(),
+        'group'  => [],
         'having' => null,
-        'order'  => array(),
+        'order'  => [],
         'offset' => null,
         'limit'  => null
-    );
+    ];
 
     /**
      * The query parameters.
      *
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * Constructor.
@@ -65,7 +65,7 @@ class QueryBuilder
      * @param  mixed $columns
      * @return self
      */
-    public function select($columns = array('*'))
+    public function select($columns = ['*'])
     {
         return $this->addPart('select', is_array($columns) ? $columns : func_get_args());
     }
@@ -142,7 +142,7 @@ class QueryBuilder
      * @param  array $params
      * @return self
      */
-    public function where($condition, array $params = array())
+    public function where($condition, array $params = [])
     {
         return $this->addWhere($condition, $params, CompositeExpression::TYPE_AND);
     }
@@ -154,7 +154,7 @@ class QueryBuilder
      * @param  array $params
      * @return self
      */
-    public function orWhere($condition, array $params = array())
+    public function orWhere($condition, array $params = [])
     {
         return $this->addWhere($condition, $params, CompositeExpression::TYPE_OR);
     }
@@ -168,7 +168,7 @@ class QueryBuilder
      */
     public function whereIn($column, $values)
     {
-        $params = array();
+        $params = [];
 
         if (is_array($values)) {
 
@@ -196,7 +196,7 @@ class QueryBuilder
      */
     public function orWhereIn($column, $values)
     {
-        $params = array();
+        $params = [];
 
         if (is_array($values)) {
 
@@ -259,10 +259,10 @@ class QueryBuilder
      */
     protected function addWhere($condition, array $params, $type)
     {
-        $args = array();
+        $args = [];
 
         if (is_string($condition)) {
-            $condition = array($condition);
+            $condition = [$condition];
         }
 
         if (is_array($condition)) {
@@ -443,7 +443,7 @@ class QueryBuilder
     public function setPart($name, $parts)
     {
         if (is_array($this->parts[$name]) && !is_array($parts)) {
-            $parts = array($parts);
+            $parts = [$parts];
         }
 
         $this->parts[$name] = $parts;
@@ -461,10 +461,10 @@ class QueryBuilder
     public function addPart($name, $parts)
     {
         if (is_array($this->parts[$name]) && !is_array($parts)) {
-            $parts = array($parts);
+            $parts = [$parts];
         }
 
-        if (in_array($name, array('select', 'set', 'order', 'group'))) {
+        if (in_array($name, ['select', 'set', 'order', 'group'])) {
             $this->parts[$name] = array_merge($this->parts[$name], $parts);
         } else if (is_array($this->parts[$name])) {
             $this->parts[$name][] = $parts;
@@ -481,7 +481,7 @@ class QueryBuilder
      * @param  mixed $columns
      * @return array
      */
-    public function get($columns = array('*'))
+    public function get($columns = ['*'])
     {
         return $this->execute($columns)->fetchAll();
     }
@@ -492,7 +492,7 @@ class QueryBuilder
      * @param  mixed $columns
      * @return mixed
      */
-    public function first($columns = array('*'))
+    public function first($columns = ['*'])
     {
         return $this->limit(1)->execute($columns)->fetch(PDO::FETCH_ASSOC);
     }
@@ -577,7 +577,7 @@ class QueryBuilder
      * @param  mixed $columns
      * @return mixed
      */
-    public function execute($columns = array('*'))
+    public function execute($columns = ['*'])
     {
         if (empty($this->parts['select'])) {
             $this->select($columns);

@@ -243,20 +243,20 @@ class FilesystemAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function providePathsForNormalizePath()
     {
-        return array(
-            array('/', '/'),
-            array('/../', '/'),
-            array('/var/lib', '/var/lib'),
-            array('c:\\\\var\\lib', 'c:/var/lib'),
-            array('c:\\..\\var\\lib', 'c:/var/lib'),
-            array('c:\\\\var\\lib\\..', 'c:/var'),
-            array('c:\\..\\var\\..\\lib', 'c:/lib'),
-            array('\\var\\lib', '/var/lib'),
-            array('var/lib', 'var/lib'),
-            array('../var/lib', 'var/lib'),
-            array('', ''),
-            array(null, '')
-        );
+        return [
+            ['/', '/'],
+            ['/../', '/'],
+            ['/var/lib', '/var/lib'],
+            ['c:\\\\var\\lib', 'c:/var/lib'],
+            ['c:\\..\\var\\lib', 'c:/var/lib'],
+            ['c:\\\\var\\lib\\..', 'c:/var'],
+            ['c:\\..\\var\\..\\lib', 'c:/lib'],
+            ['\\var\\lib', '/var/lib'],
+            ['var/lib', 'var/lib'],
+            ['../var/lib', 'var/lib'],
+            ['', ''],
+            [null, '']
+        ];
     }
 
     /**
@@ -264,14 +264,14 @@ class FilesystemAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function providePathsForIsAbsolutePath()
     {
-        return array(
-            array('/var/lib', true),
-            array('c:\\\\var\\lib', true),
-            array('\\var\\lib', true),
-            array('var/lib', false),
-            array('../var/lib', false),
-            array('', false),
-            array(null, false)
-        );
+        return [
+            ['/var/lib', true],
+            ['c:\\\\var\\lib', true],
+            ['\\var\\lib', true],
+            ['var/lib', false],
+            ['../var/lib', false],
+            ['', false],
+            [null, false]
+        ];
     }
 }

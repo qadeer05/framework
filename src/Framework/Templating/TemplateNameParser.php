@@ -19,7 +19,7 @@ class TemplateNameParser implements TemplateNameParserInterface
      *
      * @var string[]
      */
-    protected $extensions = array();
+    protected $extensions = [];
 
     /**
      * Constructor.
@@ -69,6 +69,6 @@ class TemplateNameParser implements TemplateNameParserInterface
             unset($this->extensions[$extension]);
         }
 
-        $this->extensions = array_merge(array($extension => $engine), $this->extensions);
+        $this->extensions = array_merge([$extension => $engine], $this->extensions);
     }
 }

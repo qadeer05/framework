@@ -21,7 +21,7 @@ class MailerTest extends \PHPUnit_Framework_TestCase
     public function testSend()
     {
         $message = $this->getMock('Swift_Mime_Message');
-        $errors = array();
+        $errors = [];
         $this->swift->expects($this->once())
                     ->method('send')
                     ->with($message, $errors);
@@ -32,7 +32,7 @@ class MailerTest extends \PHPUnit_Framework_TestCase
     public function testQueue()
     {
         $message = $this->getMock('Swift_Mime_Message');
-        $errors = array();
+        $errors = [];
         $this->queue->expects($this->once())
                     ->method('send')
                     ->with($message, $errors);

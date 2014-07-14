@@ -27,7 +27,7 @@ class PoFileLoader extends ArrayLoader implements LoaderInterface
 
         // empty file
         if (null === $messages) {
-            $messages = array();
+            $messages = [];
         }
 
         // not an array
@@ -87,12 +87,12 @@ class PoFileLoader extends ArrayLoader implements LoaderInterface
     {
         $stream = fopen($resource, 'r');
 
-        $defaults = array(
-            'ids' => array(),
+        $defaults = [
+            'ids' => [],
             'translated' => null,
-        );
+        ];
 
-        $messages = array();
+        $messages = [];
         $item = $defaults;
 
         while ($line = fgets($stream)) {

@@ -28,22 +28,22 @@ class Option
     /**
      * @var array $ignore
      */
-    protected $ignore = array();
+    protected $ignore = [];
 
     /**
      * @var array $autoload
      */
-    protected $autoload = array();
+    protected $autoload = [];
 
     /**
      * @var array $options
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * @var array $protected
      */
-    protected $protected = array('Ignore', 'Autoload');
+    protected $protected = ['Ignore', 'Autoload'];
 
 	/**
 	 * The name of the options table.
@@ -83,7 +83,7 @@ class Option
         }
 
         if (empty($this->ignore) && $ignore = $this->cache->fetch($this->prefix.'Ignore')) {
-            $this->ignore = $ignore ?: array();
+            $this->ignore = $ignore ?: [];
         }
 
         if (isset($this->ignore[$name])) {
@@ -119,7 +119,7 @@ class Option
             return $this->options[$name] = json_decode($option, true);
         }
 
-        if ($option = $this->connection->fetchAssoc("SELECT value FROM {$this->table} WHERE name = ?", array($name))) {
+        if ($option = $this->connection->fetchAssoc("SELECT value FROM {$this->table} WHERE name = ?", [$name])) {
             $this->cache->save($this->prefix.$name, $option['value']);
             return $this->options[$name] = json_decode($option['value'], true);
         }
@@ -156,7 +156,7 @@ class Option
 
             $this->options[$name] = $value;
 
-            $data = array('name' => $name, 'value' => json_encode($value));
+            $data = ['name' => $name, 'value' => json_encode($value)];
 
             if ($autoload !== null) {
                 $data['autoload'] = $autoload ? '1' : '0';
@@ -205,8 +205,8 @@ class Option
             throw new \InvalidArgumentException(sprintf('"%s" is a protected option and may not be modified.', $name));
         }
 
-        if ($option = $this->connection->fetchAssoc("SELECT id, autoload FROM {$this->table} WHERE name = ?", array($name))) {
-            if ($this->connection->delete($this->table, array('id' => $option['id']))) {
+        if ($option = $this->connection->fetchAssoc("SELECT id, autoload FROM {$this->table} WHERE name = ?", [$name])) {
+            if ($this->connection->delete($this->table, ['id' => $option['id']])) {
                 unset($this->options[$name]);
                 $this->cache->delete($this->prefix.($option['autoload'] ? 'Autoload' : $name));
             }

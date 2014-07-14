@@ -68,7 +68,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase
 		$provider = new UserProvider($this->user);
 		$this->auth->setUserProvider($provider);
 
-		$this->assertInstanceOf('Pagekit\Component\Auth\Tests\Fixtures\User', $this->auth->authenticate(array('username' => 'username', 'password' => 'password')));
+		$this->assertInstanceOf('Pagekit\Component\Auth\Tests\Fixtures\User', $this->auth->authenticate(['username' => 'username', 'password' => 'password']));
 	}
 
 	/**
@@ -80,7 +80,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase
 		$provider = new UserProvider($this->user);
 		$this->auth->setUserProvider($provider);
 
-		$this->auth->authenticate(array('username' => 'wrongUsername', 'password' => 'password'));
+		$this->auth->authenticate(['username' => 'wrongUsername', 'password' => 'password']);
 	}
 
 	public function testGetSession()
@@ -116,7 +116,7 @@ class AuthTest extends \PHPUnit_Framework_TestCase
 		$session = $this->getMock('Symfony\Component\HttpFoundation\Session\Session');
 		$session->expects($this->any())
 				->method('get')
-				->will($this->returnCallback(array($this, 'sessionCallback')));
+				->will($this->returnCallback([$this, 'sessionCallback']));
 		return $session;
 	}
 

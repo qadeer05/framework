@@ -117,12 +117,12 @@ class Message extends FlashBag
      */
     public static function levels()
     {
-        return array(
+        return [
             self::DEBUG,
             self::INFO,
             self::WARNING,
             self::ERROR,
             self::SUCCESS
-        );
+        ];
     }
 }

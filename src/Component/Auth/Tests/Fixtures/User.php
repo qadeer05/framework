@@ -14,7 +14,7 @@ class User implements UserInterface
 
     protected $authenticated;
 
-    protected $roles = array('key' => 'the user role');
+    protected $roles = ['key' => 'the user role'];
     
     public function getId() {
     	return $this->id;

@@ -19,15 +19,15 @@ class StripNewlinesTest extends \PHPUnit_Framework_TestCase
      */
     public function provideNewLineStrings()
     {
-        return array(
-            array('', ''),
-            array("\n", ''),
-            array("\r", ''),
-            array("\r\n", ''),
-            array('\n', '\n'),
-            array('\r', '\r'),
-            array('\r\n', '\r\n'),
-            array("These newlines should\nbe removed by\r\nthe filter", 'These newlines shouldbe removed bythe filter')
-        );
+        return [
+            ['', ''],
+            ["\n", ''],
+            ["\r", ''],
+            ["\r\n", ''],
+            ['\n', '\n'],
+            ['\r', '\r'],
+            ['\r\n', '\r\n'],
+            ["These newlines should\nbe removed by\r\nthe filter", 'These newlines shouldbe removed bythe filter']
+        ];
     }
 }

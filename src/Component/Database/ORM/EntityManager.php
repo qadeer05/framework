@@ -25,7 +25,7 @@ class EntityManager
     /**
      * @var Repository[]
      */
-    protected $repositories = array();
+    protected $repositories = [];
 
     /**
      * @var EntityMap
@@ -182,7 +182,7 @@ class EntityManager
     public function related($entities, $name, QueryBuilder $query)
     {
         if (!is_array($entities)) {
-            $entities = array($entities);
+            $entities = [$entities];
         }
 
         $metadata = $this->getMetadata(current($entities));
@@ -202,7 +202,7 @@ class EntityManager
      * @param object $entity
      * @param array  $data
      */
-    public function save($entity, array $data = array())
+    public function save($entity, array $data = [])
     {
         $metadata = $this->getMetadata($entity);
         $identifier = $metadata->getIdentifier(true);
@@ -231,7 +231,7 @@ class EntityManager
                 $this->dispatchEvent(Events::preUpdate, $entity, $metadata);
 
                 $values = $metadata->getValues($entity, true, true);
-                $this->connection->update($metadata->getTable(), $values, array($identifier => $values[$identifier]));
+                $this->connection->update($metadata->getTable(), $values, [$identifier => $values[$identifier]]);
 
                 $this->dispatchEvent(Events::postUpdate, $entity, $metadata);
         }
@@ -260,7 +260,7 @@ class EntityManager
                     throw new \InvalidArgumentException("Can't remove entity with empty identifier value.");
                 }
 
-                $this->connection->delete($metadata->getTable(), array($identifier => $value));
+                $this->connection->delete($metadata->getTable(), [$identifier => $value]);
                 $this->entities->remove($entity);
 
                 $this->dispatchEvent(Events::postDelete, $entity, $metadata);
@@ -302,7 +302,7 @@ class EntityManager
      */
     public function hydrateAll($statement, Metadata $metadata)
     {
-        $result = array();
+        $result = [];
         $identifier = $metadata->getIdentifier();
 
         while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
@@ -328,7 +328,7 @@ class EntityManager
 
         if ($events = $metadata->getEvents() and isset($events[$name])) {
             foreach ($events[$name] as $callback) {
-                call_user_func_array(array($entity, $callback), array($event));
+                call_user_func_array([$entity, $callback], [$event]);
             }
         }
 

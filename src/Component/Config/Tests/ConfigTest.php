@@ -31,7 +31,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 	public function testLoadReplace()
 	{
-		$config = new Config(array('replacement' => 'de'));
+		$config = new Config(['replacement' => 'de']);
 		$config->load(__DIR__.'/Fixtures/config2.php');
 
 		$this->assertEquals($config->get('app.locale'), 'de');

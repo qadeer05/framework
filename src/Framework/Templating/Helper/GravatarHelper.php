@@ -18,25 +18,25 @@ class GravatarHelper extends Helper
      *                        attrs   => Optional, additional key/value attributes to include in the IMG tag (array)
      * @return string         Generated gravatar string (url or <img>)
      */
-    public function get($email, $params = array())
+    public function get($email, $params = [])
     {
-        $params = array_merge(array(
+        $params = array_merge([
             'size'    => 80,
             'default' => 'mm',
             'rating'  => 'g',
             'img'     => true,
-            'attrs'   => array()
-        ), $params);
+            'attrs'   => []
+        ], $params);
 
         $url = sprintf('http://www.gravatar.com/avatar/%s?s=%s&d=%s&r=%s', md5(strtolower(trim($email))), $params['size'], $params['default'], $params['rating']);
 
         if ($params['img']) {
 
-            $attrs = array_merge(array(
+            $attrs = array_merge([
                 'src'    => $url,
                 'width'  => $params['size'],
                 'height' => $params['size']
-            ), $params['attrs']);
+            ], $params['attrs']);
 
             $attrs = array_map(function($name, $value) {
                 return sprintf('%s="%s"', $name, htmlspecialchars($value));

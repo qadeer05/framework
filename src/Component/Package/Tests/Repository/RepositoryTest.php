@@ -35,7 +35,7 @@ abstract class RepositoryTest extends \PHPUnit_Framework_TestCase
         $repo->removePackage(new Package('foo', '1', '1'));
 
         $this->assertEquals(1, count($repo));
-        $this->assertEquals(array($package), $repo->getPackages());
+        $this->assertEquals([$package], $repo->getPackages());
     }
 
     public function testHasPackage()

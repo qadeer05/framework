@@ -34,12 +34,12 @@ class ControllerCollection implements ControllerResolverInterface
     /**
      * @var array
      */
-    protected $callbacks = array();
+    protected $callbacks = [];
 
     /**
      * @var array
      */
-    protected $controllers = array();
+    protected $controllers = [];
 
     /**
      * Constructor.
@@ -111,7 +111,7 @@ class ControllerCollection implements ControllerResolverInterface
      * @param string $controller
      * @param array  $options
      */
-    public function add($controller, array $options = array())
+    public function add($controller, array $options = [])
     {
         $this->controllers[$controller] = $options;
     }
@@ -146,7 +146,7 @@ class ControllerCollection implements ControllerResolverInterface
      */
     public function getResources()
     {
-        $callbacks = array();
+        $callbacks = [];
         $controllers = array_keys($this->controllers);
 
         foreach ($this->routes as $name => $route) {

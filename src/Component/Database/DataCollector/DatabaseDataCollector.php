@@ -39,10 +39,10 @@ class DatabaseDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-        $this->data = array(
-            'queries' => null !== $this->logger ? $this->sanitizeQueries($this->logger->queries) : array(),
+        $this->data = [
+            'queries' => null !== $this->logger ? $this->sanitizeQueries($this->logger->queries) : [],
             'driver'  => $this->connection->getDriver()->getName()
-        );
+        ];
     }
 
     /**
@@ -108,7 +108,7 @@ class DatabaseDataCollector extends DataCollector
 
         try {
 
-            return $this->connection->executeQuery('EXPLAIN '.$query['sql'], $query['params'], isset($query['types']) ? $query['types'] : array())->fetchAll(\PDO::FETCH_ASSOC);
+            return $this->connection->executeQuery('EXPLAIN '.$query['sql'], $query['params'], isset($query['types']) ? $query['types'] : [])->fetchAll(\PDO::FETCH_ASSOC);
 
         } catch (\Exception $e) {
             return false;
@@ -168,11 +168,11 @@ class DatabaseDataCollector extends DataCollector
     private function sanitizeParam($var)
     {
         if (is_object($var)) {
-            return array(sprintf('Object(%s)', get_class($var)), false);
+            return [sprintf('Object(%s)', get_class($var)), false];
         }
 
         if (is_array($var)) {
-            $a = array();
+            $a = [];
             $original = true;
             foreach ($var as $k => $v) {
                 list($value, $orig) = $this->sanitizeParam($v);
@@ -180,13 +180,13 @@ class DatabaseDataCollector extends DataCollector
                 $a[$k] = $value;
             }
 
-            return array($a, $original);
+            return [$a, $original];
         }
 
         if (is_resource($var)) {
-            return array(sprintf('Resource(%s)', get_resource_type($var)), false);
+            return [sprintf('Resource(%s)', get_resource_type($var)), false];
         }
 
-        return array($var, true);
+        return [$var, true];
     }
 }

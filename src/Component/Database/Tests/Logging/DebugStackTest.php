@@ -19,13 +19,13 @@ class DebugStackTest extends \PHPUnit_Framework_TestCase
 	public function testLogging()
 	{
 		$this->logger->startQuery('SELECT something FROM table');
-		$this->assertEquals(array(
-            1 => array(
+		$this->assertEquals([
+            1 => [
                 'sql'         => 'SELECT something FROM table',
                 'params'      => null,
                 'types'       => null,
-                'executionMS' => 0)
-            ),
+                'executionMS' => 0]
+            ],
             $this->logger->queries
         );
 
@@ -38,9 +38,9 @@ class DebugStackTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->logger->enabled = false;
 		$this->logger->startQuery('SELECT something FROM table');
-		$this->assertEquals(array(), $this->logger->queries);
+		$this->assertEquals([], $this->logger->queries);
 
 		$this->logger->stopQuery();
-		$this->assertEquals(array(), $this->logger->queries);
+		$this->assertEquals([], $this->logger->queries);
 	}
 }

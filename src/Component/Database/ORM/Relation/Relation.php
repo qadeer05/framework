@@ -120,7 +120,7 @@ abstract class Relation
     protected function getKeys(array $entities, $key = null) {
 
         $key  = $key ?: $this->keyFrom;
-        $keys = array();
+        $keys = [];
 
         foreach ($entities as $entity) {
             if ($value = $this->metadata->getValue($entity, $key, true)) {

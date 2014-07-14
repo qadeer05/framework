@@ -11,11 +11,11 @@ class TemplateReference extends BaseTemplateReference
      */
     public function __construct($name = null, $path = null, $engine = null)
     {
-        $this->parameters = array(
+        $this->parameters = [
             'name'   => $name,
             'path'   => $path ?: $name,
             'engine' => $engine,
-        );
+        ];
     }
 
     /**

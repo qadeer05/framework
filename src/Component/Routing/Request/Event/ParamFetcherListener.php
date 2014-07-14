@@ -30,8 +30,8 @@ class ParamFetcherListener implements EventSubscriberInterface
     {
         $request    = $event->getRequest();
         $controller = $event->getController();
-        $parameters = $request->attributes->get('_request[value]', array(), true);
-        $options    = $request->attributes->get('_request[options]', array(), true);
+        $parameters = $request->attributes->get('_request[value]', [], true);
+        $options    = $request->attributes->get('_request[options]', [], true);
 
         if (is_array($controller) && is_array($parameters)) {
 
@@ -53,8 +53,8 @@ class ParamFetcherListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             'kernel.controller' => 'onKernelController'
-        );
+        ];
     }
 }

@@ -14,11 +14,11 @@ class CacheServiceProviderTest extends ServiceProviderTest
 
 	public function configProvider()
 	{
-		return array(
-			array('array'),
-			array('apc'),
-			array('file'),
-			array('auto'));
+		return [
+			['array'],
+			['apc'],
+			['file'],
+			['auto']];
 	}
 
 	/**
@@ -27,7 +27,7 @@ class CacheServiceProviderTest extends ServiceProviderTest
 	public function testRegister($storage)
 	{
 		$provider = new CacheServiceProvider;
-		$config   = array('cache.cache.test' => array('storage' => $storage, 'path' => './', 'cache.prefix' => 'prefix_'));
+		$config   = ['cache.cache.test' => ['storage' => $storage, 'path' => './', 'cache.prefix' => 'prefix_']];
 
 		$this->app['config'] = $this->getConfig($config);
 		$this->app->boot();

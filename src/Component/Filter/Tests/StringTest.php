@@ -10,7 +10,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
     {
         $filter = new String;
 
-        $values = array(
+        $values = [
             23                  => "23",
             "23"                => "23",
             '"23"'              => '"23"',
@@ -18,7 +18,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
             "whateverthisis"    => "whateverthisis",
             "!'#+*§$%&/()=?"    => "!'#+*§$%&/()=?",
             'äöü'               => "äöü" // unicode support please
-        );
+        ];
         foreach ($values as $in => $out) {
             $this->assertSame($filter->filter($in), $out);
         }

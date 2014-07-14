@@ -65,7 +65,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface
     public function gc($lifetime)
     {
         try {
-            $this->connection->executeQuery("DELETE FROM {$this->table} WHERE time < :time", array('time' => date('Y-m-d H:i:s', time() - $lifetime)));
+            $this->connection->executeQuery("DELETE FROM {$this->table} WHERE time < :time", ['time' => date('Y-m-d H:i:s', time() - $lifetime)]);
         } catch (\PDOException $e) {
             throw new \RuntimeException(sprintf('PDOException was thrown when trying to manipulate session data: %s', $e->getMessage()), 0, $e);
         }

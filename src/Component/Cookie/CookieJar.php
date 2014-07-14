@@ -31,7 +31,7 @@ class CookieJar
     /**
      * @var Cookie[]
      */
-    protected $cookies = array();
+    protected $cookies = [];
 
     /**
      * Constructor.

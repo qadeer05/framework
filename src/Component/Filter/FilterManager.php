@@ -8,7 +8,7 @@ class FilterManager
     /**
      * @var array
      */
-    protected $defaults = array(
+    protected $defaults = [
         'addrelnofollow' => 'Pagekit\Component\Filter\AddRelNofollow',
         'alnum'          => 'Pagekit\Component\Filter\Alnum',
         'alpha'          => 'Pagekit\Component\Filter\Alpha',
@@ -21,12 +21,12 @@ class FilterManager
         'pregreplace'    => 'Pagekit\Component\Filter\PregReplace',
         'string'         => 'Pagekit\Component\Filter\String',
         'stripnewlines'  => 'Pagekit\Component\Filter\StripNewlines'
-    );
+    ];
 
     /**
      * @var FilterInterface[]
      */
-    protected $filters = array();
+    protected $filters = [];
 
     /**
      * Constructor.
@@ -47,7 +47,7 @@ class FilterManager
      * @return FilterInterface The filter
      * @throws \InvalidArgumentException
      */
-    public function get($name, array $options = array())
+    public function get($name, array $options = [])
     {
         if (array_key_exists($name, $this->defaults)) {
             $this->filters[$name] = $this->defaults[$name];

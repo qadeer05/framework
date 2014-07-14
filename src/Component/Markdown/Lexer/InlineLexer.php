@@ -24,7 +24,7 @@ class InlineLexer
      * @param array $links
      * @param array $options
      */
-    public function __construct($links, array $options = array())
+    public function __construct($links, array $options = [])
     {
         $this->links = $links;
         $this->options = $options;
@@ -103,10 +103,10 @@ class InlineLexer
 
                 $this->inLink = true;
 
-                $out .= $this->outputLink($cap, array(
+                $out .= $this->outputLink($cap, [
                     'href'  => @$cap[2],
                     'title' => @$cap[3]
-                ));
+                ]);
 
                 $this->inLink = false;
 
@@ -276,10 +276,10 @@ class InlineLexer
     {
         if (!static::$inlines) {
 
-            $inlines = array();
+            $inlines = [];
 
             // normal
-            $inlines['normal'] = array(
+            $inlines['normal'] = [
                 '_href'      => '/\s*<?([\s\S]*?)>?(?:\s+[\'"]([\s\S]*?)[\'"])?\s*/',
                 '_inside'    => '/(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/',
                 'autolink'   => '/^<([^ >]+(@|:\/)[^ >]+)>/',
@@ -295,27 +295,27 @@ class InlineLexer
                 'tag'        => '/^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|\'[^\']*\'|[^\'">])*?>/',
                 'text'       => '/^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/',
                 'url'        => '/nooooop/'
-            );
+            ];
 
             // pedantic
-            $inlines['pedantic'] = array_merge($inlines['normal'], array(
+            $inlines['pedantic'] = array_merge($inlines['normal'], [
                 'strong' => '/^__(?=\S)([\s\S]*?\S)__(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/',
                 'em'     => '/^_(?=\S)([\s\S]*?\S)_(?!_)|^\*(?=\S)([\s\S]*?\S)\*(?!\*)/'
-            ));
+            ]);
 
             // github flavored markdown
-            $inlines['gfm'] = array_merge($inlines['normal'], array(
+            $inlines['gfm'] = array_merge($inlines['normal'], [
                 'escape' => '/^\\\([\\`*{}\[\]()#+\-.!_>~|])/',
                 'url'    => '/^(https?:\/\/[^\s<]+[^<.,:;"\')\]\s])/',
                 'del'    => '/^~~(?=\S)([\s\S]*?\S)~~/',
                 'text'   => '/^[\s\S]+?(?=[\\<!\[_*`~]|https?:\/\/| {2,}\n|$)/'
-            ));
+            ]);
 
             // github flavored markdown + line breaks
-            $inlines['breaks'] = array_merge($inlines['gfm'], array(
+            $inlines['breaks'] = array_merge($inlines['gfm'], [
                 'br'   => '/^ *\n(?!\s*$)/',
                 'text' => '/^[\s\S]+?(?=[\\<!\[_*`~]|https?:\/\/| *\n|$)/'
-            ));
+            ]);
 
             static::$inlines = $inlines;
         }

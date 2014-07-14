@@ -16,6 +16,6 @@ class Digits extends AbstractFilter
      */
     public function filter($value)
     {
-        return str_replace(array('-', '+'), '', filter_var((string) $value, FILTER_SANITIZE_NUMBER_INT));
+        return str_replace(['-', '+'], '', filter_var((string) $value, FILTER_SANITIZE_NUMBER_INT));
     }
 }

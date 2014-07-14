@@ -26,7 +26,7 @@ class HasMany extends HasOne
      */
     public function resolve(array $entities, QueryBuilder $query)
     {
-        $this->initRelation($entities, array());
+        $this->initRelation($entities, []);
 
         if (!$keys = $this->getKeys($entities)) {
             return;

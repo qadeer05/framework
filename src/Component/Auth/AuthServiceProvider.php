@@ -62,9 +62,9 @@ class AuthServiceProvider implements ServiceProviderInterface, EventSubscriberIn
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            AuthEvents::LOGIN  => array('onLogin', -32),
-            AuthEvents::LOGOUT => array('onLogout', -32)
-        );
+        return [
+            AuthEvents::LOGIN  => ['onLogin', -32],
+            AuthEvents::LOGOUT => ['onLogout', -32]
+        ];
     }
 }
