@@ -2,15 +2,17 @@
 
 namespace Pagekit\Component\View;
 
-use Pagekit\Component\View\Event\ActionEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Pagekit\Component\View\Section\SectionManager;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\EngineInterface;
 
 class View implements ViewInterface
 {
+    /**
+     * @var SectionManager
+     */
+    protected $sections;
+
     /**
      * @var EngineInterface
      */
@@ -24,28 +26,18 @@ class View implements ViewInterface
     /**
      * @var array
      */
-    protected $parameters = array();
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
-
-    /**
-     * @var string
-     */
-    protected $prefix = 'view.action.';
+    protected $parameters = [];
 
     /**
      * Constructor.
      *
-     * @param EventDispatcherInterface $events
-     * @param EngineInterface          $engine
+     * @param EngineInterface $engine
+     * @param SectionManager  $sections
      */
-    public function __construct(EventDispatcherInterface $events, EngineInterface $engine = null)
+    public function __construct(SectionManager $sections = null, EngineInterface $engine = null)
     {
-        $this->events = $events;
-        $this->engine = $engine ?: new DelegatingEngine;
+        $this->sections = $sections ?: new SectionManager;
+        $this->engine   = $engine ?: new DelegatingEngine;
     }
 
     /**
@@ -66,6 +58,14 @@ class View implements ViewInterface
     public function setEngine(EngineInterface $engine)
     {
         $this->engine = $engine;
+    }
+
+    /**
+     * @return SectionManager
+     */
+    public function getSections()
+    {
+        return $this->sections;
     }
 
     /**
@@ -127,7 +127,7 @@ class View implements ViewInterface
             $key = array_shift($keys);
 
             if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = array();
+                $array[$key] = [];
             }
 
             $array =& $array[$key];
@@ -139,7 +139,7 @@ class View implements ViewInterface
     /**
      * {@inheritdoc}
      */
-    public function render($name, array $parameters = array())
+    public function render($name, array $parameters = [])
     {
         foreach ($parameters as $key => $value) {
             if (strpos($key, '.') !== false) {
@@ -152,38 +152,6 @@ class View implements ViewInterface
         }
 
         return $this->engine->render($name, array_replace($this->parameters, $parameters));
-    }
-
-    /**
-     * Registers an action callback.
-     *
-     * @param string   $name
-     * @param callable $listener
-     * @param integer  $priority
-     */
-    public function addAction($name, callable $listener, $priority = 0)
-    {
-        $this->events->addListener($this->prefix.$name, $listener, $priority);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function callAction($action, $parameters = array())
-    {
-        $prefix = $this->prefix;
-        $placeholder = '<!-- '.uniqid('action.').' -->';
-
-        $this->events->addListener(KernelEvents::RESPONSE, function(FilterResponseEvent $event, $name, $dispatcher) use ($prefix, $action, $parameters, $placeholder) {
-
-            $response = $event->getResponse();
-            $replace  = $dispatcher->dispatch($prefix.$action, new ActionEvent($action, $parameters))->getContent();
-
-            $response->setContent(str_replace($placeholder, $replace, $response->getContent()));
-
-        }, 10);
-
-        return $placeholder;
     }
 
     /**

@@ -26,15 +26,5 @@ interface ViewInterface
      *
      * @return string
      */
-    public function render($name, array $parameters = array());
-
-    /**
-     * Calls an action callback
-     *
-     * @param string $action
-     * @param array  $parameters
-     *
-     * @return string The placeholder
-     */
-    public function callAction($action, $parameters = array());
+    public function render($name, array $parameters = []);
 }

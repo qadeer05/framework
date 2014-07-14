@@ -26,7 +26,7 @@ abstract class Asset implements AssetInterface
      * @param mixed  $asset
 	 * @param array  $options
 	 */
-    public function __construct($name, $asset, array $options = array())
+    public function __construct($name, $asset, array $options = [])
     {
         $this->name = $name;
         $this->asset = $asset;

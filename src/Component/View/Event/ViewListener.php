@@ -3,6 +3,7 @@
 namespace Pagekit\Component\View\Event;
 
 use Pagekit\Component\View\ViewInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -31,13 +32,13 @@ class ViewListener implements EventSubscriberInterface
      * @param string                              $name
      * @param EventDispatcherInterface            $dispatcher
      */
-    public function onKernelView(GetResponseForControllerResultEvent $event, $name, $dispatcher)
+    public function onKernelView(GetResponseForControllerResultEvent $event, $name, EventDispatcherInterface $dispatcher)
     {
         $request = $event->getRequest();
         $result  = $event->getControllerResult();
 
         if (null !== $template = $request->attributes->get('_response[value]', null, true) and (null === $result || is_array($result))) {
-            $response = $result = $this->view->render($template, $result ?: array());
+            $response = $result = $this->view->render($template, $result ?: []);
         }
 
         if (null !== $layout = $request->attributes->get('_response[layout]', null, true)) {
@@ -45,7 +46,7 @@ class ViewListener implements EventSubscriberInterface
         }
 
         if ($layout = $this->view->getLayout()) {
-            $this->view->addAction('content', function (ActionEvent $e) use ($result) { $e->setContent((string) $result); });
+            $this->view->getSections()->set('content', (string) $result);
             $dispatcher->dispatch('view.layout', $e = new LayoutEvent($layout));
             $response = $this->view->render($e->getLayout(), $e->getParameters());
         }
@@ -60,8 +61,8 @@ class ViewListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            'kernel.view' => array('onKernelView', -5)
-        );
+        return [
+            'kernel.view' => ['onKernelView', -5]
+        ];
     }
 }

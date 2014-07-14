@@ -7,7 +7,7 @@ class AssetCollection implements \IteratorAggregate
     /**
      * @var AssetInterface[]
      */
-	protected $assets = array();
+	protected $assets = [];
 
    /**
      * Add asset to collection.

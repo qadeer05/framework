@@ -6,6 +6,7 @@ use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 use Pagekit\Framework\Templating\Helper\GravatarHelper;
 use Pagekit\Framework\Templating\Helper\TokenHelper;
+use Pagekit\Framework\Templating\Razr\Directive\SectionDirective;
 use Pagekit\Framework\Templating\Razr\Directive\TransDirective;
 use Pagekit\Framework\Templating\RazrEngine;
 use Razr\Directive\FunctionDirective;
@@ -27,10 +28,6 @@ class RazrServiceProvider implements ServiceProviderInterface
             $engine->addDirective(new FunctionDirective('url', array($app['url'], 'to')));
             $engine->addFunction('url', array($app['url'], 'to'));
 
-            if (isset($app['view'])) {
-                $engine->addDirective(new FunctionDirective('action', array($app['view'], 'callAction')));
-            }
-
             if (isset($app['view.styles'])) {
                 $engine->addDirective(new FunctionDirective('style', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
                     $app['view.styles']->queue($name, $asset, $dependencies, $options);
@@ -41,6 +38,11 @@ class RazrServiceProvider implements ServiceProviderInterface
                 $engine->addDirective(new FunctionDirective('script', function($name, $asset = null, $dependencies = array(), $options = array()) use ($app) {
                     $app['view.scripts']->queue($name, $asset, $dependencies, $options);
                 }));
+            }
+
+            if (isset($app['view.sections'])) {
+                $engine->addDirective(new SectionDirective);
+                $engine->addFunction('hasSection', [$app['view.sections'], 'has']);
             }
 
             if (isset($app['csrf'])) {

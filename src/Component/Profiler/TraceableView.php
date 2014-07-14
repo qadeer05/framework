@@ -27,20 +27,6 @@ class TraceableView implements ViewInterface
     /**
      * {@inheritdoc}
      */
-    public function render($name, array $parameters = array())
-    {
-        $e = $this->stopwatch->start($name, 'views');
-
-        $result = $this->view->render($name, $parameters);
-
-        $e->stop();
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLayout()
     {
         return $this->view->getLayout();
@@ -57,9 +43,15 @@ class TraceableView implements ViewInterface
     /**
      * {@inheritdoc}
      */
-    public function callAction($action, $parameters = array())
+    public function render($name, array $parameters = array())
     {
-        return $this->view->callAction($action, $parameters);
+        $e = $this->stopwatch->start($name, 'views');
+
+        $result = $this->view->render($name, $parameters);
+
+        $e->stop();
+
+        return $result;
     }
 
     /**

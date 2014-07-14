@@ -24,7 +24,7 @@ class ActionEvent extends Event
     /**
      * Constructs an event.
      */
-    public function __construct($action, $parameters = array())
+    public function __construct($action, $parameters = [])
     {
         $this->action     = $action;
         $this->parameters = $parameters;

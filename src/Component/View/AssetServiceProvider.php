@@ -5,7 +5,6 @@ namespace Pagekit\Component\View;
 use Pagekit\Component\View\Asset\AssetInterface;
 use Pagekit\Component\View\Asset\AssetManager;
 use Pagekit\Component\View\Asset\FileAsset;
-use Pagekit\Component\View\Event\ActionEvent;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 
@@ -28,36 +27,35 @@ class AssetServiceProvider implements ServiceProviderInterface
 
     public function boot(Application $app)
     {
-        $app['view']->addAction('head', array($this, 'getAssetsAction'));
-    }
+        $app['view.sections']->append('head', function() use ($app) {
 
-    public function getAssetsAction(ActionEvent $event)
-    {
-        $result = array();
+            $result = [];
 
-        foreach ($this->app['view.styles'] as $style) {
+            foreach ($app['view.styles'] as $style) {
 
-            $attributes = $this->getDataAttributes($style);
+                $attributes = $this->getDataAttributes($style);
 
-            if ($style instanceof FileAsset) {
-                $result[] = sprintf('        <link href="%s" rel="stylesheet"%s>', $style, $attributes);
-            } else {
-                $result[] = sprintf('        <style%s>%s</style>', $attributes, $style);
+                if ($style instanceof FileAsset) {
+                    $result[] = sprintf('        <link href="%s" rel="stylesheet"%s>', $style, $attributes);
+                } else {
+                    $result[] = sprintf('        <style%s>%s</style>', $attributes, $style);
+                }
             }
-        }
 
-        foreach ($this->app['view.scripts'] as $script) {
+            foreach ($app['view.scripts'] as $script) {
 
-            $attributes = $this->getDataAttributes($script);
+                $attributes = $this->getDataAttributes($script);
 
-            if ($script instanceof FileAsset) {
-                $result[] = sprintf('        <script src="%s"%s></script>', $script, $attributes);
-            } else {
-                $result[] = sprintf('        <script%s>%s</script>', $attributes, $script);
+                if ($script instanceof FileAsset) {
+                    $result[] = sprintf('        <script src="%s"%s></script>', $script, $attributes);
+                } else {
+                    $result[] = sprintf('        <script%s>%s</script>', $attributes, $script);
+                }
             }
-        }
 
-        $event->append(implode(PHP_EOL, $result));
+            return implode(PHP_EOL, $result);
+
+        });
     }
 
     protected function getDataAttributes(AssetInterface $asset)

@@ -4,7 +4,6 @@ namespace Pagekit\Component\Routing\Event;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
-use Pagekit\Component\Routing\Event\ConfigureRouteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ConfigureRouteListener implements EventSubscriberInterface

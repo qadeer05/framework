@@ -19,7 +19,7 @@ class LayoutEvent extends Event
     /**
      * Constructs an event.
      */
-    public function __construct($layout, $parameters = array())
+    public function __construct($layout, $parameters = [])
     {
         $this->layout     = $layout;
         $this->parameters = $parameters;

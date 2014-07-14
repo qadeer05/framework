@@ -2,8 +2,8 @@
 
 namespace Pagekit\Component\View;
 
-use Pagekit\Component\View\Event\ActionEvent;
 use Pagekit\Component\View\Event\ViewListener;
+use Pagekit\Component\View\Section\SectionManager;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 
@@ -13,10 +13,14 @@ class ViewServiceProvider implements ServiceProviderInterface
     {
         $app['view'] = function($app) {
 
-            $view = new View($app['events']);
+            $view = new View($app['view.sections']);
             $view->set('app', $app);
 
             return $view;
+        };
+
+        $app['view.sections'] = function() {
+            return new SectionManager;
         };
     }
 
@@ -24,15 +28,15 @@ class ViewServiceProvider implements ServiceProviderInterface
     {
         $app['events']->addSubscriber(new ViewListener($view = $app['view']));
 
-        $view->addAction('head', function(ActionEvent $event) use ($view) {
+        $app['view.sections']->prepend('head', function() use ($view) {
 
-            $result = array();
+            $result = [];
 
             if ($title = $view->get('head.title')) {
                 $result[] = sprintf('        <title>%s</title>', $title);
             }
 
-            if ($links = $view->get('head.link', array())) {
+            if ($links = $view->get('head.link', [])) {
                 foreach($links as $rel => $attributes) {
 
                     if (!$attributes) {
@@ -47,8 +51,7 @@ class ViewServiceProvider implements ServiceProviderInterface
                 }
             }
 
-            $event->append(implode(PHP_EOL, $result));
-
-        }, 4);
+            return implode(PHP_EOL, $result);
+        });
     }
 }

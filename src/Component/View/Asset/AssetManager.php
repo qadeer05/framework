@@ -24,7 +24,7 @@ class AssetManager implements \IteratorAggregate
     /**
      * @var array
      */
-    protected $queued = array();
+    protected $queued = [];
 
     /**
      * Constructor.
@@ -49,10 +49,10 @@ class AssetManager implements \IteratorAggregate
      * @throws \InvalidArgumentException
      * @return AssetInterface
      */
-    protected function create($name, $asset, $dependencies = array(), $options = array())
+    protected function create($name, $asset, $dependencies = [], $options = [])
     {
         if (is_string($options)) {
-            $options = array('type' => $options);
+            $options = ['type' => $options];
         }
 
         if (!isset($options['type'])) {
@@ -60,7 +60,7 @@ class AssetManager implements \IteratorAggregate
         }
 
         if ($dependencies) {
-            $options = array_merge($options, array('dependencies' => (array) $dependencies));
+            $options = array_merge($options, ['dependencies' => (array) $dependencies]);
         }
 
         if ('string' == $options['type']) {
@@ -83,7 +83,7 @@ class AssetManager implements \IteratorAggregate
 
             $options['path'] = $asset;
 
-            return new FileAsset($name, $this->url->to($options['path'], $ver ? compact('ver') : array()), $options);
+            return new FileAsset($name, $this->url->to($options['path'], $ver ? compact('ver') : []), $options);
         }
 
         throw new \InvalidArgumentException('Unable to determine asset type.');
@@ -98,7 +98,7 @@ class AssetManager implements \IteratorAggregate
      * @param  array  $options
      * @return self
      */
-    public function register($name, $asset, $dependencies = array(), $options = array())
+    public function register($name, $asset, $dependencies = [], $options = [])
     {
         $this->registered->add($this->create($name, $asset, $dependencies, $options));
 
@@ -128,7 +128,7 @@ class AssetManager implements \IteratorAggregate
      * @param  array  $options
      * @return self
      */
-    public function queue($name, $asset = null, $dependencies = array(), $options = array())
+    public function queue($name, $asset = null, $dependencies = [], $options = [])
     {
         if (!$instance = $this->registered->get($name)) {
             $this->registered->add($instance = $this->create($name, $asset, $dependencies, $options));
@@ -157,7 +157,7 @@ class AssetManager implements \IteratorAggregate
      */
     public function getIterator()
     {
-        $assets = array();
+        $assets = [];
 
         foreach (array_keys($this->queued) as $name) {
             $this->resolveDependencies($this->registered->get($name), $assets);
@@ -174,7 +174,7 @@ class AssetManager implements \IteratorAggregate
      * @param array          $unresolved
      * @throws \RuntimeException
      */
-    protected function resolveDependencies($asset, &$resolved, &$unresolved = array())
+    protected function resolveDependencies($asset, &$resolved, &$unresolved = [])
     {
         $unresolved[$asset->getName()] = $asset;
 
