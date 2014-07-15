@@ -168,7 +168,10 @@ class MetadataManager
                     $config['relations'][$relation['name']] = $relation;
                 }
 
-                $config['identifier'] = $parent->getIdentifier();
+                if ($identifer = $parent->getIdentifier()) {
+                    $config['identifier'] = $identifer;
+                }
+
                 $config['events']     = $parent->getEvents();
 
                 if ($parent->isMappedSuperclass()) {

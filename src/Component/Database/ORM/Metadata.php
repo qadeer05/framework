@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Type;
 class Metadata
 {
     /**
-     * @var MetadataManger
+     * @var MetadataManager
      */
     protected $manager;
 
@@ -328,14 +328,14 @@ class Metadata
     public function getConfig()
     {
         return [
-            'class' => $this->class,
-            'repositoryClass' => $this->repositoryClass,
-            'table' => $this->table,
-            'fields' => $this->fields,
-            'relations' => $this->relations,
+            'class'              => $this->class,
+            'eventPrefix'        => $this->eventPrefix,
+            'events'             => $this->events,
+            'fields'             => $this->fields,
             'isMappedSuperclass' => $this->isMappedSuperclass,
-            'events' => $this->events,
-            'eventPrefix' => $this->eventPrefix
+            'relations'          => $this->relations,
+            'repositoryClass'    => $this->repositoryClass,
+            'table'              => $this->table
         ];
     }
 
