@@ -86,7 +86,9 @@ class MailServiceProvider implements ServiceProviderInterface
     {
         $app->on('kernel.terminate', function () use ($app) {
             if ($app['mailer.initialized']) {
-                $app['swift.spooltransport']->getSpool()->flushQueue($app['swift.transport']);
+                try {
+                    $app['swift.spooltransport']->getSpool()->flushQueue($app['swift.transport']);
+                } catch(\Exception $e) {}
             }
         });
     }
