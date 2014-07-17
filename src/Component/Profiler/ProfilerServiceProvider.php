@@ -4,6 +4,7 @@ namespace Pagekit\Component\Profiler;
 
 use Pagekit\Component\Database\DataCollector\DatabaseDataCollector;
 use Pagekit\Component\Profiler\Event\ToolbarListener;
+use Pagekit\Component\Routing\DataCollector\RoutesDataCollector;
 use Pagekit\Framework\Application;
 use Pagekit\Framework\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcherInterface;
@@ -67,6 +68,7 @@ class ProfilerServiceProvider implements ServiceProviderInterface
         $panel   = __DIR__ . '/views/panel/';
 
         $app['profiler']->add($request = new RequestDataCollector, "$toolbar/request.php", "$panel/request.php", 40);
+        $app['profiler']->add(new RoutesDataCollector($app['router'], $app['path.cache']), "$toolbar/routes.php", "$panel/routes.php", 35);
         $app['profiler']->add(new TimeDataCollector, "$toolbar/time.php", "$panel/time.php", 20);
         $app['profiler']->add(new MemoryDataCollector, "$toolbar/memory.php");
         $app['profiler']->add(new EventDataCollector, "$toolbar/events.php", "$panel/events.php", 30);
