@@ -147,21 +147,6 @@ class View implements ViewInterface
             }
         }
 
-        if (!$this->isAbsolutePath($name) and !strpos($name, '://') > 0) {
-            $name = 'view://'.$name;
-        }
-
         return $this->engine->render($name, array_replace($this->parameters, $parameters));
-    }
-
-    /**
-     * Returns whether the file path is an absolute path.
-     *
-     * @param  string $file
-     * @return bool
-     */
-    protected function isAbsolutePath($file)
-    {
-        return $file && ($file[0] == '/' || $file[0] == '\\' || (strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/')));
     }
 }

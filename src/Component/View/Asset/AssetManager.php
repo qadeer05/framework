@@ -77,10 +77,6 @@ class AssetManager implements \IteratorAggregate
                 $ver = null;
             }
 
-            if (!$this->isAbsolutePath($asset) and strpos($asset, '://') === false) {
-                $asset = "asset://$asset";
-            }
-
             $options['path'] = $asset;
 
             return new FileAsset($name, $this->url->to($options['path'], $ver ? compact('ver') : []), $options);
@@ -197,16 +193,5 @@ class AssetManager implements \IteratorAggregate
 
         $resolved[$asset->getName()] = $asset;
         unset($unresolved[$asset->getName()]);
-    }
-
-    /**
-     * Returns whether the file path is an absolute path.
-     *
-     * @param  string $file
-     * @return bool
-     */
-    protected function isAbsolutePath($file)
-    {
-        return $file && ($file[0] == '/' || $file[0] == '\\' || (strlen($file) > 3 && ctype_alpha($file[0]) && $file[1] == ':' && ($file[2] == '\\' || $file[2] == '/')));
     }
 }
