@@ -2,9 +2,9 @@
 
 namespace Pagekit\Component\Session;
 
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
+use Symfony\Component\HttpFoundation\Session\Flash\AutoExpireFlashBag;
 
-class Message extends FlashBag
+class Message extends AutoExpireFlashBag
 {
     /**
      * Detailed debug information
@@ -35,7 +35,7 @@ class Message extends FlashBag
      * Constructor.
      *
      * @param string $name
-     * @param string $storageKey The key used to store messages in the session.
+     * @param string $storageKey
      */
     public function __construct($name = 'messages', $storageKey = '_pk_messages')
     {
