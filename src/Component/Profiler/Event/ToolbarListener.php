@@ -65,14 +65,13 @@ class ToolbarListener implements EventSubscriberInterface
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        $response = $event->getResponse();
+        $request  = $event->getRequest();
+
+        if (!$event->isMasterRequest()) {
             return;
         }
 
-        $response = $event->getResponse();
-        $request = $event->getRequest();
-
-        // do not capture redirects or modify XML HTTP Requests
         if ($request->isXmlHttpRequest()) {
             return;
         }
