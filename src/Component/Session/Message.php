@@ -95,22 +95,6 @@ class Message extends AutoExpireFlashBag
     }
 
     /**
-     * Checks if messages exist
-     *
-     * @return bool
-     */
-    public function hasMessages()
-    {
-        foreach ($this->levels() as $level) {
-            if ($this->has($level)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Gets array of message levels
      *
      * @return array
