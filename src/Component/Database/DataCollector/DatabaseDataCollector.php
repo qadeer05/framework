@@ -129,14 +129,15 @@ class DatabaseDataCollector extends DataCollector
         $query['explainable'] = true;
         $query['params'] = (array) $query['params'];
         foreach ($query['params'] as $j => &$param) {
-            if (isset($query['types'][$j])) {
+            $key = is_int($j) ? $j + 1 : $j;
+            if (isset($query['types'][$key])) {
                 // Transform the param according to the type
-                $type = $query['types'][$j];
+                $type = $query['types'][$key];
                 if (is_string($type)) {
                     $type = Type::getType($type);
                 }
                 if ($type instanceof Type) {
-                    $query['types'][$j] = $type->getBindingType();
+                    $query['types'][$key] = $type->getBindingType();
                     $param = $type->convertToDatabaseValue($param, $this->connection->getDatabasePlatform());
                 }
             }

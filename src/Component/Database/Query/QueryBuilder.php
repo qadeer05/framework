@@ -3,6 +3,7 @@
 namespace Pagekit\Component\Database\Query;
 
 use PDO, Closure;
+use Doctrine\DBAL\Types\Type;
 use Pagekit\Component\Database\Connection;
 
 class QueryBuilder
@@ -662,9 +663,9 @@ class QueryBuilder
         }
 
         if ($type == 'select') {
-            return $this->connection->executeQuery($sql, $this->params);
+            return $this->connection->executeQuery($sql, $this->params, $this->guessParamTypes($this->params));
         } else {
-            return $this->connection->executeUpdate($sql, $this->params);
+            return $this->connection->executeUpdate($sql, $this->params, $this->guessParamTypes($this->params));
         }
     }
 
@@ -736,5 +737,19 @@ class QueryBuilder
         }
 
         return $query;
+    }
+
+    /**
+     * Tries to guess param types
+     */
+    protected function guessParamTypes(array $params = array())
+    {
+        $types = [];
+        foreach($params as $key => $param) {
+            if ($param instanceof \DateTime) {
+                $types[is_int($key) ? $key + 1 : $key] = Type::DATETIME;
+            }
+        }
+        return $types;
     }
 }
