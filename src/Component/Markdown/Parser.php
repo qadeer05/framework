@@ -30,7 +30,8 @@ class Parser
     /**
      * Compiling method.
      *
-     * @param array $src
+     * @param  array $src
+     * @return string
      */
     public function parse($src)
     {

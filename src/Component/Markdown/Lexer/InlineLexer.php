@@ -35,7 +35,9 @@ class InlineLexer
     /**
      * Lexing/Compiling
      *
-     * @param string $src
+     * @param  string $src
+     * @throws \Exception
+     * @return string
      */
     public function output($src)
     {

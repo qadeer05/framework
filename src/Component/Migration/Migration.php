@@ -106,7 +106,6 @@ class Migration
     protected function load($start = null, $end = null, $method = 'up')
     {
         $files = [];
-        $value = false;
 
         foreach ($this->files as $version => $file) {
 
