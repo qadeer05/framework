@@ -43,11 +43,15 @@ class ViewServiceProvider implements ServiceProviderInterface
                         continue;
                     }
 
-                    $html = '';
+                    if (!isset($attributes['rel'])) {
+                        $attributes['rel'] = $rel;
+                    }
+
+                    $html = '<link';
                     foreach ($attributes as $name => $value) {
                         $html .= sprintf(' %s="%s"', $name, htmlspecialchars($value));
                     }
-                    $result[] = sprintf('        <link rel="%s"%s/>', $rel, $html);
+                    $result[] = $html.'>';
                 }
             }
 

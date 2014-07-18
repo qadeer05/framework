@@ -16,6 +16,7 @@
         "guzzlehttp/guzzle": "4.*",
         "ircmaxell/password-compat": "1.0.*",
         "ircmaxell/random-lib": "1.0.*",
+        "mibe/feedwriter": "dev-master",
         "nikic/php-parser": "1.*",
         "pimple/pimple": "2.0.*",
         "swiftmailer/swiftmailer": "5.*",
