@@ -13,7 +13,6 @@
     "require": {
         "doctrine/annotations": "1.*",
         "doctrine/dbal": "2.4.*",
-        "eko/feedbundle": "dev-master",
         "guzzlehttp/guzzle": "4.*",
         "ircmaxell/password-compat": "1.0.*",
         "ircmaxell/random-lib": "1.0.*",
